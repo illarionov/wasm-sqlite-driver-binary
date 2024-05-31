@@ -1,0 +1,160 @@
+name: build
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '**/*.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+  CI: true
+  TERM: dumb
+
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+  assemble:
+    name: Assemble
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: ${{ !contains(github.event.head_commit.message, '[ci skip]') }}
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install WABT
+        run: |
+          curl -fsSL https://github.com/WebAssembly/wabt/releases/download/1.0.34/wabt-1.0.34-ubuntu.tar.gz | \
+            tar -C $HOME -xzf -
+          echo "$HOME/wabt-1.0.34/bin" >> $GITHUB_PATH
+
+      - name: Install EMSDK
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.58
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: generate
+
+      - name: Restore Kotlin Native Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
+          restore-keys: ${{ runner.os }}-konan-
+
+      - name: Assemble debug build, run tests
+        run: >
+          ./gradlew
+          build --stacktrace --scan
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: ${{ !cancelled() && (github.actor != 'dependabot[bot]') }}
+        with:
+          comment_mode: off
+          junit_files: '**/build/*test-results/**/*.xml'
+          check_name: "Test results"
+
+      - name: Bundle the test reports and outputs
+        if: failure()
+        run: >
+          find . \(
+          -type d -path '*/build/reports'  -o -type d -path '*/build/outputs'
+          \) -print0
+          | xargs -0 tar -c -I 'zstd -19 -T0' -f test-reports.tar.zst
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-reports
+          path: test-reports.tar.zst
+
+      - name: Save Kotlin Native Cache
+        uses: actions/cache/save@v4
+        if: github.ref_name == 'main'
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
+
+  static-analysis:
+    name: Style check
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    timeout-minutes: 60
+    if: >-
+      !contains(github.event.head_commit.message, '[ci skip]')
+      && github.actor != 'dependabot[bot]'
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: generate
+
+      - name: Run static code analyzers
+        run: >
+          ./gradlew
+          styleCheck --continue
+
+      - name: Uploads Detekt .sarif files to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./build/reports/detekt/report.sarif
+          category: detekt
+
+      - name: Uploads Diktat .sarif files to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./build/reports/diktat/diktat.sarif
+          category: diktat
+
+      - name: Bundle the build report
+        if: ${{ !cancelled() }}
+        run: >
+          tar -c -I 'zstd -19 -T0' -f lint-outputs.tar.zst build/reports
+
+      - name: Upload lint outputs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-outputs
+          path: lint-outputs.tar.zst

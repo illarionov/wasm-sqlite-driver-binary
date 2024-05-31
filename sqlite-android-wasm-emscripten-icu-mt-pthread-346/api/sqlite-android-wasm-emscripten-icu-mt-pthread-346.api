@@ -1,0 +1,8 @@
+public final class ru/pixnews/wasm/sqlite/binary/SqliteAndroidWasmEmscriptenIcuMtPthread346 : ru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration {
+	public static final field INSTANCE Lru/pixnews/wasm/sqlite/binary/SqliteAndroidWasmEmscriptenIcuMtPthread346;
+	public fun getRequireSharedMemory ()Z
+	public fun getRequireThreads ()Z
+	public fun getSqliteUrl ()Ljava/lang/String;
+	public fun getWasmMinMemorySize ()J
+}
+
