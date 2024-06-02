@@ -1,10 +1,9 @@
 # Wasm SQLite binaries
 
-Several versions of SQLite compiled into WebAssembly and packaged into JAR archives for use in the
-[Wasm-sqlite-open-helper] project.
+SQLite compiled into WebAssembly and bundled into JAR archives for use in the [Wasm-sqlite-open-helper] project.
 
-This was moved to a separate repository after multiple unsuccessful attempts to eliminate full 
-recompilation of SQLite every time there were minor changes to the Gradle build scripts of the main project.
+The code for building SQLite has been moved to this repository after multiple unsuccessful attempts to eliminate 
+full recompilation of SQLite each time there were minor changes to the Gradle build scripts in the main project.
 
 Currently, two modules with distinct build configurations are available:
 
