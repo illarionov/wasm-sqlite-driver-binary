@@ -72,8 +72,8 @@ emsdkRoot=/opt/emsdk
 Install and activate the SDK version used in the project (not the latest one):
 
 ```shell
-./emsdk install 3.1.58
-./emsdk activate 3.1.58
+./emsdk install 3.1.61
+./emsdk activate 3.1.61
 source ./emsdk_env.sh
 ```
 
