@@ -49,7 +49,7 @@ dependencies {
     implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-346:0.1-alpha04")
     
     // Single-threaded version
-    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu--346:0.1-alpha04")
+    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-346:0.1-alpha04")
 }
 ```
 
