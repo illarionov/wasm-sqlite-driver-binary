@@ -56,6 +56,13 @@ public object SqliteExportedFunctions {
         "_sqlite3__wasm_db_config_s",
         "_sqlite3__wasm_enum_json", // optional
     )
+    public val openHelperExportedFunctionsMultithread: List<String> = openHelperExportedFunctions + listOf(
+        "_free",
+        "_malloc",
+        "_pthread_create",
+        "_pthread_exit",
+        "_pthread_self",
+    )
     public val defaultWasmExportedFunctions: List<String> = listOf(
         "_free",
         "_malloc",

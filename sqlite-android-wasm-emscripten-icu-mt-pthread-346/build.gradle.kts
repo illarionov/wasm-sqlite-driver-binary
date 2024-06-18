@@ -56,7 +56,7 @@ sqlite3Build {
                 enableIcu = true,
                 enableMultithreading = true,
             )
-            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctions
+            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
             setupIcu(project)
             setupAndroidExtensions(project)
         }
