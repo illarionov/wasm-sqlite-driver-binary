@@ -6,9 +6,21 @@
 
 package ru.pixnews.wasm.sqlite.binary.base
 
+import kotlin.jvm.JvmField
+
 public interface WasmSqliteConfiguration {
     public val sqliteUrl: String
     public val wasmMinMemorySize: Long
     public val requireThreads: Boolean
     public val requireSharedMemory: Boolean
+
+    public companion object {
+        @JvmField
+        public val UNSET: WasmSqliteConfiguration = object : WasmSqliteConfiguration {
+            override val sqliteUrl: String = ""
+            override val wasmMinMemorySize: Long = 0
+            override val requireThreads: Boolean = false
+            override val requireSharedMemory: Boolean = false
+        }
+    }
 }

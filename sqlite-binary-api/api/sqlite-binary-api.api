@@ -1,7 +1,12 @@
 public abstract interface class ru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration {
+	public static final field Companion Lru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration$Companion;
+	public static final field UNSET Lru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration;
 	public abstract fun getRequireSharedMemory ()Z
 	public abstract fun getRequireThreads ()Z
 	public abstract fun getSqliteUrl ()Ljava/lang/String;
 	public abstract fun getWasmMinMemorySize ()J
+}
+
+public final class ru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration$Companion {
 }
 
