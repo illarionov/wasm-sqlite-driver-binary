@@ -27,6 +27,8 @@ plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
 }
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
@@ -70,14 +72,28 @@ val copyResourcesTask = tasks.register<Copy>("copyWasmLibrariesToResources") {
     include("*.wasm")
 }
 
+compose.resources {
+    publicResClass = false
+    generateResClass = always
+}
+
 kotlin {
     jvm()
+    js(IR) {
+        browser()
+    }
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
+        commonMain.dependencies {
+            api(projects.sqliteBinaryApi)
+            compileOnly(compose.runtime)
+            implementation(compose.components.resources)
+        }
         named("jvmMain") {
             resources.srcDir(files(wasmResourcesDir).builtBy(copyResourcesTask))
-            dependencies {
-                api(projects.sqliteBinaryApi)
-            }
         }
     }
 }
