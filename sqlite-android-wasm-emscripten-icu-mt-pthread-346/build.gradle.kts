@@ -72,12 +72,14 @@ val copyResourcesTask = tasks.register<Copy>("copyWasmLibrariesToResources") {
 
 kotlin {
     jvm()
+    linuxX64()
+
     sourceSets {
+        commonMain.dependencies {
+            api(projects.sqliteBinaryApi)
+        }
         named("jvmMain") {
             resources.srcDir(files(wasmResourcesDir).builtBy(copyResourcesTask))
-            dependencies {
-                api(projects.sqliteBinaryApi)
-            }
         }
     }
 }

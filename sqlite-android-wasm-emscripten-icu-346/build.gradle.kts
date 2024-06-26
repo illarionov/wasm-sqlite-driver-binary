@@ -14,6 +14,7 @@ import ru.pixnews.wasm.builder.sqlite.SqliteConfigurationOptions
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
 import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.WasmResourcesLinuxX64
 
 /*
  * SQLite WebAssembly Build with Emscripten
@@ -65,26 +66,32 @@ sqlite3Build {
     }
 }
 
-val wasmResourcesDir = layout.buildDirectory.dir("wasmLibraries")
-val copyResourcesTask = tasks.register<Copy>("copyWasmLibrariesToResources") {
+val wasmResourcesRootDir = layout.buildDirectory.dir("wasmLibraries")
+val wasmResourcesJvmDir = wasmResourcesRootDir.map { it.dir("jvm") }
+val copyJvmResourcesTask = tasks.register<Copy>("copyWasmLibrariesToJvmResources") {
     from(configurations.named("wasmSqliteReleaseElements").get().artifacts.files)
 
     // Temporary build with unstripped symbols for debugging. Remove in the future or move to a separate
     // build type
     from(configurations.named("wasmSqliteDebugElements").get().artifacts.files)
 
-    into(wasmResourcesDir.map { it.dir("ru/pixnews/wasm/sqlite/binary") })
+    into(wasmResourcesJvmDir.map { it.dir("ru/pixnews/wasm/sqlite/binary") })
     include("*.wasm")
 }
 
 kotlin {
     jvm()
+    linuxX64()
+
     sourceSets {
+        commonMain.dependencies {
+            api(projects.sqliteBinaryApi)
+        }
         named("jvmMain") {
-            resources.srcDir(files(wasmResourcesDir).builtBy(copyResourcesTask))
-            dependencies {
-                api(projects.sqliteBinaryApi)
-            }
+            resources.srcDir(files(wasmResourcesJvmDir).builtBy(copyJvmResourcesTask))
         }
     }
 }
+
+val resourcesHelper = objects.newInstance<WasmResourcesLinuxX64>(wasmResourcesRootDir)
+resourcesHelper.setupResourcesPublication()

@@ -8,7 +8,7 @@ package ru.pixnews.wasm.sqlite.binary
 
 import ru.pixnews.wasm.sqlite.binary.base.WasmSqliteConfiguration
 
-public object SqliteAndroidWasmEmscriptenIcu346 : WasmSqliteConfiguration {
+public actual object SqliteAndroidWasmEmscriptenIcu346 : WasmSqliteConfiguration {
     override val sqliteUrl: String
         get() = requireNotNull(
             SqliteAndroidWasmEmscriptenIcu346::class.java.getResource(
