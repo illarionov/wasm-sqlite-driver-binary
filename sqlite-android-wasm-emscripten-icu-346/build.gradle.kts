@@ -27,6 +27,7 @@ plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
 }
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
@@ -65,26 +66,13 @@ sqlite3Build {
     }
 }
 
-val wasmResourcesDir = layout.buildDirectory.dir("wasmLibraries")
-val copyResourcesTask = tasks.register<Copy>("copyWasmLibrariesToResources") {
-    from(configurations.named("wasmSqliteReleaseElements").get().artifacts.files)
-
-    // Temporary build with unstripped symbols for debugging. Remove in the future or move to a separate
-    // build type
-    from(configurations.named("wasmSqliteDebugElements").get().artifacts.files)
-
-    into(wasmResourcesDir.map { it.dir("ru/pixnews/wasm/sqlite/binary") })
-    include("*.wasm")
-}
-
 kotlin {
     jvm()
+    linuxX64()
+
     sourceSets {
-        named("jvmMain") {
-            resources.srcDir(files(wasmResourcesDir).builtBy(copyResourcesTask))
-            dependencies {
-                api(projects.sqliteBinaryApi)
-            }
+        commonMain.dependencies {
+            api(projects.sqliteBinaryApi)
         }
     }
 }
