@@ -1,6 +1,9 @@
 name: publish
 
 on:
+  push:
+    tags:
+      - '*'
   workflow_dispatch:
     inputs:
       upload_to_s3:
@@ -72,8 +75,8 @@ jobs:
           ./gradlew
           --no-configuration-cache
           build
-          ${{ inputs.create_github_release && 'packageMavenDistribution' || '' }}
-          ${{ inputs.upload_to_s3 && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
+          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'packageMavenDistribution' || '' }}
+          ${{ (github.event_name == 'push' || inputs.upload_to_s3) && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
           --stacktrace
 
       - name: Upload build artifacts
@@ -85,7 +88,7 @@ jobs:
 
       - name: Create release on Github
         uses: softprops/action-gh-release@v2
-        if: ${{ inputs.create_github_release }}
+        if: ${{ github.event_name == 'push' || inputs.create_github_release }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
