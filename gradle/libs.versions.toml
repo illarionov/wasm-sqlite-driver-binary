@@ -1,5 +1,5 @@
 [versions]
-emscripten = "3.1.61"
+emscripten = "3.1.62"
 sqlite = "3460000"
 icu = "75.1"
 
