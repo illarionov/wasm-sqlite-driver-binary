@@ -8,6 +8,7 @@ package ru.pixnews.wasm.sqlite.binary.reader
 
 import okio.FileSystem
 import okio.Path
+import okio.Source
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 import ru.pixnews.wasm.sqlite.open.helper.common.xdg.XdgBaseDirectory
 
@@ -18,11 +19,14 @@ public class LinuxWasmSourceReader(
     private val xdgBaseDirs: List<Path> = XdgBaseDirectory.getBaseDataDirectories(),
     private val fileSystem: FileSystem = FileSystem.SYSTEM,
 ) : WasmSourceReader {
-    override fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmSourceFactory> {
+    override fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmBinarySource.Factory> {
         return xdgBaseDirs.map { xdgBaseDir ->
-            val candidate = xdgBaseDir.resolve(appName).resolve(url.url)
-            WasmSourceFactory {
-                fileSystem.source(candidate)
+            val candidate: Path = xdgBaseDir.resolve(appName).resolve(url.url)
+            WasmBinarySource.Factory {
+                object : WasmBinarySource {
+                    override val path: String = candidate.toString()
+                    override val source: Source = fileSystem.source(candidate)
+                }
             }
         }
     }

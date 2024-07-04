@@ -8,6 +8,14 @@ package ru.pixnews.wasm.sqlite.binary.reader
 
 import okio.Source
 
-public fun interface WasmSourceFactory {
-    public operator fun invoke(): Source
+public interface WasmBinarySource {
+    public val source: Source
+    public val path: String
+
+    public operator fun component1(): Source = source
+    public operator fun component2(): String = path
+
+    public fun interface Factory {
+        public operator fun invoke(): WasmBinarySource
+    }
 }

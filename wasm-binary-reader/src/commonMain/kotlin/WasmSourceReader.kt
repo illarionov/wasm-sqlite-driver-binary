@@ -11,7 +11,7 @@ import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 internal expect fun getDefaultWasmSourceReader(): WasmSourceReader
 
 public fun interface WasmSourceReader {
-    public fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmSourceFactory>
+    public fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmBinarySource.Factory>
 
     public companion object : WasmSourceReader by getDefaultWasmSourceReader()
 }

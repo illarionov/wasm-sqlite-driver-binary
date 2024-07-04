@@ -6,14 +6,20 @@
 
 package ru.pixnews.wasm.sqlite.binary.reader
 
+import okio.Source
 import okio.source
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
-import java.io.File
 import java.net.URI
 
 public class JvmResourcesWasmBinaryReader : WasmSourceReader {
-    override fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmSourceFactory> {
-        val urlAsFile = File(URI(url.url))
-        return listOf(WasmSourceFactory(urlAsFile::source))
+    override fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmBinarySource.Factory> {
+        return listOf(
+            WasmBinarySource.Factory {
+                object : WasmBinarySource {
+                    override val path: String = url.toString()
+                    override val source: Source = URI(url.url).toURL().openStream().source()
+                }
+            },
+        )
     }
 }
