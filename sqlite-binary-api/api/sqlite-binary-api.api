@@ -1,9 +1,18 @@
+public abstract interface class ru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl {
+	public static final field Companion Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl$Companion;
+	public static fun create (Ljava/lang/String;)Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl;
+	public abstract fun getUrl ()Ljava/lang/String;
+}
+
+public final class ru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl$Companion {
+	public final fun create (Ljava/lang/String;)Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl;
+}
+
 public abstract interface class ru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration {
 	public static final field Companion Lru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration$Companion;
 	public static final field UNSET Lru/pixnews/wasm/sqlite/binary/base/WasmSqliteConfiguration;
-	public abstract fun getRequireSharedMemory ()Z
 	public abstract fun getRequireThreads ()Z
-	public abstract fun getSqliteUrl ()Ljava/lang/String;
+	public abstract fun getSqliteUrl ()Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl;
 	public abstract fun getWasmMinMemorySize ()J
 }
 

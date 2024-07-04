@@ -6,16 +6,17 @@
 
 package ru.pixnews.wasm.sqlite.binary
 
+import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 import ru.pixnews.wasm.sqlite.binary.base.WasmSqliteConfiguration
 
 public actual object SqliteAndroidWasmEmscriptenIcu346 : WasmSqliteConfiguration {
-    override val sqliteUrl: String
-        get() = requireNotNull(
+    override val sqliteUrl: WasmSourceUrl = WasmSourceUrl.create(
+        requireNotNull(
             SqliteAndroidWasmEmscriptenIcu346::class.java.getResource(
                 "sqlite3-android-icu-3460000.wasm",
-            )?.toString(),
-        )
+            ),
+        ).toString(),
+    )
     override val wasmMinMemorySize: Long = 50_331_648L
     override val requireThreads: Boolean = false
-    override val requireSharedMemory: Boolean = false
 }
