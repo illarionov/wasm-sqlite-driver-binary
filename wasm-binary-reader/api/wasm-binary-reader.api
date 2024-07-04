@@ -8,10 +8,11 @@ public abstract interface class ru/pixnews/wasm/sqlite/binary/reader/WasmSourceF
 }
 
 public abstract interface class ru/pixnews/wasm/sqlite/binary/reader/WasmSourceReader {
+	public static final field Companion Lru/pixnews/wasm/sqlite/binary/reader/WasmSourceReader$Companion;
 	public abstract fun getSourcePathCandidates (Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl;)Ljava/util/List;
 }
 
-public final class ru/pixnews/wasm/sqlite/binary/reader/WasmSourceReader_jvmKt {
-	public static final fun getDefaultWasmSourceReader ()Lru/pixnews/wasm/sqlite/binary/reader/WasmSourceReader;
+public final class ru/pixnews/wasm/sqlite/binary/reader/WasmSourceReader$Companion : ru/pixnews/wasm/sqlite/binary/reader/WasmSourceReader {
+	public fun getSourcePathCandidates (Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl;)Ljava/util/List;
 }
 

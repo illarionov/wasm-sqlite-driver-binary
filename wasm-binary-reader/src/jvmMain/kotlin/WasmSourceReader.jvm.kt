@@ -6,4 +6,4 @@
 
 package ru.pixnews.wasm.sqlite.binary.reader
 
-public actual fun getDefaultWasmSourceReader(): WasmSourceReader = JvmResourcesWasmBinaryReader()
+internal actual fun getDefaultWasmSourceReader(): WasmSourceReader = JvmResourcesWasmBinaryReader()

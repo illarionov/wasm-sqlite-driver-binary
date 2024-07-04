@@ -11,7 +11,7 @@ import okio.Path
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 import ru.pixnews.wasm.sqlite.open.helper.common.xdg.XdgBaseDirectory
 
-public actual fun getDefaultWasmSourceReader(): WasmSourceReader = LinuxWasmSourceReader()
+internal actual fun getDefaultWasmSourceReader(): WasmSourceReader = LinuxWasmSourceReader()
 
 public class LinuxWasmSourceReader(
     private val appName: String = "wasm-sqlite-open-helper",

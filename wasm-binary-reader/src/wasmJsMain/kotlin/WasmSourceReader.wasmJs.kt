@@ -6,6 +6,6 @@
 
 package ru.pixnews.wasm.sqlite.binary.reader
 
-public actual fun getDefaultWasmSourceReader(): WasmSourceReader {
+internal actual fun getDefaultWasmSourceReader(): WasmSourceReader {
     TODO("Not yet implemented")
 }
