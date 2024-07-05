@@ -28,7 +28,9 @@ buildscript {
 
 rootProject.name = "wasm-sqlite-open-helper-binary"
 
+include("common-xdg")
 include("sqlite-binary-api")
+include("wasm-binary-reader")
 include("icu-wasm")
 include("sqlite-android-wasm-emscripten-icu-mt-pthread-346")
 include("sqlite-android-wasm-emscripten-icu-346")
