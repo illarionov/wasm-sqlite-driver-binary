@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.1-alpha07] — 2024-07-05
+
+### Added
+
+- `wasm-binary-reader` library to simplify reading WASM binaries from application resources in a multi-platform project
+
+### Changed
+
+- Removed `requireSharedMemory` field from `WasmSqliteConfiguration`
+
 ## [0.1-alpha06] — 2024-07-03
 
 ### Added
