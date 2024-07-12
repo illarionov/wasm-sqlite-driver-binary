@@ -31,6 +31,7 @@ import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.newInstance
 import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.ExecOperations
+import org.gradle.process.internal.ExecException
 import ru.pixnews.wasm.builder.base.emscripten.EmscriptenSdk
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath
 import java.io.File
@@ -93,11 +94,18 @@ public abstract class EmscriptenBuildTask @Inject constructor(
 
         val cmdLine = buildCommandLine()
 
-        execOperations.exec {
-            this.commandLine = cmdLine
-            this.workingDir = workingDir
-            this.environment = emscriptenSdk.getEmsdkEnvironment()
-        }.rethrowFailure().assertNormalExitValue()
+        try {
+            execOperations.exec {
+                this.commandLine = cmdLine
+                this.workingDir = workingDir
+                this.environment = emscriptenSdk.getEmsdkEnvironment()
+            }.rethrowFailure().assertNormalExitValue()
+        } catch (execException: ExecException) {
+            throw ExecException(
+                "Failed to execute `$cmdLine`. Make sure ICU can be built on this system.",
+                execException,
+            )
+        }
     }
 
     private fun buildCommandLine(): List<String> = emscriptenSdk.buildEmccCommandLine {
