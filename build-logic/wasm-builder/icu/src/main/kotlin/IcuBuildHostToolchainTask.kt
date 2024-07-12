@@ -21,6 +21,7 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
 import org.gradle.process.ExecOperations
+import org.gradle.process.internal.ExecException
 import ru.pixnews.wasm.builder.icu.IcuBuildDefaults.ICU_BUILD_TOOLCHAIN_DIR
 import java.io.File
 import javax.inject.Inject
@@ -67,16 +68,30 @@ public abstract class IcuBuildHostToolchainTask @Inject constructor(
             it == "PATH"
         }
 
-        execOperations.exec {
-            commandLine = listOf(icuConfigurePath.absolutePath)
-            workingDir = dstDir
-            environment = hostEnv
-        }.rethrowFailure().assertNormalExitValue()
+        try {
+            execOperations.exec {
+                commandLine = listOf(icuConfigurePath.absolutePath)
+                workingDir = dstDir
+                environment = hostEnv
+            }.rethrowFailure().assertNormalExitValue()
+        } catch (execException: ExecException) {
+            throw ExecException(
+                "Failed to execute `${icuConfigurePath.absolutePath}`. Make sure ICU can be built on this system.",
+                execException,
+            )
+        }
 
-        execOperations.exec {
-            commandLine = listOf("gmake", "-j${maxJobs.get()}")
-            workingDir = dstDir
-            environment = hostEnv
-        }.rethrowFailure().assertNormalExitValue()
+        try {
+            execOperations.exec {
+                commandLine = listOf("gmake", "-j${maxJobs.get()}")
+                workingDir = dstDir
+                environment = hostEnv
+            }.rethrowFailure().assertNormalExitValue()
+        } catch (execException: ExecException) {
+            throw ExecException(
+                "Failed to execute `gmake` to build ICU. Make sure GNU Make is installed.",
+                execException,
+            )
+        }
     }
 }

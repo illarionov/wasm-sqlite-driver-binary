@@ -17,6 +17,7 @@ import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.process.ExecOperations
+import org.gradle.process.internal.ExecException
 import org.gradle.work.DisableCachingByDefault
 import ru.pixnews.wasm.builder.sqlite.internal.ApplyAndroidPatchesSqliteTransform.Parameters
 import java.io.File
@@ -38,11 +39,16 @@ internal abstract class ApplyAndroidPatchesSqliteTransform @Inject constructor(
         inputDir.copyRecursively(outputDir)
 
         val androidPatchFile = parameters.androidSqlitePatchFile.get().asFile
-        execOperations.exec {
-            this.commandLine("patch", "--strip=0", "--silent")
-            this.setStandardInput(androidPatchFile.inputStream())
-            this.workingDir = outputDir
+        try {
+            execOperations.exec {
+                this.commandLine("patch", "--strip=0", "--silent")
+                this.setStandardInput(androidPatchFile.inputStream())
+                this.workingDir = outputDir
+            }.rethrowFailure().assertNormalExitValue()
+        } catch (execException: ExecException) {
+            throw ExecException("Failed to execute `patch`", execException)
         }
+
         outputDir.walkBottomUp().forEach { file ->
             if (file.extension == "orig") {
                 file.delete()

@@ -25,6 +25,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.newInstance
 import org.gradle.kotlin.dsl.property
 import org.gradle.process.ExecOperations
+import org.gradle.process.internal.ExecException
 import org.gradle.work.DisableCachingByDefault
 import ru.pixnews.wasm.builder.base.emscripten.EmscriptenSdk
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
@@ -143,12 +144,16 @@ public abstract class IcuBuildWasmLibraryTask @Inject constructor(
             emConfigure,
             emBuild,
             emInstall,
-        ).forEach {
-            execOperations.exec {
-                commandLine = it
-                workingDir = buildDir
-                environment = hostEnv
-            }.rethrowFailure().assertNormalExitValue()
+        ).forEach { cmdLine ->
+            try {
+                execOperations.exec {
+                    commandLine = cmdLine
+                    workingDir = buildDir
+                    environment = hostEnv
+                }.rethrowFailure().assertNormalExitValue()
+            } catch (execException: ExecException) {
+                throw ExecException("Failed to execute `$cmdLine`", execException)
+            }
         }
     }
 

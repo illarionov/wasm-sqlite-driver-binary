@@ -19,6 +19,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.process.ExecOperations
+import org.gradle.process.internal.ExecException
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -118,11 +119,18 @@ public abstract class EmscriptenSdk @Inject constructor(
         val emcc = getEmscriptenExecutableOrThrow(emccExecutablePath).toString()
 
         val stdErr = ByteArrayOutputStream()
-        execOperations.exec {
-            commandLine = listOf(emcc, "-v")
-            errorOutput = stdErr
-            environment = getEmsdkEnvironment()
-        }.rethrowFailure().assertNormalExitValue()
+        try {
+            execOperations.exec {
+                commandLine = listOf(emcc, "-v")
+                errorOutput = stdErr
+                environment = getEmsdkEnvironment()
+            }.rethrowFailure().assertNormalExitValue()
+        } catch (execException: ExecException) {
+            throw ExecException(
+                "Failed to execute `emcc -v`. Make sure Emscripten SDK is installed correctly",
+                execException,
+            )
+        }
 
         val firstLine: String = ByteArrayInputStream(stdErr.toByteArray()).bufferedReader().use {
             it.readLine()
