@@ -54,9 +54,16 @@ dependencies {
 
 ## Development notes
 
-To build the project, you need to have Emscripten SDK installed.
-Check [this link](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended)
-for instructions on installing the SDK.
+To build the project, you will need to install the following software in addition to the JVM:
+
+ - GNU Make 
+   - on macOS: `brew install make`
+ - [WABT](https://github.com/WebAssembly/wabt) (The WebAssembly Binary Toolkit)
+   - on macOS: `brew install wabt`
+   - on Ubuntu Linux: `apt install wabt`
+ - [Emscripten SDK](https://emscripten.org/)
+   - Check [this link](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended)
+   for instructions on installing the Emscripten SDK.
 
 `EMSDK` environment variable must point to the root of the installed SDK.
 Version of the SDK used in the project must be activated (check the `emscripten` version
