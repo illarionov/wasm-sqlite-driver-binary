@@ -18,14 +18,14 @@ public fun <R : Any> WasmSourceReader.readOrThrow(
     val candidates = getSourcePathCandidates(url)
     val failedPaths: MutableList<Pair<String, Throwable>> = mutableListOf()
     for (sourceFactory in candidates) {
-        val (wasmSource: Source, path: String) = sourceFactory()
-        wasmSource.use { source ->
-            val result: Result<R> = transform(source, path)
-            result.onSuccess {
-                return it
-            }.onFailure {
-                failedPaths.add(path to it)
-            }
+        val wasmSourceFactory = sourceFactory()
+        val result: Result<R> = wasmSourceFactory.createSource().use { source ->
+            transform(source, wasmSourceFactory.path)
+        }
+        result.onSuccess {
+            return it
+        }.onFailure {
+            failedPaths.add(wasmSourceFactory.path to it)
         }
     }
     if (failedPaths.isEmpty()) {

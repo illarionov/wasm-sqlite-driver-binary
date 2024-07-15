@@ -25,7 +25,7 @@ public class LinuxWasmSourceReader(
             WasmBinarySource.Factory {
                 object : WasmBinarySource {
                     override val path: String = candidate.toString()
-                    override val source: Source = fileSystem.source(candidate)
+                    override fun createSource(): Source = fileSystem.source(candidate)
                 }
             }
         }

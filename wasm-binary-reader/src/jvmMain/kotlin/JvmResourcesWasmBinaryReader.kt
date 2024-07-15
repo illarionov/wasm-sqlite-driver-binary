@@ -17,7 +17,9 @@ public class JvmResourcesWasmBinaryReader : WasmSourceReader {
             WasmBinarySource.Factory {
                 object : WasmBinarySource {
                     override val path: String = url.toString()
-                    override val source: Source = URI(url.url).toURL().openStream().source()
+                    override fun createSource(): Source {
+                        return URI(url.url).toURL().openStream().source()
+                    }
                 }
             },
         )

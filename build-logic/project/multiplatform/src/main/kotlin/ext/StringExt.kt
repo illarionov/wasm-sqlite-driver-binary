@@ -4,6 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.reader
+package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.ext
 
-public actual fun getDefaultWasmSourceReader(): WasmSourceReader = AppleFileManagerSourceReader()
+import java.util.Locale
+
+internal fun String.capitalizeAscii(): String = replaceFirstChar {
+    if (it.isLowerCase()) {
+        it.titlecase(Locale.ROOT)
+    } else {
+        it.toString()
+    }
+}
