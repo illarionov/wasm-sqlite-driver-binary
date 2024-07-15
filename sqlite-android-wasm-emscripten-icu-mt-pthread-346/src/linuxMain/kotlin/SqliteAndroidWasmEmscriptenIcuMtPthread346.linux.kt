@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("MatchingDeclarationName")
+
 package ru.pixnews.wasm.sqlite.binary
 
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
