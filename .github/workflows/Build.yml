@@ -26,7 +26,7 @@ permissions:
 jobs:
   assemble:
     name: Assemble
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 60
     if: ${{ !contains(github.event.head_commit.message, '[ci skip]') }}
 
@@ -38,7 +38,7 @@ jobs:
 
       - name: Install WABT
         run: |
-          curl -fsSL https://github.com/WebAssembly/wabt/releases/download/1.0.35/wabt-1.0.35-ubuntu-20.04.tar.gz | \
+          curl -fsSL https://github.com/WebAssembly/wabt/releases/download/1.0.35/wabt-1.0.35-macos-14.tar.gz | \
             tar -C $HOME -xzf -
           echo "$HOME/wabt-1.0.35/bin" >> $GITHUB_PATH
 
@@ -73,7 +73,7 @@ jobs:
           build --stacktrace --scan
 
       - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action/macos@v2
         if: ${{ !cancelled() && (github.actor != 'dependabot[bot]') }}
         with:
           comment_mode: off
@@ -86,7 +86,7 @@ jobs:
           find . \(
           -type d -path '*/build/reports'  -o -type d -path '*/build/outputs'
           \) -print0
-          | xargs -0 tar -c -I 'zstd -19 -T0' -f test-reports.tar.zst
+          | xargs -0 tar -c --zstd --options zstd:compression-level=20 -f test-reports.tar.zst
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
