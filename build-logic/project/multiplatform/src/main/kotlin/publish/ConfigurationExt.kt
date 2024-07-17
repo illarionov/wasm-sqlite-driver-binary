@@ -17,17 +17,29 @@ import org.gradle.api.attributes.java.TargetJvmEnvironment.TARGET_JVM_ENVIRONMEN
 import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.named
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.Companion.konanTargetAttribute
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 
-internal fun AttributeContainer.addLinuxX64MultiplatformResourcesAttributes(
+internal fun AttributeContainer.addMultiplatformNativeResourcesAttributes(
     objects: ObjectFactory,
+    target: KotlinTarget,
 ) {
     attribute(CATEGORY_ATTRIBUTE, objects.named(LIBRARY))
     attribute(BUNDLING_ATTRIBUTE, objects.named(EXTERNAL))
     attribute(TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named("non-jvm"))
-    attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named("kotlin-multiplatformresources"))
-    attribute(USAGE_ATTRIBUTE, objects.named("kotlin-multiplatformresources"))
+    attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(target.multiplatformResourcesUsageAttribute))
+    attribute(USAGE_ATTRIBUTE, objects.named(target.multiplatformResourcesUsageAttribute))
 
-    attribute(konanTargetAttribute, "linux_x64")
-    attribute(KotlinPlatformType.attribute, KotlinPlatformType.native)
+    if (target is KotlinNativeTarget) {
+        attribute(konanTargetAttribute, target.konanTarget.name)
+        attribute(KotlinPlatformType.attribute, KotlinPlatformType.native)
+    }
 }
+
+private val KotlinTarget.multiplatformResourcesUsageAttribute: String
+    get() = when {
+        this is KotlinJsIrTarget -> "kotlin-multiplatformresourcesjs"
+        else -> "kotlin-multiplatformresources"
+    }

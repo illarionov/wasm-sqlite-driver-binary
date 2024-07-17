@@ -19,6 +19,7 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.ext.capitalizeAscii
 import javax.inject.Inject
 
 internal open class WasmPublishedResourcesConfigurator @Inject constructor(
@@ -52,33 +53,33 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         kotlinJvmSourceSet.resources.srcDir(resourcesDir)
     }
 
-    fun setupLinuxX64Resources(
+    fun setupNativeResources(
         linuxTarget: KotlinTarget,
         wasmFiles: FileCollection,
         projectName: String,
         projectVersion: Provider<String>,
     ) {
-        val zipForPublicationDir = wasmPaths.linuxX64Root.map { it.dir("zip-for-publication") }
-        val packZipForPublicationTask = setupPackageLinuxResourcesTask(
-            zipForPublicationDir = zipForPublicationDir,
+        val packZipForPublicationTask = setupPackageResourcesTask(
+            targetName = linuxTarget.targetName,
             wasmFiles = wasmFiles,
             projectName = projectName,
             projectVersion = projectVersion,
         )
-        setupLinuxX64Publication(
-            linuxTarget = linuxTarget,
+        setupPublication(
+            target = linuxTarget,
             archiveForPublication = packZipForPublicationTask.flatMap { it.archiveFile },
         )
     }
 
-    private fun setupPackageLinuxResourcesTask(
-        zipForPublicationDir: Provider<Directory>,
+    private fun setupPackageResourcesTask(
+        targetName: String,
         wasmFiles: FileCollection,
         projectName: String,
         projectVersion: Provider<String>,
+        subdirInsideZip: String = "wsohResources/${projectName.replace("-", "_")}/",
     ): Provider<Zip> {
-        val unpackedSubdir = "wsohResources/${projectName.replace("-", "_")}/"
-        return tasks.register<Zip>("packageLinuxX64Resources") {
+        val zipForPublicationDir = wasmPaths.rootForTarget(targetName).map { it.dir("zip-for-publication") }
+        return tasks.register<Zip>("package${targetName.capitalizeAscii()}Resources") {
             archiveBaseName.set(projectName)
             archiveVersion.set(projectVersion)
             archiveClassifier.set("kotlin_resources")
@@ -89,7 +90,7 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
             from(wasmFiles) {
                 include("*.wasm")
             }
-            into(unpackedSubdir)
+            into(subdirInsideZip)
 
             isReproducibleFileOrder = true
             isPreserveFileTimestamps = false
@@ -97,21 +98,23 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
     }
 
     @Suppress("UnstableApiUsage")
-    private fun setupLinuxX64Publication(
-        linuxTarget: KotlinTarget,
+    private fun setupPublication(
+        target: KotlinTarget,
         archiveForPublication: Provider<RegularFile>,
     ) {
-        val publishedConfiguration = configurations.consumable("wasmSqliteReleasePackedLinuxX64Elements") {
-            description = "Wasm binaries published as Kotlin Multiplatform Resources"
+        val publishedConfiguration = configurations.consumable(
+            "wasmSqliteReleasePacked${target.targetName.capitalizeAscii()}Elements",
+        ) {
+            description = "Wasm binaries published as Kotlin Multiplatform Resources for ${target.targetName}"
             attributes {
-                addLinuxX64MultiplatformResourcesAttributes(objects)
+                addMultiplatformNativeResourcesAttributes(objects, target)
             }
             outgoing {
                 artifact(archiveForPublication)
             }
         }.get()
 
-        linuxTarget.addVariantsFromConfigurationsToPublication(publishedConfiguration) {
+        target.addVariantsFromConfigurationsToPublication(publishedConfiguration) {
             mapToMavenScope("runtime")
         }
     }
@@ -121,6 +124,7 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
     ) {
         val root: Provider<Directory> = layout.buildDirectory.dir("wasmLibraries")
         val jvmRoot: Provider<Directory> = root.map { it.dir("jvm") }
-        val linuxX64Root: Provider<Directory> = root.map { it.dir("linuxX64") }
+
+        fun rootForTarget(targetName: String): Provider<Directory> = root.map { it.dir(targetName) }
     }
 }
