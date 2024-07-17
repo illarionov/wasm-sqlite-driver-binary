@@ -45,10 +45,10 @@ Add the dependencies:
 ```kotlin
 dependencies {
     // Version with multithreading
-    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-346:0.1-alpha07")
+    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-346:0.1-alpha08")
     
     // Single-threaded version
-    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-346:0.1-alpha07")
+    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-346:0.1-alpha08")
 }
 ```
 

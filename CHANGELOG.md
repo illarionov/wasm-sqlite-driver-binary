@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.1-alpha08] — 2024-07-17
+
+### Added
+
+- MacOS target
+
+### Changed
+
+- `wasm-binary-reader` updated for MacOS target
+
 ## [0.1-alpha07] — 2024-07-05
 
 ### Added
