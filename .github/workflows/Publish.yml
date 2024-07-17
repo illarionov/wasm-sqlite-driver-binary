@@ -33,11 +33,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install WABT
+      - name: Install required software
         run: |
-          curl -fsSL https://github.com/WebAssembly/wabt/releases/download/1.0.35/wabt-1.0.35-macos-14.tar.gz | \
-            tar -C $HOME -xzf -
-          echo "$HOME/wabt-1.0.35/bin" >> $GITHUB_PATH
+          brew update
+          brew install make wabt
 
       - name: Install EMSDK
         uses: mymindstorm/setup-emsdk@v14
