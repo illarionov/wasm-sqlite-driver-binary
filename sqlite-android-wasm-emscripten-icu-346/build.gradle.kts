@@ -69,6 +69,7 @@ sqlite3Build {
 kotlin {
     jvm()
     linuxX64()
+    iosArm64()
     iosSimulatorArm64()
     iosX64()
     macosX64()
