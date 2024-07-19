@@ -29,7 +29,7 @@ public interface WasmSourceUrl {
 
         override fun hashCode(): Int = url.hashCode()
 
-        override fun toString(): String = "DefaultWasmSourceUrl('$url')"
+        override fun toString(): String = "WasmSourceUrl('$url')"
     }
 
     public companion object {

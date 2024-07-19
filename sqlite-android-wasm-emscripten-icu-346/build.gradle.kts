@@ -68,12 +68,17 @@ sqlite3Build {
 
 kotlin {
     jvm()
+    js {
+        browser()
+        nodejs()
+    }
     linuxX64()
     iosArm64()
     iosSimulatorArm64()
     iosX64()
     macosX64()
     macosArm64()
+    mingwX64()
 
     sourceSets {
         commonMain.dependencies {
