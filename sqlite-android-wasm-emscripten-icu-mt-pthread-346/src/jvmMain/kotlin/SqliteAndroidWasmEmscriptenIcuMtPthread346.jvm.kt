@@ -10,7 +10,7 @@ package ru.pixnews.wasm.sqlite.binary
 
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 
-internal actual fun getSqliteAndroidWasmEmscriptenIcuMtPthread346Url(): WasmSourceUrl = WasmSourceUrl.create(
+internal actual fun getSqliteAndroidWasmEmscriptenIcuMtPthread346Url(): WasmSourceUrl = WasmSourceUrl(
     requireNotNull(
         SqliteAndroidWasmEmscriptenIcuMtPthread346::class.java.getResource(
             "sqlite3-android-icu-mt-pthread-3460000.wasm",

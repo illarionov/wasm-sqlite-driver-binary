@@ -6,6 +6,7 @@
 
 package ru.pixnews.wasm.sqlite.binary.base
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 
 public interface WasmSourceUrl {
@@ -34,6 +35,7 @@ public interface WasmSourceUrl {
 
     public companion object {
         @JvmStatic
-        public fun create(url: String): WasmSourceUrl = DefaultWasmSourceUrl(url)
+        @JvmName("create")
+        public operator fun invoke(url: String): WasmSourceUrl = DefaultWasmSourceUrl(url)
     }
 }
