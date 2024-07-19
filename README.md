@@ -1,6 +1,6 @@
 # Wasm SQLite binaries
 
-SQLite compiled into WebAssembly and bundled into JAR archives for use in the [Wasm-sqlite-open-helper] project.
+SQLite compiled into WebAssembly and bundled into JAR archives and Kotlin Multiplatform Resources for use in the [Wasm-sqlite-open-helper] project.
 
 The code for building SQLite has been moved to this repository after multiple unsuccessful attempts to eliminate 
 full recompilation of SQLite each time there were minor changes to the Gradle build scripts in the main project.
@@ -51,6 +51,15 @@ dependencies {
     implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-346:0.1-alpha08")
 }
 ```
+
+For native Kotlin Multiplatform targets (`iosArm64`, `iosSimulatorArm64`, `linuxX64`, `macosX64`, etc.),
+Sqlite binaries are packaged and published in a format compatible with Kotlin Multiplatform Resources (not yet 
+publicly announced).
+To use it in your project, you can try the [Compose Multiplatform Resources] plugin, or check the 
+[resources.gradle.kts] of the main project.
+
+[Compose Multiplatform Resources]: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-images-resources.html
+[resources.gradle.kts]: https://github.com/illarionov/wasm-sqlite-open-helper/blob/main/build-logic/project/multiplatform/src/main/kotlin/resources.gradle.kts
 
 ## Development notes
 
