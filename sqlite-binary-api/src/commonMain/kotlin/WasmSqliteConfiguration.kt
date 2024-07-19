@@ -16,7 +16,7 @@ public interface WasmSqliteConfiguration {
     public companion object {
         @JvmField
         public val UNSET: WasmSqliteConfiguration = object : WasmSqliteConfiguration {
-            override val sqliteUrl: WasmSourceUrl = WasmSourceUrl.create("")
+            override val sqliteUrl: WasmSourceUrl = WasmSourceUrl("")
             override val wasmMinMemorySize: Long = 0
             override val requireThreads: Boolean = false
         }

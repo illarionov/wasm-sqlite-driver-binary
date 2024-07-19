@@ -10,7 +10,7 @@ package ru.pixnews.wasm.sqlite.binary
 
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 
-private val sqliteAndroidWasmEmscriptenIcuMtPthread346Url = WasmSourceUrl.create(
+private val sqliteAndroidWasmEmscriptenIcuMtPthread346Url = WasmSourceUrl(
     "wsohResources/sqlite_android_wasm_emscripten_icu_mt_pthread_346/sqlite3-android-icu-mt-pthread-3460000.wasm",
 )
 
