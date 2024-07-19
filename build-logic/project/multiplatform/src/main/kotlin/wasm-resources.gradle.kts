@@ -25,11 +25,10 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
             "iosArm64",
             "iosSimulatorArm64",
             "iosX64",
-            "js",
             "linuxX64",
             "macosArm64",
             "macosX64",
-            "mingwX64",
+            // XX: js and mingwX64 are disabled until needed
         )
         targets.matching { it.name in targetsWithResources }.configureEach {
             resourcesConfigurator.setupNativeJsResources(
