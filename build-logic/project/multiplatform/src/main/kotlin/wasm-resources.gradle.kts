@@ -29,6 +29,7 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
             "linuxX64",
             "macosArm64",
             "macosX64",
+            "mingwX64",
         )
         targets.matching { it.name in targetsWithResources }.configureEach {
             resourcesConfigurator.setupNativeJsResources(

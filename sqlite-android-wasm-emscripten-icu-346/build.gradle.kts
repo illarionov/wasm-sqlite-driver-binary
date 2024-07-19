@@ -78,6 +78,7 @@ kotlin {
     iosX64()
     macosX64()
     macosArm64()
+    mingwX64()
 
     sourceSets {
         commonMain.dependencies {
