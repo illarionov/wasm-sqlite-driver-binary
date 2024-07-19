@@ -9,12 +9,12 @@ diktat = "2.0.0"
 gradle-maven-publish-plugin = "0.29.0"
 kotlin = "2.0.0"
 kotlinx-binary-compatibility-validator = "0.14.0"
-okio = "3.9.0"
 spotless = "6.25.0"
+kotlinx-io ="0.5.1"
 
 [libraries]
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
-okio-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 
 # Dependencies of the included build-logic
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }

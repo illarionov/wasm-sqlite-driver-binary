@@ -40,7 +40,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.okio.okio)
+            api(libs.kotlinx.io)
         }
     }
 }
