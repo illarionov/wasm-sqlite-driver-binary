@@ -1,5 +1,17 @@
 # Change Log
 
+## [Unreleased]
+
+### Changed
+
+- okio replaced with kotlinx-io
+
+## [0.1-alpha09] — 2024-07-19
+
+### Added
+
+- Ios target
+
 ## [0.1-alpha08] — 2024-07-17
 
 ### Added
@@ -24,7 +36,7 @@
 
 ### Added
 
-- Artifacts published for the Kolin LinuxX64 target as Multiplatform Resources
+- Artifacts published for the Kotlin LinuxX64 target as Multiplatform Resources
 
 ### Removed
 
