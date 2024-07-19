@@ -6,12 +6,12 @@
 
 package ru.pixnews.wasm.sqlite.binary.reader
 
-import okio.Source
+import kotlinx.io.RawSource
 
 public interface WasmBinarySource {
     public val path: String
 
-    public fun createSource(): Source
+    public fun createSource(): RawSource
 
     public fun interface Factory {
         public operator fun invoke(): WasmBinarySource

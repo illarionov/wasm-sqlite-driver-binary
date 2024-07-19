@@ -9,9 +9,9 @@ package ru.pixnews.wasm.sqlite.binary.reader
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
-import okio.Buffer
-import okio.FileNotFoundException
-import okio.Source
+import kotlinx.io.Buffer
+import kotlinx.io.RawSource
+import kotlinx.io.files.FileNotFoundException
 import platform.Foundation.NSFileManager
 import platform.posix.memcpy
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
@@ -42,7 +42,7 @@ public class AppleFileManagerSourceReader(
         private val fileManager: NSFileManager,
         override val path: String,
     ) : WasmBinarySource {
-        override fun createSource(): Source {
+        override fun createSource(): RawSource {
             val data = fileManager.contentsAtPath(path) ?: throw FileNotFoundException("File not found: $path")
             // TODO: FileHandle source?
             val bytes = ByteArray(data.length.toInt()).apply {

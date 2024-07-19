@@ -6,8 +6,7 @@
 
 package ru.pixnews.wasm.sqlite.open.helper.common.xdg
 
-import okio.Path
-import okio.Path.Companion.toPath
+import kotlinx.io.files.Path
 
 /**
  * Simple helper for getting base directories according to the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
@@ -28,7 +27,7 @@ private class DefaultXdgBaseDirectory(
 
     fun getXdgDataHome(): Path? {
         val dataHome = envReader.getEnv("XDG_DATA_HOME").toAbsolutePathOrNull()
-        return dataHome ?: getUserHome()?.resolve(".local/share")
+        return dataHome ?: getUserHome()?.let { Path(it, ".local", "share") }
     }
 
     fun getUserHome(): Path? {
@@ -51,13 +50,13 @@ private class DefaultXdgBaseDirectory(
 
     private companion object {
         private val DEFAULT_XDG_DATA_DIRS = listOf(
-            "/usr/local/share/".toPath(),
-            "/usr/share/".toPath(),
+            Path("/usr/local/share/"),
+            Path("/usr/share/"),
         )
 
         private fun String?.toAbsolutePathOrNull() = this
             ?.ifBlank { null }
-            ?.toPath()
+            ?.let(::Path) // XXX: no path validation
             ?.takeIf(Path::isAbsolute)
     }
 }

@@ -6,14 +6,14 @@
 
 package ru.pixnews.wasm.sqlite.binary.reader
 
-import okio.Source
-import okio.buffer
-import okio.use
+import kotlinx.io.RawSource
+import kotlinx.io.buffered
+import kotlinx.io.readByteArray
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 
 public fun <R : Any> WasmSourceReader.readOrThrow(
     url: WasmSourceUrl,
-    transform: (Source, String) -> Result<R>,
+    transform: (RawSource, String) -> Result<R>,
 ): R {
     val candidates = getSourcePathCandidates(url)
     val failedPaths: MutableList<Pair<String, Throwable>> = mutableListOf()
@@ -40,9 +40,21 @@ public fun <R : Any> WasmSourceReader.readOrThrow(
     }
 }
 
+private fun <R> RawSource.use(block: (RawSource) -> R): R {
+    return try {
+        block(this)
+    } finally {
+        try {
+            this.close()
+        } catch (@Suppress("SwallowedException", "TooGenericExceptionCaught") ex: Throwable) {
+            // IGNORE
+        }
+    }
+}
+
 public fun WasmSourceReader.readBytesOrThrow(url: WasmSourceUrl): ByteArray = readOrThrow(url) { source, _ ->
     runCatching {
-        source.buffer().readByteArray()
+        source.buffered().readByteArray()
     }
 }
 

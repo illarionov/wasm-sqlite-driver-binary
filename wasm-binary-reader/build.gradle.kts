@@ -41,7 +41,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.sqliteBinaryApi)
-            api(libs.okio.okio)
+            api(libs.kotlinx.io)
         }
         nativeMain.dependencies {
             implementation(projects.commonXdg)
