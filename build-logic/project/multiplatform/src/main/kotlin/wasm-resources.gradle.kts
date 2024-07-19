@@ -21,16 +21,17 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
     val wasmFiles = configurations.named("wasmSqliteReleaseElements").get().artifacts.files
     val resourcesConfigurator: WasmPublishedResourcesConfigurator = objects.newInstance()
     extensions.configure<KotlinMultiplatformExtension> {
-        val nativeResourcesTargets = setOf(
+        val targetsWithResources = setOf(
             "iosArm64",
             "iosSimulatorArm64",
             "iosX64",
+            "js",
             "linuxX64",
             "macosArm64",
             "macosX64",
         )
-        targets.matching { it.name in nativeResourcesTargets }.configureEach {
-            resourcesConfigurator.setupNativeResources(
+        targets.matching { it.name in targetsWithResources }.configureEach {
+            resourcesConfigurator.setupNativeJsResources(
                 linuxTarget = this,
                 wasmFiles = wasmFiles,
                 projectName = project.name,

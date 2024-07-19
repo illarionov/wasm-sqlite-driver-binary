@@ -4,16 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("MatchingDeclarationName")
-
 package ru.pixnews.wasm.sqlite.binary
 
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 
-internal actual fun getSqliteAndroidWasmEmscriptenIcu346Url(): WasmSourceUrl = WasmSourceUrl.create(
-    requireNotNull(
-        SqliteAndroidWasmEmscriptenIcu346::class.java.getResource(
-            "sqlite3-android-icu-3460000.wasm",
-        ),
-    ).toString(),
+private val sqliteAndroidWasmEmscriptenIcu346Url = WasmSourceUrl.create(
+    "wsohResources/sqlite_android_wasm_emscripten_icu_346/sqlite3-android-icu-3460000.wasm",
 )
+
+internal actual fun getSqliteAndroidWasmEmscriptenIcu346Url(): WasmSourceUrl = sqliteAndroidWasmEmscriptenIcu346Url

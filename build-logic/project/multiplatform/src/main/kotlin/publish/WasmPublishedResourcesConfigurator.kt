@@ -53,7 +53,7 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         kotlinJvmSourceSet.resources.srcDir(resourcesDir)
     }
 
-    fun setupNativeResources(
+    fun setupNativeJsResources(
         linuxTarget: KotlinTarget,
         wasmFiles: FileCollection,
         projectName: String,

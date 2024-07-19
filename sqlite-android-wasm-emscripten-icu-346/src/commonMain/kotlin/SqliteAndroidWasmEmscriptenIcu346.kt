@@ -6,6 +6,13 @@
 
 package ru.pixnews.wasm.sqlite.binary
 
+import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 import ru.pixnews.wasm.sqlite.binary.base.WasmSqliteConfiguration
 
-public expect object SqliteAndroidWasmEmscriptenIcu346 : WasmSqliteConfiguration
+internal expect fun getSqliteAndroidWasmEmscriptenIcu346Url(): WasmSourceUrl
+
+public object SqliteAndroidWasmEmscriptenIcu346 : WasmSqliteConfiguration {
+    override val sqliteUrl: WasmSourceUrl get() = getSqliteAndroidWasmEmscriptenIcu346Url()
+    override val wasmMinMemorySize: Long = 50_331_648L
+    override val requireThreads: Boolean = false
+}
