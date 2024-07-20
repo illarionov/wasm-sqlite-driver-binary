@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [0.1-alpha10] — 2024-07-20
 
 ### Changed
 
