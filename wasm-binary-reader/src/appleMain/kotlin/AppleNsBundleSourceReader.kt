@@ -6,15 +6,12 @@
 
 package ru.pixnews.wasm.sqlite.binary.reader
 
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.usePinned
-import kotlinx.io.Buffer
 import kotlinx.io.RawSource
 import kotlinx.io.files.FileNotFoundException
+import kotlinx.io.files.FileSystem
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 import platform.Foundation.NSBundle
-import platform.Foundation.NSFileManager
-import platform.posix.memcpy
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 
 /**
@@ -25,14 +22,13 @@ import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
  */
 public class AppleNsBundleSourceReader(
     private val bundle: NSBundle = NSBundle.mainBundle,
-    private val fileManager: NSFileManager = NSFileManager.defaultManager,
+    private val fileSystem: FileSystem = SystemFileSystem,
     private val wshohResourcesRoot: String = "wsoh-resources",
 ) : WasmSourceReader {
     override fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmBinarySource.Factory> = listOf(
         WasmBinarySource.Factory { NsBundleBinarySource(url) },
     )
 
-    @OptIn(ExperimentalForeignApi::class)
     private inner class NsBundleBinarySource(
         private val url: WasmSourceUrl,
     ) : WasmBinarySource {
@@ -40,25 +36,12 @@ public class AppleNsBundleSourceReader(
 
         override fun createSource(): RawSource {
             val fullPath = url.url
-
             val absolutePath = bundle.pathForResource(
                 name = fullPath.substringBeforeLast("."),
                 ofType = fullPath.substringAfterLast("."),
                 inDirectory = wshohResourcesRoot,
             ) ?: throw FileNotFoundException("File not found in bundle: $fullPath. Bundle base: ${bundle.bundlePath}")
-            val data = fileManager.contentsAtPath(absolutePath)
-                ?: throw FileNotFoundException("Can not read $absolutePath")
-
-            // TODO: FileHandle source?
-            val bytes = ByteArray(data.length.toInt()).apply {
-                usePinned { pinnedByteArray ->
-                    memcpy(pinnedByteArray.addressOf(0), data.bytes, data.length)
-                }
-            }
-
-            return Buffer().apply {
-                write(bytes)
-            }
+            return fileSystem.source(Path(absolutePath))
         }
     }
 }
