@@ -36,6 +36,7 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
                 wasmFiles = wasmFiles,
                 projectName = project.name,
                 projectVersion = provider { project.version.toString() },
+                archiveBaseName = project.extensions.getByType<BasePluginExtension>().archivesName,
             )
         }
 
