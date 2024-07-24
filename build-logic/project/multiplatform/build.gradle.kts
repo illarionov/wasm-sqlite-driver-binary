@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("UnstableApiUsage")
+
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     `kotlin-dsl`
 }
@@ -14,4 +18,79 @@ dependencies {
     implementation(project(":lint"))
     implementation(libs.gradle.maven.publish.plugin)
     implementation(libs.kotlin.gradle.plugin)
+}
+
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter(libs.versions.junit5)
+            targets {
+                all {
+                    testTask.configure {
+                        configureTestTaskDefaults()
+                    }
+                }
+            }
+            dependencies {
+                implementation(platform(libs.junit.bom))
+
+                implementation(libs.assertk)
+                implementation(libs.junit.jupiter.api)
+                implementation(libs.junit.jupiter.params)
+                implementation(libs.mockk)
+                runtimeOnly(libs.junit.jupiter.engine)
+            }
+        }
+        withType(JvmTestSuite::class).matching {
+            it.name in setOf("functionalTest")
+        }.configureEach {
+            useJUnitJupiter(libs.versions.junit5)
+
+            dependencies {
+                implementation(project())
+                implementation(libs.assertk)
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        configureTestTaskDefaults()
+//                        dependsOn(tasks.named("publishAllPublicationsToFunctionalTestsRepository"))
+//                        inputs.dir(functionalTestRepository)
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+        register<JvmTestSuite>("functionalTest") {
+            testType = "functional-test"
+        }
+    }
+}
+
+private fun Test.configureTestTaskDefaults() {
+    maxHeapSize = "1512M"
+    jvmArgs = listOf("-XX:MaxMetaspaceSize=768M")
+    testLogging {
+        if (providers.gradleProperty("verboseTest").map(String::toBoolean).getOrElse(false)) {
+            events = setOf(
+                TestLogEvent.FAILED,
+                TestLogEvent.STANDARD_ERROR,
+                TestLogEvent.STANDARD_OUT,
+            )
+        } else {
+            events = setOf(TestLogEvent.FAILED)
+        }
+    }
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = providers.environmentVariable("TEST_JDK_VERSION")
+            .map { JavaLanguageVersion.of(it.toInt()) }
+            .orElse(JavaLanguageVersion.of(21))
+    }
+}
+
+gradlePlugin.testSourceSets.add(sourceSets["functionalTest"])
+
+tasks.named<Task>("check") {
+    dependsOn(testing.suites.named("functionalTest"))
 }

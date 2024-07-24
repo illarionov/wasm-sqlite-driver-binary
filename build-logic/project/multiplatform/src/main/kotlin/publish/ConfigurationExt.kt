@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.Companion.konanTargetAttribute
+import org.jetbrains.kotlin.gradle.targets.js.KotlinJsCompilerAttribute
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 
 internal fun AttributeContainer.addMultiplatformNativeResourcesAttributes(
@@ -35,6 +36,11 @@ internal fun AttributeContainer.addMultiplatformNativeResourcesAttributes(
     if (target is KotlinNativeTarget) {
         attribute(konanTargetAttribute, target.konanTarget.name)
         attribute(KotlinPlatformType.attribute, KotlinPlatformType.native)
+    }
+
+    if (target is KotlinJsIrTarget) {
+        attribute(KotlinJsCompilerAttribute.jsCompilerAttribute, KotlinJsCompilerAttribute.ir)
+        attribute(KotlinPlatformType.attribute, KotlinPlatformType.js)
     }
 }
 
