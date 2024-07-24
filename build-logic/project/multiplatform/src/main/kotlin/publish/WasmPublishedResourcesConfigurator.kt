@@ -13,6 +13,7 @@ import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFile
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.bundling.Zip
@@ -26,6 +27,7 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
     layout: ProjectLayout,
     private val tasks: TaskContainer,
     private val objects: ObjectFactory,
+    private val providers: ProviderFactory,
     private val configurations: ConfigurationContainer,
 ) {
     private val wasmPaths = WasmLibraryResourcesPaths(layout)
@@ -58,12 +60,14 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         wasmFiles: FileCollection,
         projectName: String,
         projectVersion: Provider<String>,
+        archiveBaseName: Provider<String> = providers.provider { projectName },
     ) {
         val packZipForPublicationTask = setupPackageResourcesTask(
             targetName = linuxTarget.targetName,
             wasmFiles = wasmFiles,
             projectName = projectName,
             projectVersion = projectVersion,
+            archiveBaseName = archiveBaseName,
         )
         setupPublication(
             target = linuxTarget,
@@ -71,16 +75,19 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun setupPackageResourcesTask(
         targetName: String,
         wasmFiles: FileCollection,
         projectName: String,
         projectVersion: Provider<String>,
-        subdirInsideZip: String = "wsohResources/${projectName.replace("-", "_")}/",
+        archiveBaseName: Provider<String>,
+        resourcePackage: String = getResourcePackage(projectName),
     ): Provider<Zip> {
         val zipForPublicationDir = wasmPaths.rootForTarget(targetName).map { it.dir("zip-for-publication") }
+        val subdirInsideZip = "wsohResources/$resourcePackage/"
         return tasks.register<Zip>("package${targetName.capitalizeAscii()}Resources") {
-            archiveBaseName.set(projectName)
+            this.archiveBaseName.set(archiveBaseName)
             archiveVersion.set(projectVersion)
             archiveClassifier.set("kotlin_resources")
             archiveExtension.set("zip")
@@ -95,6 +102,12 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
             isReproducibleFileOrder = true
             isPreserveFileTimestamps = false
         }
+    }
+
+    private fun getResourcePackage(
+        projectName: String,
+    ): String {
+        return projectName.lowercase().replace("-", "_")
     }
 
     @Suppress("UnstableApiUsage")
