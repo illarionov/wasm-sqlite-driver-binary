@@ -74,3 +74,7 @@ private fun Test.configureTestTaskDefaults() {
         }
     }
 }
+
+tasks.named<Task>("check") {
+    dependsOn(testing.suites.named("functionalTest"))
+}

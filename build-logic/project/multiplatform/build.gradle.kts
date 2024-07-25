@@ -7,17 +7,31 @@
 @file:Suppress("UnstableApiUsage")
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `kotlin-dsl`
+    `maven-publish`
 }
 
 group = "ru.pixnews.wasm.sqlite.binary.gradle.multiplatform"
 
 dependencies {
-    implementation(project(":lint"))
     implementation(libs.gradle.maven.publish.plugin)
     implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.kotlinx.binary.compatibility.validator.plugin)
+}
+
+val functionalTestRepository = rootProject.layout.buildDirectory.dir("functional-tests-plugin-repository")
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+    }
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 testing {
@@ -55,8 +69,8 @@ testing {
                 all {
                     testTask.configure {
                         configureTestTaskDefaults()
-//                        dependsOn(tasks.named("publishAllPublicationsToFunctionalTestsRepository"))
-//                        inputs.dir(functionalTestRepository)
+                        dependsOn(tasks.named("publishAllPublicationsToFunctionalTestsRepository"))
+                        inputs.dir(functionalTestRepository)
                         shouldRunAfter(test)
                     }
                 }
@@ -90,6 +104,18 @@ private fun Test.configureTestTaskDefaults() {
 }
 
 gradlePlugin.testSourceSets.add(sourceSets["functionalTest"])
+
+publishing {
+    repositories {
+        maven {
+            name = "functionalTests"
+            setUrl(functionalTestRepository)
+        }
+    }
+    publications.withType<MavenPublication>().all {
+        version = "9999"
+    }
+}
 
 tasks.named<Task>("check") {
     dependsOn(testing.suites.named("functionalTest"))
