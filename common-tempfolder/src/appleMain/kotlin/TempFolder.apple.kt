@@ -19,6 +19,7 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSItemReplacementDirectory
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
+import platform.Foundation.URLByAppendingPathComponent
 
 internal actual fun createPlatformTempFolder(namePrefix: String): TempFolder = AppleTempFolder.create()
 
