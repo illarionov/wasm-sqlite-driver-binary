@@ -15,8 +15,8 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_driver_binary_reader_version",
-    envVariableName = "WSOH_SQLITE_DRIVER_BINARY_READER_VERSION",
+    propertiesFileKey = "wsoh_common_tempfolder_version",
+    envVariableName = "WSOH_COMMON_TEMPFOLDER_VERSION",
 ).get()
 
 kotlin {
@@ -44,16 +44,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.sqliteBinaryApi)
             api(libs.kotlinx.io)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.assertk)
-            implementation(projects.commonTempfolder)
-        }
-        nativeMain.dependencies {
-            implementation(projects.commonXdg)
         }
     }
 }

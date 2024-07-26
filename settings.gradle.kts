@@ -29,6 +29,7 @@ buildscript {
 rootProject.name = "wasm-sqlite-open-helper-binary"
 
 include("common-xdg")
+include("common-tempfolder")
 include("sqlite-binary-api")
 include("wasm-binary-reader")
 include("icu-wasm")
