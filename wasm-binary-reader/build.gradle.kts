@@ -36,12 +36,20 @@ kotlin {
     linuxX64()
     macosArm64()
     macosX64()
-    mingwX64()
+    mingwX64 {
+        binaries.all {
+            linkerOpts("-lole32")
+        }
+    }
 
     sourceSets {
         commonMain.dependencies {
             api(projects.sqliteBinaryApi)
             api(libs.kotlinx.io)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.assertk)
         }
         nativeMain.dependencies {
             implementation(projects.commonXdg)

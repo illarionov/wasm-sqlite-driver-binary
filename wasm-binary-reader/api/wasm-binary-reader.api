@@ -3,7 +3,12 @@ public final class ru/pixnews/wasm/sqlite/binary/reader/JvmResourcesWasmBinaryRe
 	public fun getSourcePathCandidates (Lru/pixnews/wasm/sqlite/binary/base/WasmSourceUrl;)Ljava/util/List;
 }
 
-public final class ru/pixnews/wasm/sqlite/binary/reader/WasmBinaryReaderIoException : java/lang/RuntimeException {
+public class ru/pixnews/wasm/sqlite/binary/reader/WasmBinaryReaderException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class ru/pixnews/wasm/sqlite/binary/reader/WasmBinaryReaderIoException : ru/pixnews/wasm/sqlite/binary/reader/WasmBinaryReaderException {
 	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
