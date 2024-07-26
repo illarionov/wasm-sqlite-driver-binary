@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     `kotlin-dsl`
 }
@@ -13,6 +15,15 @@ group = "ru.pixnews.wasm.sqlite.binary.gradle.lint"
 dependencies {
     implementation(libs.detekt.plugin)
     implementation(libs.diktat.plugin)
-    implementation(libs.kotlinx.binary.compatibility.validator.plugin)
     implementation(libs.spotless.plugin)
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+    }
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_21
 }

@@ -86,6 +86,7 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
     ): Provider<Zip> {
         val zipForPublicationDir = wasmPaths.rootForTarget(targetName).map { it.dir("zip-for-publication") }
         val subdirInsideZip = "wsohResources/$resourcePackage/"
+
         return tasks.register<Zip>("package${targetName.capitalizeAscii()}Resources") {
             this.archiveBaseName.set(archiveBaseName)
             archiveVersion.set(projectVersion)
