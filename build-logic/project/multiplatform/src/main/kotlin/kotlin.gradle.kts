@@ -34,6 +34,7 @@ kotlin {
             languageSettings {
                 languageVersion = "1.9"
                 apiVersion = "1.9"
+                optIn("kotlin.ExperimentalStdlibApi")
             }
         }
     }

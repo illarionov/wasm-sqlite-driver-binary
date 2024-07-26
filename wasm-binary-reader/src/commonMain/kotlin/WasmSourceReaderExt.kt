@@ -15,17 +15,15 @@ public fun <R : Any> WasmSourceReader.readOrThrow(
     url: WasmSourceUrl,
     transform: (RawSource, String) -> Result<R>,
 ): R {
-    val candidates = getSourcePathCandidates(url)
+    val candidates: List<WasmBinarySource.Factory> = getSourcePathCandidates(url)
     val failedPaths: MutableList<Pair<String, Throwable>> = mutableListOf()
     for (sourceFactory in candidates) {
-        val wasmSourceFactory = sourceFactory()
-        val result: Result<R> = wasmSourceFactory.createSource().use { source ->
-            transform(source, wasmSourceFactory.path)
-        }
+        val wasmBinarySource: WasmBinarySource = sourceFactory()
+        val result: Result<R> = tryReadCandidate(wasmBinarySource, transform)
         result.onSuccess {
             return it
         }.onFailure {
-            failedPaths.add(wasmSourceFactory.path to it)
+            failedPaths.add(wasmBinarySource.path to it)
         }
     }
     if (failedPaths.isEmpty()) {
@@ -40,15 +38,18 @@ public fun <R : Any> WasmSourceReader.readOrThrow(
     }
 }
 
-private fun <R> RawSource.use(block: (RawSource) -> R): R {
-    return try {
-        block(this)
-    } finally {
-        try {
-            this.close()
-        } catch (@Suppress("SwallowedException", "TooGenericExceptionCaught") ex: Throwable) {
-            // IGNORE
-        }
+private fun <R : Any> tryReadCandidate(
+    candidate: WasmBinarySource,
+    transform: (RawSource, String) -> Result<R>,
+): Result<R> {
+    val source = try {
+        candidate.createSource()
+    } catch (@Suppress("TooGenericExceptionCaught") ex: Throwable) {
+        return Result.failure(WasmBinaryReaderException("Can not create source `${candidate.path}`", ex))
+    }
+
+    return source.use {
+        transform(it, candidate.path)
     }
 }
 
@@ -58,10 +59,15 @@ public fun WasmSourceReader.readBytesOrThrow(url: WasmSourceUrl): ByteArray = re
     }
 }
 
+public open class WasmBinaryReaderException(
+    message: String?,
+    throwable: Throwable? = null,
+) : RuntimeException(message, throwable)
+
 public class WasmBinaryReaderIoException(
     message: String?,
     paths: List<Pair<String, Throwable>> = emptyList(),
-) : RuntimeException(
+) : WasmBinaryReaderException(
     message,
     paths.lastOrNull()?.second,
 )
