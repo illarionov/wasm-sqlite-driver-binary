@@ -34,7 +34,11 @@ kotlin {
             languageSettings {
                 languageVersion = "1.9"
                 apiVersion = "1.9"
-                optIn("kotlin.ExperimentalStdlibApi")
+                listOf(
+                    "kotlin.RequiresOptIn",
+                    "kotlin.ExperimentalStdlibApi",
+                    "kotlinx.cinterop.ExperimentalForeignApi",
+                ).forEach(::optIn)
             }
         }
     }
