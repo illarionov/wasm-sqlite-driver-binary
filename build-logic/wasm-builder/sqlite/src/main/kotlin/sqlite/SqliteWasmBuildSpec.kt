@@ -4,18 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("BLANK_LINE_BETWEEN_PROPERTIES")
+@file:Suppress("BLANK_LINE_BETWEEN_PROPERTIES", "GENERIC_VARIABLE_WRONG_DECLARATION")
 
 package ru.pixnews.wasm.builder.sqlite
 
 import org.gradle.api.Named
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.ProjectLayout
+import org.gradle.api.file.RegularFile
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
+import org.gradle.api.tasks.TaskContainer
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.kotlin.dsl.register
 import ru.pixnews.wasm.builder.base.WasmBuildDsl
+import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
+import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
+import ru.pixnews.wasm.builder.emscripten.WasmStripTask
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -24,6 +32,7 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     objects: ObjectFactory,
     providers: ProviderFactory,
     projectLayout: ProjectLayout,
+    tasks: TaskContainer,
     private val name: String,
 ) : Named, Serializable {
     private val sqliteWasmFilesSrdDir = projectLayout.projectDirectory.dir("../sqlite-android-common/sqlite")
@@ -75,9 +84,23 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     public val sqliteConfigOptions: ListProperty<String> = objects.listProperty(String::class.java)
         .convention(SqliteConfigurationOptions.openHelperConfig())
 
+    public val buildTaskName: String = "compileSqlite${name.capitalizeAscii()}"
+
+    public val buildTask: TaskProvider<EmscriptenBuildTask> = tasks.register<EmscriptenBuildTask>(buildTaskName)
+
+    public val stripTaskName: String = "stripSqlite${name.capitalizeAscii()}"
+
+    public val stripTask: TaskProvider<WasmStripTask> = tasks.register<WasmStripTask>(stripTaskName)
+
+    public val unstrippedWasmOutput: Provider<RegularFile> = buildTask.flatMap {
+        it.outputDirectory.file(wasmUnstrippedFileName.get())
+    }
+
+    public val strippedWasmOutput: Provider<RegularFile> = stripTask.flatMap(WasmStripTask::destination)
+
     override fun getName(): String = name
 
     public companion object {
-        private const val serialVersionUID: Long = -2
+        private const val serialVersionUID: Long = -3
     }
 }

@@ -30,8 +30,6 @@ import ru.pixnews.wasm.builder.base.emscripten.wasm32Architecture
 import ru.pixnews.wasm.builder.base.emscripten.wasmBinaryLibraryElements
 import ru.pixnews.wasm.builder.base.emscripten.wasmRuntimeUsage
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
-import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
-import ru.pixnews.wasm.builder.emscripten.WasmStripTask
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath.STRIPPED_RESULT_DIR
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath.compileUnstrippedResultDir
 import ru.pixnews.wasm.builder.sqlite.internal.SqliteAdditionalArgumentProvider
@@ -119,17 +117,18 @@ afterEvaluate {
 }
 
 private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
-    val buildName = buildSpec.name.capitalizeAscii()
     val sqlite3c: FileCollection = if (buildSpec.sqlite3Source.isEmpty) {
         createSqliteSourceConfiguration(buildSpec.sqliteVersion)
     } else {
         buildSpec.sqlite3Source
     }
-    val unstrippedWasmFileName = buildSpec.wasmUnstrippedFileName.get()
-    val unstrippedJsFileName = unstrippedWasmFileName.substringBeforeLast(".wasm") + ".mjs"
-    val strippedWasmFileName = buildSpec.wasmFileName.get()
+    val unstrippedWasmFileName = buildSpec.wasmUnstrippedFileName
+    val unstrippedJsFileName = unstrippedWasmFileName.map { it.substringBeforeLast(".wasm") + ".mjs" }
+    val strippedWasmFileName = buildSpec.wasmFileName
+    val buildName = buildSpec.name.capitalizeAscii()
 
-    val buildSqliteTask = tasks.register<EmscriptenBuildTask>("compileSqlite$buildName") {
+    val buildSqliteTask = buildSpec.buildTask
+    buildSqliteTask.configure {
         val sqlite3cFile = sqlite3c.elements.map { it.first().asFile }
 
         group = "Build"
@@ -155,12 +154,13 @@ private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
         additionalArgumentProviders.add(additionalArgsProvider)
     }
 
-    val stripSqliteTask: TaskProvider<WasmStripTask> = tasks.register<WasmStripTask>("stripSqlite$buildName") {
+    val stripSqliteTask = buildSpec.stripTask
+    stripSqliteTask.configure {
         group = "Build"
         description = "Strip compiled SQLite `$buildName` Wasm binary"
-        source = buildSqliteTask.flatMap { it.outputDirectory.file(unstrippedWasmFileName) }
+        source = buildSqliteTask.flatMap { it.outputDirectory.file(unstrippedWasmFileName.get()) }
         val dstDir = layout.buildDirectory.dir(STRIPPED_RESULT_DIR)
-        destination = dstDir.map { it.file(strippedWasmFileName) }
+        destination = dstDir.zip(strippedWasmFileName) { dir, name -> dir.file(name) }
         doFirst {
             dstDir.get().asFile.let { dir ->
                 dir.walkBottomUp()
@@ -170,7 +170,10 @@ private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
         }
     }
 
-    setupOutgoingArtifacts(buildSqliteTask, stripSqliteTask, unstrippedWasmFileName)
+    setupOutgoingArtifacts(
+        buildSpec.strippedWasmOutput,
+        buildSpec.unstrippedWasmOutput,
+    )
 
     tasks.named("assemble").configure {
         dependsOn(stripSqliteTask)
@@ -178,22 +181,13 @@ private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
 }
 
 private fun setupOutgoingArtifacts(
-    buildSqliteTask: TaskProvider<EmscriptenBuildTask>,
-    stripSqliteTask: TaskProvider<WasmStripTask>,
-    unstrippedWasmFileName: String,
+    strippedWasm: Provider<RegularFile>,
+    unstrippedWasm: Provider<RegularFile>,
 ) {
     configurations.named("wasmSqliteDebugElements").get().outgoing {
-        artifacts {
-            artifact(buildSqliteTask.flatMap { it.outputDirectory.file(unstrippedWasmFileName) }) {
-                builtBy(buildSqliteTask)
-            }
-        }
+        artifact(unstrippedWasm)
     }
     configurations.named("wasmSqliteReleaseElements").get().outgoing {
-        artifacts {
-            artifact(stripSqliteTask.flatMap(WasmStripTask::destination)) {
-                builtBy(stripSqliteTask)
-            }
-        }
+        artifact(strippedWasm)
     }
 }
