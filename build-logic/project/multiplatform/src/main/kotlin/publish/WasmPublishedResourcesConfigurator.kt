@@ -124,7 +124,10 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
                 addMultiplatformNativeResourcesAttributes(objects, target)
             }
             outgoing {
-                artifact(archiveForPublication)
+                artifact(archiveForPublication) {
+                    extension = "zip"
+                    classifier = "kotlin_resources"
+                }
             }
         }.get()
 

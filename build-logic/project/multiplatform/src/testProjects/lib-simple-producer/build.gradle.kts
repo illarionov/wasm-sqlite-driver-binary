@@ -1,6 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
     id("maven-publish")
 }
 
@@ -24,6 +25,10 @@ val conf = configurations.consumable("wasmSqliteReleaseElements") {
 
 val testingRepository = project.layout.buildDirectory.dir("repo")
 
+publishedResources {
+    files.setFrom(layout.projectDirectory.file("resource.txt.wasm"))
+}
+
 publishing {
     repositories {
         maven {
@@ -35,5 +40,3 @@ publishing {
         version = "9999"
     }
 }
-
-apply(plugin = "ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
