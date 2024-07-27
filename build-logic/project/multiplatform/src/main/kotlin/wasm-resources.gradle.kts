@@ -7,6 +7,7 @@
 package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.PublishResourcesExtension
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.WasmPublishedResourcesConfigurator
 
 /*
@@ -16,9 +17,10 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
 }
 
+private val publishResourcesExtension = extensions.create("publishedResources", PublishResourcesExtension::class.java)
+
 pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
-    // XXX: Temporary build with unstripped symbols for debugging (wasmSqliteDebugElements) may be added
-    val wasmFiles = configurations.named("wasmSqliteReleaseElements").get().artifacts.files
+    val wasmFiles = publishResourcesExtension.files
     val resourcesConfigurator: WasmPublishedResourcesConfigurator = objects.newInstance()
     extensions.configure<KotlinMultiplatformExtension> {
         val targetsWithResources = setOf(
