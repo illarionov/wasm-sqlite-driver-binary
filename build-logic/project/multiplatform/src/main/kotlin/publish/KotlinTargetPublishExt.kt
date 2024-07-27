@@ -10,6 +10,7 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.component.AdhocComponentWithVariants
 import org.gradle.api.component.ConfigurationVariantDetails
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 
 /**
  * Adds variants from [configuration] to [KotlinTarget] published component.
@@ -20,6 +21,9 @@ public fun KotlinTarget.addVariantsFromConfigurationsToPublication(
     configuration: Configuration,
     details: ConfigurationVariantDetails.() -> Unit,
 ) {
+    if (this is KotlinMetadataTarget) {
+        return // not supported
+    }
     val component = this.components.first()
     check(KOTLIN_SOFTWARE_COMPONENT_CLASS.isAssignableFrom(component::class.java))
     val getAdHocComponentField = KOTLIN_SOFTWARE_COMPONENT_CLASS.getDeclaredField("adhocComponent").apply {

@@ -1,8 +1,8 @@
 plugins {
+    `maven-publish`
     id("org.jetbrains.kotlin.multiplatform")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
-    id("maven-publish")
 }
 
 kotlin {
