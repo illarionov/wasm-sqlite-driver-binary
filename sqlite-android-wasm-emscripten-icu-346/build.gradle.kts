@@ -27,6 +27,7 @@ plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
 }
 
@@ -67,6 +68,7 @@ sqlite3Build {
 }
 
 kotlin {
+    androidTarget()
     jvm()
     js {
         browser()
@@ -85,4 +87,8 @@ kotlin {
             api(projects.sqliteBinaryApi)
         }
     }
+}
+
+android {
+    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenicu346"
 }

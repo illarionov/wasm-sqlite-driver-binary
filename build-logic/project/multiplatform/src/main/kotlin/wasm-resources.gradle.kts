@@ -27,8 +27,9 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
     val resourcesConfigurator: WasmPublishedResourcesConfigurator = objects.newInstance()
 
     extensions.configure<KotlinMultiplatformExtension> {
-        when (publishResourcesExtension.publishMethod.get() ?: COMMON_MODULE) {
-            COMMON_MODULE -> setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.files)
+        @Suppress("SENSELESS_NULL_IN_WHEN")
+        when (publishResourcesExtension.publishMethod.get()) {
+            COMMON_MODULE, null -> setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.files)
             TARGETS -> setupNativeOrJsTargetsResources(this, resourcesConfigurator, publishResourcesExtension.files)
         }
         setupJvmResources(this, resourcesConfigurator, publishResourcesExtension.files)
