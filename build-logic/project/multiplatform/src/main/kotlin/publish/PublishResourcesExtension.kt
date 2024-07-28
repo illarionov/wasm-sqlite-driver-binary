@@ -9,7 +9,10 @@ package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.ProviderFactory
+import org.gradle.kotlin.dsl.property
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.PublishResourcesExtension.PublishMethod.COMMON_MODULE
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -17,12 +20,18 @@ public abstract class PublishResourcesExtension @Inject internal constructor(
     objects: ObjectFactory,
     providers: ProviderFactory,
     configurations: ConfigurationContainer,
-    ) : Serializable {
+) : Serializable {
     public val files: ConfigurableFileCollection = objects.fileCollection().apply {
         val wasmReleaseElements = providers.provider {
             configurations.findByName("wasmSqliteReleaseElements")?.artifacts?.files
         }
         from(wasmReleaseElements)
+    }
+    public val publishMethod: Property<PublishMethod> = objects.property<PublishMethod>().convention(COMMON_MODULE)
+
+    public enum class PublishMethod {
+        COMMON_MODULE,
+        TARGETS,
     }
 
     public companion object {

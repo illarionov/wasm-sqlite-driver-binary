@@ -28,14 +28,14 @@ class PublishTest {
         val testProject: RootProjectDsl = projectBuilder.setupTestProject("lib-simple-producer")
         val result = projectBuilder.build("publishAllPublicationsToTestRepository")
 
-        val linuxX64ResultFile = File(
+        val commonResultFile = File(
             testProject.rootDir,
             "lib-simple-producer/build/repo/com/example/" +
-                    "lib-simple-producer-linuxx64/9999/lib-simple-producer-linuxx64-9999-kotlin_resources.zip",
+                    "lib-simple-producer/9999/lib-simple-producer-9999-kotlin_resources.zip",
         )
 
         assertThat(result.output).contains("BUILD SUCCESSFUL")
-        assertResourcesText(linuxX64ResultFile)
+        assertResourcesText(commonResultFile)
     }
 
     private fun assertResourcesText(

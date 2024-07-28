@@ -25,7 +25,7 @@ import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 
 internal fun AttributeContainer.addMultiplatformNativeResourcesAttributes(
     objects: ObjectFactory,
-    target: KotlinTarget,
+    target: KotlinTarget?,
 ) {
     attribute(CATEGORY_ATTRIBUTE, objects.named(LIBRARY))
     attribute(BUNDLING_ATTRIBUTE, objects.named(EXTERNAL))
@@ -33,18 +33,25 @@ internal fun AttributeContainer.addMultiplatformNativeResourcesAttributes(
     attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(target.multiplatformResourcesUsageAttribute))
     attribute(USAGE_ATTRIBUTE, objects.named(target.multiplatformResourcesUsageAttribute))
 
-    if (target is KotlinNativeTarget) {
-        attribute(konanTargetAttribute, target.konanTarget.name)
-        attribute(KotlinPlatformType.attribute, KotlinPlatformType.native)
-    }
-
-    if (target is KotlinJsIrTarget) {
-        attribute(KotlinJsCompilerAttribute.jsCompilerAttribute, KotlinJsCompilerAttribute.ir)
-        attribute(KotlinPlatformType.attribute, KotlinPlatformType.js)
+    when (target) {
+        null -> {
+            // We do not add the KotlinPlatformType attribute to allow resources from all Kotlin multiplatform targets
+            // to match with common resources. This way, common resource dependencies are transitively added
+            // to the configurations of the targets.
+            // attribute(KotlinPlatformType.attribute, KotlinPlatformType.common)
+        }
+        is KotlinNativeTarget -> {
+            attribute(konanTargetAttribute, target.konanTarget.name)
+            attribute(KotlinPlatformType.attribute, KotlinPlatformType.native)
+        }
+        is KotlinJsIrTarget -> {
+            attribute(KotlinJsCompilerAttribute.jsCompilerAttribute, KotlinJsCompilerAttribute.ir)
+            attribute(KotlinPlatformType.attribute, KotlinPlatformType.js)
+        }
     }
 }
 
-private val KotlinTarget.multiplatformResourcesUsageAttribute: String
+private val KotlinTarget?.multiplatformResourcesUsageAttribute: String
     get() = when {
         this is KotlinJsIrTarget -> "kotlin-multiplatformresourcesjs"
         else -> "kotlin-multiplatformresources"

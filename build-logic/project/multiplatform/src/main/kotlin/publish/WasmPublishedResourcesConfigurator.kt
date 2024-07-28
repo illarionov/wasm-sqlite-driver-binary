@@ -6,7 +6,9 @@
 
 package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish
 
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
+import org.gradle.api.component.AdhocComponentWithVariants
 import org.gradle.api.file.Directory
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.ProjectLayout
@@ -55,24 +57,50 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         kotlinJvmSourceSet.resources.srcDir(resourcesDir)
     }
 
-    fun setupNativeJsResources(
-        linuxTarget: KotlinTarget,
+    fun setupCommonResources(
+        targetComponent: AdhocComponentWithVariants,
         wasmFiles: FileCollection,
         projectName: String,
         projectVersion: Provider<String>,
         archiveBaseName: Provider<String> = providers.provider { projectName },
     ) {
         val packZipForPublicationTask = setupPackageResourcesTask(
-            targetName = linuxTarget.targetName,
+            targetName = "common",
             wasmFiles = wasmFiles,
             projectName = projectName,
             projectVersion = projectVersion,
             archiveBaseName = archiveBaseName,
         )
-        setupPublication(
-            target = linuxTarget,
-            archiveForPublication = packZipForPublicationTask.flatMap { it.archiveFile },
+        val publishedConfiguration = createConfigurationWithArchiveArtifact(
+            null,
+            packZipForPublicationTask.flatMap { it.archiveFile },
         )
+        targetComponent.addVariantsFromConfiguration(publishedConfiguration) {
+            mapToMavenScope("runtime")
+        }
+    }
+
+    fun setupNativeOrJsResources(
+        target: KotlinTarget,
+        wasmFiles: FileCollection,
+        projectName: String,
+        projectVersion: Provider<String>,
+        archiveBaseName: Provider<String> = providers.provider { projectName },
+    ) {
+        val packZipForPublicationTask = setupPackageResourcesTask(
+            targetName = target.targetName,
+            wasmFiles = wasmFiles,
+            projectName = projectName,
+            projectVersion = projectVersion,
+            archiveBaseName = archiveBaseName,
+        )
+        val publishedConfiguration = createConfigurationWithArchiveArtifact(
+            target,
+            packZipForPublicationTask.flatMap { it.archiveFile },
+        )
+        target.addVariantsFromConfigurationsToPublication(publishedConfiguration) {
+            mapToMavenScope("runtime")
+        }
     }
 
     @Suppress("LongParameterList")
@@ -112,14 +140,16 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
     }
 
     @Suppress("UnstableApiUsage")
-    private fun setupPublication(
-        target: KotlinTarget,
+    private fun createConfigurationWithArchiveArtifact(
+        target: KotlinTarget?,
         archiveForPublication: Provider<RegularFile>,
-    ) {
-        val publishedConfiguration = configurations.consumable(
-            "wasmSqliteReleasePacked${target.targetName.capitalizeAscii()}Elements",
+    ): Configuration {
+        val targetName = target?.targetName?.capitalizeAscii() ?: "Common"
+
+        return configurations.consumable(
+            "wasmSqliteReleasePacked${targetName}Elements",
         ) {
-            description = "Wasm binaries published as Kotlin Multiplatform Resources for ${target.targetName}"
+            description = "Wasm binaries published as Kotlin Multiplatform Resources for $targetName"
             attributes {
                 addMultiplatformNativeResourcesAttributes(objects, target)
             }
@@ -130,10 +160,6 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
                 }
             }
         }.get()
-
-        target.addVariantsFromConfigurationsToPublication(publishedConfiguration) {
-            mapToMavenScope("runtime")
-        }
     }
 
     class WasmLibraryResourcesPaths(

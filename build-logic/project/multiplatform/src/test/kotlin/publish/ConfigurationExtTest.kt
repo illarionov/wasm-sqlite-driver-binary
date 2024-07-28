@@ -29,7 +29,7 @@ class ConfigurationExtTest {
     val objects: ObjectFactory = project.objects
 
     @TestFactory
-    fun CheckAttributes(): List<DynamicTest> {
+    fun checkAttributes(): List<DynamicTest> {
         val macosx64Target = createKotlinNativeTarget(MACOS_X64)
         val linuxX64Target = createKotlinNativeTarget(LINUX_X64)
         val jsTarget: KotlinJsIrTarget = mockk()
@@ -38,6 +38,7 @@ class ConfigurationExtTest {
             macosx64Target to MACOS_X64_PUBLISHED_RESOURCE_ATTRIBUTES,
             linuxX64Target to LINUX_X64_PUBLISHED_RESOURCE_ATTRIBUTES,
             jsTarget to JS_PUBLISHED_RESOURCE_ATTRIBUTES,
+            null to COMMON_PUBLISHED_RESOURCE_ATTRIBUTES,
         ).map { (target, expectedAttributes) ->
             DynamicTest.dynamicTest("$target target") {
                 val configuration = project.configurations.consumable("testElements$target") {
@@ -63,30 +64,34 @@ class ConfigurationExtTest {
     }
 
     private companion object {
-        val COMMON_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = mapOf(
+        val PUBLISHED_RESOURCE_ATTRIBUTES_BASE: Map<String, String> = mapOf(
             "org.gradle.category" to "library",
             "org.gradle.dependency.bundling" to "external",
             "org.gradle.jvm.environment" to "non-jvm",
         )
-        val WASM_JS_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = COMMON_PUBLISHED_RESOURCE_ATTRIBUTES + mapOf(
+        val COMMON_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = PUBLISHED_RESOURCE_ATTRIBUTES_BASE + mapOf(
+            "org.gradle.libraryelements" to "kotlin-multiplatformresources",
+            "org.gradle.usage" to "kotlin-multiplatformresources",
+        )
+        val WASM_JS_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = PUBLISHED_RESOURCE_ATTRIBUTES_BASE + mapOf(
             "org.gradle.libraryelements" to "kotlin-multiplatformresourcesjs",
             "org.gradle.usage" to "kotlin-multiplatformresourcesjs",
             "org.jetbrains.kotlin.platform.type" to "wasm",
             "org.jetbrains.kotlin.wasm.target" to "js",
         )
-        val JS_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = COMMON_PUBLISHED_RESOURCE_ATTRIBUTES + mapOf(
+        val JS_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = PUBLISHED_RESOURCE_ATTRIBUTES_BASE + mapOf(
             "org.gradle.libraryelements" to "kotlin-multiplatformresourcesjs",
             "org.gradle.usage" to "kotlin-multiplatformresourcesjs",
             "org.jetbrains.kotlin.js.compiler" to "ir",
             "org.jetbrains.kotlin.platform.type" to "js",
         )
-        val MACOS_X64_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = COMMON_PUBLISHED_RESOURCE_ATTRIBUTES + mapOf(
+        val MACOS_X64_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = PUBLISHED_RESOURCE_ATTRIBUTES_BASE + mapOf(
             "org.gradle.libraryelements" to "kotlin-multiplatformresources",
             "org.gradle.usage" to "kotlin-multiplatformresources",
             "org.jetbrains.kotlin.native.target" to "macos_x64",
             "org.jetbrains.kotlin.platform.type" to "native",
         )
-        val LINUX_X64_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = COMMON_PUBLISHED_RESOURCE_ATTRIBUTES + mapOf(
+        val LINUX_X64_PUBLISHED_RESOURCE_ATTRIBUTES: Map<String, String> = PUBLISHED_RESOURCE_ATTRIBUTES_BASE + mapOf(
             "org.gradle.libraryelements" to "kotlin-multiplatformresources",
             "org.gradle.usage" to "kotlin-multiplatformresources",
             "org.jetbrains.kotlin.native.target" to "linux_x64",
