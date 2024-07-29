@@ -11,7 +11,7 @@ import kotlinx.io.asSource
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
 import java.net.URI
 
-public class JvmResourcesWasmBinaryReader : WasmSourceReader {
+public class JvmResourcesWasmSourceReader : WasmSourceReader {
     override fun getSourcePathCandidates(url: WasmSourceUrl): List<WasmBinarySource.Factory> {
         return listOf(
             WasmBinarySource.Factory {

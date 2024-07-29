@@ -19,7 +19,7 @@ class JvmResourcesWasmBinaryReaderTest {
         ).toString()
         val wasmUrl = WasmSourceUrl(url)
 
-        val reader = JvmResourcesWasmBinaryReader()
+        val reader = JvmResourcesWasmSourceReader()
         val resourceContent = reader.readBytesOrThrow(wasmUrl).decodeToString().trim()
         assertThat(resourceContent).isEqualTo("Test Resource")
     }
