@@ -6,6 +6,7 @@
 
 package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 
+import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.publish.maven.internal.publication.MavenPublicationInternal
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.CompositeComponent
@@ -27,10 +28,12 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
     val resourcesConfigurator: WasmPublishedResourcesConfigurator = objects.newInstance()
 
     extensions.configure<KotlinMultiplatformExtension> {
-        when (publishResourcesExtension.publishMethod.get() ?: COMMON_MODULE) {
-            COMMON_MODULE -> setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.files)
+        @Suppress("SENSELESS_NULL_IN_WHEN")
+        when (publishResourcesExtension.publishMethod.get()) {
+            COMMON_MODULE, null -> setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.files)
             TARGETS -> setupNativeOrJsTargetsResources(this, resourcesConfigurator, publishResourcesExtension.files)
         }
+        setupAndroidAssets(resourcesConfigurator, publishResourcesExtension.files)
         setupJvmResources(this, resourcesConfigurator, publishResourcesExtension.files)
     }
 }
@@ -91,6 +94,22 @@ private fun setupNativeOrJsTargetsResources(
             projectVersion = provider { project.version.toString() },
             archiveBaseName = project.extensions.getByType<BasePluginExtension>().archivesName,
         )
+    }
+}
+
+private fun setupAndroidAssets(
+    resourcesConfigurator: WasmPublishedResourcesConfigurator,
+    wasmFiles: FileCollection = publishResourcesExtension.files,
+) {
+    plugins.withId("com.android.library") {
+        val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
+        androidComponents.onVariants {
+            resourcesConfigurator.setupAndroidAssets(
+                wasmFiles = wasmFiles,
+                androidVariant = it,
+                projectName = project.name,
+            )
+        }
     }
 }
 

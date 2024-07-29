@@ -9,6 +9,7 @@
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
+    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
 }
@@ -20,6 +21,7 @@ version = wasmSqliteVersions.getSubmoduleVersionProvider(
 ).get()
 
 kotlin {
+    androidTarget()
     jvm()
     js {
       browser()
@@ -42,6 +44,8 @@ kotlin {
         }
     }
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         commonMain.dependencies {
             api(projects.sqliteBinaryApi)
@@ -55,5 +59,15 @@ kotlin {
         nativeMain.dependencies {
             implementation(projects.commonXdg)
         }
+
+        val jvmAndAndroid by creating {
+            dependsOn(commonMain.get())
+        }
+        androidMain.get().dependsOn(jvmAndAndroid)
+        jvmMain.get().dependsOn(jvmAndAndroid)
     }
+}
+
+android {
+    namespace = "ru.pixnews.wasm.sqlite.binary.reader"
 }

@@ -20,6 +20,8 @@ dependencies {
     implementation(libs.gradle.maven.publish.plugin)
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.kotlinx.binary.compatibility.validator.plugin)
+    implementation(libs.agp.plugin.api)
+    runtimeOnly(libs.agp.plugin)
 }
 
 val functionalTestRepository = rootProject.layout.buildDirectory.dir("functional-tests-plugin-repository")
