@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.builder.sqlite
+package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish
 
-import org.gradle.api.NamedDomainObjectContainer
-import ru.pixnews.wasm.builder.base.WasmBuildDsl
+import java.util.Locale
 
-@WasmBuildDsl
-public interface SqliteWasmBuilderExtension {
-    public val builds: NamedDomainObjectContainer<SqliteWasmBuildSpec>
+internal fun String.capitalizeAscii(): String = replaceFirstChar {
+    if (it.isLowerCase()) {
+        it.titlecase(Locale.ROOT)
+    } else {
+        it.toString()
+    }
 }

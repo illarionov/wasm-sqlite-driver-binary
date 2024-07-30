@@ -8,6 +8,7 @@
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `kotlin-dsl`
@@ -17,6 +18,13 @@ group = "ru.pixnews.wasm.builder.sqlite"
 
 kotlin {
     explicitApi = ExplicitApiMode.Warning
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+    }
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 dependencies {

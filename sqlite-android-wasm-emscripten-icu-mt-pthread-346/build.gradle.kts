@@ -14,6 +14,7 @@ import ru.pixnews.wasm.builder.sqlite.SqliteConfigurationOptions
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
 import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
+import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
@@ -29,6 +30,8 @@ plugins {
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.generator")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
 }
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
@@ -50,7 +53,7 @@ sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("android-icu-mt-pthread") {
+        create("android-wasm-emscripten-icu-mt-pthread-346") {
             sqliteVersion = defaultSqliteVersion
             codeGenerationOptions = SqliteCodeGenerationOptions.codeGenerationOptionsMultithread
             emscriptenConfigurationOptions = SqliteCodeGenerationOptions.emscriptenConfigurationOptionMultithread
@@ -61,6 +64,14 @@ sqlite3Build {
             exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
             setupIcu(project)
             setupAndroidExtensions(project)
+        }
+    }
+}
+
+sqliteConfigGenerator {
+    configurations {
+        create("android-wasm-emscripten-icu-mt-pthread-346") {
+            fromSqliteBuild(sqlite3Build.builds.getByName("android-wasm-emscripten-icu-mt-pthread-346"))
         }
     }
 }

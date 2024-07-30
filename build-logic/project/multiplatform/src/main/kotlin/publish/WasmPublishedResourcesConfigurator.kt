@@ -32,7 +32,6 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.ext.capitalizeAscii
 import javax.inject.Inject
 
 internal open class WasmPublishedResourcesConfigurator @Inject constructor(

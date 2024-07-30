@@ -13,5 +13,7 @@ tasks.register("styleCheck") {
 
 tasks.named("check").configure {
     dependsOn(gradle.includedBuild("sohb-gradle-project-plugins").task(":multiplatform:check"))
+    dependsOn(gradle.includedBuild("sohb-gradle-project-plugins").task(":sqlite-build-info:check"))
+    dependsOn(gradle.includedBuild("sohb-gradle-project-plugins").task(":sqlite-build-info-ext:check"))
     dependsOn(gradle.includedBuild("sohb-gradle-wasm-builder-plugins").task(":sqlite:check"))
 }

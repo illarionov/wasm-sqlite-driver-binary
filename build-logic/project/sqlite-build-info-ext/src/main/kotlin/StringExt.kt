@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.builder.sqlite
+package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
 
-import org.gradle.api.NamedDomainObjectContainer
-import ru.pixnews.wasm.builder.base.WasmBuildDsl
+import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
 
-@WasmBuildDsl
-public interface SqliteWasmBuilderExtension {
-    public val builds: NamedDomainObjectContainer<SqliteWasmBuildSpec>
-}
+internal fun String.toUpperCamelCase() = this
+    .split("-", "_")
+    .filter(String::isNotEmpty)
+    .joinToString("", transform = String::capitalizeAscii)
