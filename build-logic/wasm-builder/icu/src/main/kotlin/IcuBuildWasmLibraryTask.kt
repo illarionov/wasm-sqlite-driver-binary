@@ -26,7 +26,6 @@ import org.gradle.kotlin.dsl.newInstance
 import org.gradle.kotlin.dsl.property
 import org.gradle.process.ExecOperations
 import org.gradle.process.internal.ExecException
-import org.gradle.work.DisableCachingByDefault
 import ru.pixnews.wasm.builder.base.emscripten.EmscriptenSdk
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
 import ru.pixnews.wasm.builder.icu.IcuBuildDefaults.ICU_PTHREADS_CFLAGS
@@ -38,7 +37,6 @@ import javax.inject.Inject
 /**
  * Builds the ICU for WebAssembly using Emscripten
  */
-@DisableCachingByDefault(because = "Caching is temporarily disabled due to suspected malfunction")
 public abstract class IcuBuildWasmLibraryTask @Inject constructor(
     private val execOperations: ExecOperations,
     objects: ObjectFactory,

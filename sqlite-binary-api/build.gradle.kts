@@ -4,10 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
-
 plugins {
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")

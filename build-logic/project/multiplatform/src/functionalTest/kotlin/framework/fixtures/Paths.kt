@@ -14,7 +14,5 @@ object Paths {
     public val testProjectsRoot: File
         get() = File(userDir, "src/testProjects")
     public val functionTestPluginRepository: File
-        get() = File(userDir, "../build/functional-tests-plugin-repository")
-    public val resultRepository: File
-        get() = File(userDir, "../build/repo")
+        get() = File(userDir, "build/functional-tests-plugin-repository")
 }
