@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.builder.sqlite
+package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
 
-import org.gradle.api.NamedDomainObjectContainer
-import ru.pixnews.wasm.builder.base.WasmBuildDsl
-
-@WasmBuildDsl
-public interface SqliteWasmBuilderExtension {
-    public val builds: NamedDomainObjectContainer<SqliteWasmBuildSpec>
-}
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class SqliteConfigurationBuilderDsl

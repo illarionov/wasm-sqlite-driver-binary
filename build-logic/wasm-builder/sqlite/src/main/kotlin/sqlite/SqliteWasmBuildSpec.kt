@@ -53,7 +53,7 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     public val additionalLibs: ConfigurableFileCollection = objects.fileCollection()
 
     public val wasmBaseFileName: Property<String> = objects.property(String::class.java)
-        .convention("sqlite3")
+        .convention("sqlite")
 
     public val wasmUnstrippedFileName: Property<String> = objects.property(String::class.java)
         .convention(

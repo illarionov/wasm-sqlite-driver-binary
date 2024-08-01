@@ -34,5 +34,7 @@ dependencyResolutionManagement {
 
 include("lint")
 include("multiplatform")
+include("sqlite-build-info")
+include("sqlite-build-info-ext")
 
 rootProject.name = "sohb-gradle-project-plugins"

@@ -173,6 +173,11 @@
             <pgp value="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E"/>
          </artifact>
       </component>
+      <component group="dev.zacsweers.kctfork" name="core" version="0.5.1">
+         <artifact name="core-0.5.1.jar">
+            <pgp value="719F7C29985A8E95F58F47194D8159D6A1159B69"/>
+         </artifact>
+      </component>
       <component group="icu" name="sources" version="74.2">
          <artifact name="sources-74.2.tgz">
             <pgp value="3DA35301A7C330257B8755754058F67406EAA6AB"/>
@@ -181,6 +186,11 @@
       <component group="icu" name="sources" version="75.1">
          <artifact name="sources-75.1.tgz">
             <pgp value="3DA35301A7C330257B8755754058F67406EAA6AB"/>
+         </artifact>
+      </component>
+      <component group="io.github.classgraph" name="classgraph" version="4.8.174">
+         <artifact name="classgraph-4.8.174.jar">
+            <pgp value="1F47744C9B6E14F2049C2857F1F111AF65925306"/>
          </artifact>
       </component>
       <component group="io.github.davidburstrom.contester" name="contester-breakpoint" version="0.2.0">
