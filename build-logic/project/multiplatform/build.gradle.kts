@@ -24,7 +24,7 @@ dependencies {
     runtimeOnly(libs.agp.plugin)
 }
 
-val functionalTestRepository = rootProject.layout.buildDirectory.dir("functional-tests-plugin-repository")
+val functionalTestRepository = layout.buildDirectory.dir("functional-tests-plugin-repository")
 
 kotlin {
     compilerOptions {

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("UnstableApiUsage")
+
 package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 
 import com.vanniktech.maven.publish.JavadocJar
@@ -27,19 +29,17 @@ tasks.withType<AbstractArchiveTask>().configureEach {
     isReproducibleFileOrder = true
 }
 
-private val publishedMavenLocalRoot = project.rootProject.layout.buildDirectory.dir("localMaven")
+private val publishedMavenLocalRoot = isolated.rootProject.projectDirectory.dir("build/localMaven")
 private val downloadableReleaseDirName = wasmVersions.rootVersion.map { "maven-wasm-sqlite-binary-$it" }
-private val downloadableReleaseRoot = publishedMavenLocalRoot.zip(downloadableReleaseDirName) { root, subdir ->
-    root.dir(subdir)
-}
-private val distributionDir = project.rootProject.layout.buildDirectory.dir("distribution")
+private val downloadableReleaseRoot = publishedMavenLocalRoot.dir(downloadableReleaseDirName)
+private val distributionDir = isolated.rootProject.projectDirectory.dir("build/distribution")
 
 mavenPublishing {
     publishing {
         repositories {
             maven {
                 name = "test"
-                setUrl(publishedMavenLocalRoot.map { it.dir("test") })
+                setUrl(publishedMavenLocalRoot.dir("test"))
             }
             maven {
                 name = "downloadableRelease"
