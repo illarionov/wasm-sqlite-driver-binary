@@ -69,20 +69,20 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
             },
         )
 
-    public val codeGenerationOptions: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCodeGenerationOptions.codeGenerationOptionsMultithread)
+    public val codeGenerationFlags: ListProperty<String> = objects.listProperty(String::class.java)
+        .convention(SqliteCodeGenerationCompilerSettings.codeGenerationFlagsMultithread)
 
-    public val codeOptimizationOptions: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCodeGenerationOptions.codeOptimizationOptionsO2)
+    public val codeOptimizationFlags: ListProperty<String> = objects.listProperty(String::class.java)
+        .convention(SqliteCodeGenerationCompilerSettings.codeOptimizationFlagsO2)
 
-    public val emscriptenConfigurationOptions: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCodeGenerationOptions.emscriptenConfigurationOptionMultithread)
+    public val emscriptenFlags: ListProperty<String> = objects.listProperty(String::class.java)
+        .convention(SqliteCodeGenerationCompilerSettings.emscriptenFlagsMultithread)
 
     public val exportedFunctions: ListProperty<String> = objects.listProperty(String::class.java)
         .convention(SqliteExportedFunctions.openHelperExportedFunctions)
 
-    public val sqliteConfigOptions: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteConfigurationOptions.openHelperConfig())
+    public val sqliteFlags: ListProperty<String> = objects.listProperty(String::class.java)
+        .convention(SqliteCompilerFlags.openHelperConfig())
 
     public val buildTaskName: String = "compileSqlite${name.capitalizeAscii()}"
 
@@ -101,6 +101,6 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     override fun getName(): String = name
 
     public companion object {
-        private const val serialVersionUID: Long = -3
+        private const val serialVersionUID: Long = -4
     }
 }

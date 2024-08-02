@@ -7,9 +7,12 @@
 package ru.pixnews.wasm.builder.sqlite
 
 import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.provider.Provider
 import ru.pixnews.wasm.builder.base.WasmBuildDsl
 
 @WasmBuildDsl
-public interface SqliteWasmBuilderExtension {
-    public val builds: NamedDomainObjectContainer<SqliteWasmBuildSpec>
+public abstract class SqliteWasmBuilderExtension(
+    public val emscriptenVersion: Provider<String>,
+) {
+    public abstract val builds: NamedDomainObjectContainer<SqliteWasmBuildSpec>
 }

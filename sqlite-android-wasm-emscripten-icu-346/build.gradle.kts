@@ -9,8 +9,8 @@
 import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
-import ru.pixnews.wasm.builder.sqlite.SqliteCodeGenerationOptions
-import ru.pixnews.wasm.builder.sqlite.SqliteConfigurationOptions
+import ru.pixnews.wasm.builder.sqlite.SqliteCodeGenerationCompilerSettings
+import ru.pixnews.wasm.builder.sqlite.SqliteCompilerFlags
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
 import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
@@ -55,11 +55,11 @@ sqlite3Build {
     builds {
         create("android-wasm-emscripten-icu-346") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationOptions = SqliteCodeGenerationOptions.codeGenerationOptions
-            emscriptenConfigurationOptions = SqliteCodeGenerationOptions.emscriptenConfigurationOptions -
+            codeGenerationFlags = SqliteCodeGenerationCompilerSettings.codeGenerationFlags
+            emscriptenFlags = SqliteCodeGenerationCompilerSettings.emscriptenFlags -
                     "-sERROR_ON_UNDEFINED_SYMBOLS" + "-sERROR_ON_UNDEFINED_SYMBOLS=0"
             additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
-            sqliteConfigOptions = SqliteConfigurationOptions.openHelperConfig(
+            sqliteFlags = SqliteCompilerFlags.openHelperConfig(
                 enableIcu = true,
                 enableMultithreading = false,
             )
@@ -73,7 +73,7 @@ sqlite3Build {
 sqliteConfigGenerator {
     configurations {
         create("android-wasm-emscripten-icu-346") {
-            fromSqliteBuild(sqlite3Build.builds.getByName("android-wasm-emscripten-icu-346"))
+            fromSqliteBuild(objects, sqlite3Build)
         }
     }
 }

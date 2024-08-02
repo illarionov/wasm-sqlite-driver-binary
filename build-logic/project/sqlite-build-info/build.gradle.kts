@@ -18,7 +18,8 @@ group = "ru.pixnews.wasm.sqlite.binary.gradle"
 dependencies {
     implementation(libs.agp.plugin.api)
     implementation(libs.kotlin.gradle.plugin)
-    implementation(libs.kotlinpoet) { exclude(module = "kotlin-reflect") }
+    implementation(libs.kotlinpoet)
+    testImplementation(kotlin("reflect"))
     runtimeOnly(libs.agp.plugin)
 }
 
@@ -49,6 +50,7 @@ testing {
                 implementation(libs.assertk)
                 implementation(libs.junit.jupiter.api)
                 implementation(libs.junit.jupiter.params)
+                implementation(libs.kotlin.compile.testing)
                 runtimeOnly(libs.junit.jupiter.engine)
             }
         }

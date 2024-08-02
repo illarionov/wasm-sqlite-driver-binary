@@ -6,23 +6,23 @@
 
 package ru.pixnews.wasm.builder.sqlite
 
-public object SqliteCodeGenerationOptions {
+public object SqliteCodeGenerationCompilerSettings {
     @Suppress("ArgumentListWrapping")
-    public val codeGenerationOptions: List<String> = listOf(
+    public val codeGenerationFlags: List<String> = listOf(
         "-g3",
         "-fPIC",
         "--minify", "0",
         "--no-entry",
         "-Wno-limited-postlink-optimizations",
     )
-    public val codeGenerationOptionsMultithread: List<String> = codeGenerationOptions + listOf(
+    public val codeGenerationFlagsMultithread: List<String> = codeGenerationFlags + listOf(
         "-pthread",
     )
-    public val codeOptimizationOptionsO2: List<String> = listOf(
+    public val codeOptimizationFlagsO2: List<String> = listOf(
         "-O2",
         "-flto",
     )
-    public val emscriptenConfigurationOptions: List<String> = listOf(
+    public val emscriptenFlags: List<String> = listOf(
         "-sALLOW_MEMORY_GROWTH",
         "-sALLOW_TABLE_GROWTH",
         "-sDYNAMIC_EXECUTION=0",
@@ -44,7 +44,7 @@ public object SqliteCodeGenerationOptions {
         "-sUSE_ES6_IMPORT_META",
         "-sWASM_BIGINT",
     )
-    public val emscriptenConfigurationOptionMultithread: List<String> = emscriptenConfigurationOptions + listOf(
+    public val emscriptenFlagsMultithread: List<String> = emscriptenFlags + listOf(
         "-sSHARED_MEMORY",
     )
 }

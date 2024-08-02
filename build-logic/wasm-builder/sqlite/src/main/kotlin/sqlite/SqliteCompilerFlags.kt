@@ -6,10 +6,10 @@
 
 package ru.pixnews.wasm.builder.sqlite
 
-import ru.pixnews.wasm.builder.sqlite.SqliteConfigurationOptions.DefaultUnixVfs.UNIX_EXCL
-import ru.pixnews.wasm.builder.sqlite.SqliteConfigurationOptions.DefaultUnixVfs.UNIX_NONE
+import ru.pixnews.wasm.builder.sqlite.SqliteCompilerFlags.DefaultUnixVfs.UNIX_EXCL
+import ru.pixnews.wasm.builder.sqlite.SqliteCompilerFlags.DefaultUnixVfs.UNIX_NONE
 
-public object SqliteConfigurationOptions {
+public object SqliteCompilerFlags {
     /**
      * Build configuration from https://github.com/requery/sqlite-android.git
      */
