@@ -18,7 +18,6 @@ import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.createWasmSqli
  */
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
-    id("org.jetbrains.kotlinx.binary-compatibility-validator")
     id("com.vanniktech.maven.publish.base")
 }
 
