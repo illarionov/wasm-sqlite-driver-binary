@@ -12,13 +12,16 @@ public interface WasmSqliteConfiguration {
     public val sqliteUrl: WasmSourceUrl
     public val wasmMinMemorySize: Long
     public val requireThreads: Boolean
+    public val buildInfo: WasmSqliteExtendedBuildInfo?
 
     public companion object {
         @JvmField
+        @Suppress("NULLABLE_PROPERTY_TYPE")
         public val UNSET: WasmSqliteConfiguration = object : WasmSqliteConfiguration {
             override val sqliteUrl: WasmSourceUrl = WasmSourceUrl("")
             override val wasmMinMemorySize: Long = 0
             override val requireThreads: Boolean = false
+            override val buildInfo: WasmSqliteExtendedBuildInfo? = null
         }
     }
 }

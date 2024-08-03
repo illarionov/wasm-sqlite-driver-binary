@@ -27,8 +27,8 @@ public fun SqliteWasmBuildSpec.setupIcu(
             locations.map { it.asFile.absolutePath }
         },
     )
-    emscriptenConfigurationOptions.set(
-        emscriptenConfigurationOptions.get()
+    emscriptenFlags.set(
+        emscriptenFlags.get()
             .filter { !it.startsWith("-sINITIAL_MEMORY=") }
             .toList() + "-sINITIAL_MEMORY=$initialMemory",
     )

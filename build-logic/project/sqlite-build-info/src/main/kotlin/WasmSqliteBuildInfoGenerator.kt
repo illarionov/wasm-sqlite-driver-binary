@@ -8,23 +8,36 @@ package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
 
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.ACTUAL
 import com.squareup.kotlinpoet.KModifier.EXPECT
+import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
+import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.STRING
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import org.gradle.api.provider.Provider
+import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 import java.io.File
 
+@Suppress("TooManyFunctions")
 class WasmSqliteBuildInfoGenerator(
     private val configuration: WasmSqliteBuildInfo,
 ) {
     private val outputObjectClassName = ClassName(
         configuration.rootPackage.get(),
         configuration.wasmSqliteBuildClassName.get(),
+    )
+    private val outputExtendedInfoClassName = ClassName(
+        configuration.rootPackage.get(),
+        configuration.wasmSqliteBuildClassName.get() + "ExtendedBuildInfo",
     )
 
     fun generateCommonCode(
@@ -34,11 +47,103 @@ class WasmSqliteBuildInfoGenerator(
             .addModifiers(PUBLIC, EXPECT)
             .addSuperinterface(WASM_SQLITE_CONFIGURATION_CLASS_NAME)
             .build()
-        val fileContent = FileSpec
+        val configurationContent = FileSpec
             .builder(outputObjectClassName)
             .addType(objectSpec)
             .build()
-        fileContent.writeTo(commonOutputDirectory)
+        configurationContent.writeTo(commonOutputDirectory)
+        generateExtendedBuildInfo(commonOutputDirectory)
+    }
+
+    private fun generateExtendedBuildInfo(
+        commonOutputDirectory: File,
+    ) {
+        val extendedInfo: WasmSqliteExtendedBuildInfo = configuration.extendedInfo.orNull ?: return
+        val objectSpec: TypeSpec = TypeSpec.objectBuilder(outputExtendedInfoClassName)
+            .addModifiers(INTERNAL)
+            .addSuperinterface(WASM_SQLITE_EXTENDED_BUILD_INFO_CLASS_NAME)
+            .addProperty(
+                PropertySpec.builder("sqliteVersion", STRING, OVERRIDE)
+                    .initializer("%S", extendedInfo.sqliteVersion.get())
+                    .build(),
+            )
+            .addProperty(
+                PropertySpec.builder("emscriptenVersion", STRING, OVERRIDE)
+                    .initializer("%S", extendedInfo.emscriptenVersion.get())
+                    .build(),
+            )
+            .apply {
+                val compilerSettings = extendedInfo.compilerSettings.orNull
+                val compilerSettingsType = if (compilerSettings != null) {
+                    WASM_SQLITE_COMPILER_SETTINGS_CLASS_NAME
+                } else {
+                    WASM_SQLITE_COMPILER_SETTINGS_CLASS_NAME.copy(nullable = true)
+                }
+                val compilerSettingsPropertyBuilder = PropertySpec.builder(
+                    "compilerSettings",
+                    compilerSettingsType,
+                    OVERRIDE,
+                )
+                if (compilerSettings != null) {
+                    val extendedCompilerSettings: TypeSpec = generateExtendedCompilerSettings(compilerSettings)
+                    compilerSettingsPropertyBuilder.initializer("%L", extendedCompilerSettings)
+                } else {
+                    compilerSettingsPropertyBuilder.initializer("null")
+                }
+                addProperty(compilerSettingsPropertyBuilder.build())
+            }
+            .build()
+        val extendedInfoContent = FileSpec
+            .builder(outputExtendedInfoClassName)
+            .addType(objectSpec)
+            .build()
+        extendedInfoContent.writeTo(commonOutputDirectory)
+    }
+
+    private fun generateExtendedCompilerSettings(
+        compilerSettings: WasmSqliteCompilerSettings,
+    ): TypeSpec {
+        val extendedCompilerSettings: TypeSpec = TypeSpec.anonymousClassBuilder()
+            .addSuperinterface(WASM_SQLITE_COMPILER_SETTINGS_CLASS_NAME)
+            .addProperty(compilerSettings.additionalSourceFiles.toPropertySpec("additionalSourceFiles"))
+            .addProperty(compilerSettings.additionalIncludes.toPropertySpec("additionalIncludes"))
+            .addProperty(compilerSettings.additionalLibs.toPropertySpec("additionalLibs"))
+            .addProperty(compilerSettings.codeGenerationFlags.toPropertySpec("codeGenerationFlags"))
+            .addProperty(compilerSettings.codeOptimizationFlags.toPropertySpec("codeOptimizationFlags"))
+            .addProperty(compilerSettings.emscriptenFlags.toPropertySpec("emscriptenFlags"))
+            .addProperty(compilerSettings.exportedFunctions.toPropertySpec("exportedFunctions"))
+            .addProperty(compilerSettings.sqliteFlags.toPropertySpec("sqliteFlags"))
+            .build()
+        return extendedCompilerSettings
+    }
+
+    private fun Provider<List<String>>.toPropertySpec(
+        name: String,
+    ): PropertySpec {
+        val value = this.orNull
+        return PropertySpec.builder(name, value.typeName(), OVERRIDE)
+            .initializer(value.asListOfStringsCodeBlock())
+            .build()
+    }
+
+    private fun List<String>?.typeName(): TypeName {
+        val listOfStringsType = LIST.parameterizedBy(STRING)
+        return if (this != null) {
+            listOfStringsType
+        } else {
+            listOfStringsType.copy(nullable = true)
+        }
+    }
+
+    private fun List<String>?.asListOfStringsCodeBlock(): CodeBlock {
+        if (this == null) {
+            return CodeBlock.of("null")
+        }
+
+        val argsTemplate = List(this.size) { "%S,\n" }.joinToString(prefix = "\n", separator = "")
+        return CodeBlock.builder()
+            .addStatement("listOf($argsTemplate)", args = this.toTypedArray())
+            .build()
     }
 
     fun generateJvmActualCode(
@@ -48,8 +153,8 @@ class WasmSqliteBuildInfoGenerator(
             this.getter(
                 FunSpec.getterBuilder()
                     .addStatement(
-                        "return %L(requireNotNull(%L::class.java.getResource(%S)).toString())",
-                        WASM_SOURCE_URL_CLASS_NAME.simpleName,
+                        "return %L(requireNotNull(%T::class.java.getResource(%S)).toString())",
+                        WASM_SOURCE_URL_CLASS_NAME,
                         outputObjectClassName,
                         configuration.wasmFileName.get(),
                     )
@@ -116,6 +221,11 @@ class WasmSqliteBuildInfoGenerator(
                     .initializer("%L", configuration.requireThreads.get())
                     .build(),
             )
+            .addProperty(
+                PropertySpec.builder("buildInfo", WASM_SQLITE_EXTENDED_BUILD_INFO_CLASS_NAME, OVERRIDE)
+                    .initializer("%T", outputExtendedInfoClassName)
+                    .build(),
+            )
             .build()
 
         return FileSpec
@@ -127,6 +237,10 @@ class WasmSqliteBuildInfoGenerator(
     private companion object {
         const val SQLITE_BINARY_API_ROOT_PACKAGE = "ru.pixnews.wasm.sqlite.binary.base"
         val WASM_SQLITE_CONFIGURATION_CLASS_NAME = ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteConfiguration")
+        val WASM_SQLITE_EXTENDED_BUILD_INFO_CLASS_NAME =
+            ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteExtendedBuildInfo")
+        val WASM_SQLITE_COMPILER_SETTINGS_CLASS_NAME =
+            ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteCompilerSettings")
         val WASM_SOURCE_URL_CLASS_NAME = ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSourceUrl")
 
         private fun String.dropTrailingSlash() = if (this.endsWith("/")) {

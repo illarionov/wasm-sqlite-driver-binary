@@ -7,6 +7,7 @@
 package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
 
 import assertk.assertThat
+import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
@@ -18,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteBuildInfo
+import java.io.File
 
 class WasmSqliteBuildInfoExtTest {
     private val project: Project = ProjectBuilder.builder().build()
@@ -25,27 +27,46 @@ class WasmSqliteBuildInfoExtTest {
 
     @Test
     fun fromSqliteBuild_success_case() {
+        val testSourceFile = File("/test/source.c")
+        val testIncludeFile = File("/test/include.h")
+        val testLibFile = File("/test/lib.so")
+
         val testBuildSpec = objects.newInstance(SqliteWasmBuildSpec::class.java, "testSpec").apply {
             sqliteVersion.set("123")
             wasmBaseFileName.set("testSqlite")
-            emscriptenConfigurationOptions.set(
-                listOf("-sINITIAL_MEMORY=100"),
-            )
-            codeGenerationOptions.set(
-                listOf(
-                    "-pthread",
-                ),
-            )
+            emscriptenFlags.set(listOf("-sINITIAL_MEMORY=100"))
+            codeGenerationFlags.set(listOf("-pthread"))
+            codeOptimizationFlags.set(listOf("-optimFlag"))
+            additionalSourceFiles.setFrom(testSourceFile)
+            additionalIncludes.setFrom(testIncludeFile)
+            additionalLibs.setFrom(testLibFile)
+            exportedFunctions.set(listOf("exportFunc"))
+            sqliteFlags.set(listOf("sqliteFlag"))
         }
 
         val buildInfo = objects.newInstance(WasmSqliteBuildInfo::class.java, "testSpec").apply {
-            fromSqliteBuild(testBuildSpec)
+            fromSqliteBuild(objects, testBuildSpec, project.provider { "emscripten5.0" })
         }
 
         assertThat(buildInfo.wasmSqliteBuildClassName.get()).isEqualTo("SqliteTestSpec")
         assertThat(buildInfo.wasmFileName.get()).isEqualTo("testSqlite-testSpec-123.wasm")
         assertThat(buildInfo.minMemorySize.get()).isEqualTo(100L)
         assertThat(buildInfo.requireThreads.get()).isEqualTo(true)
+
+        buildInfo.extendedInfo.get().let { extendedInfo ->
+            assertThat(extendedInfo.sqliteVersion.get()).isEqualTo("123")
+            assertThat(extendedInfo.emscriptenVersion.get()).isEqualTo("emscripten5.0")
+        }
+
+        buildInfo.extendedInfo.get().compilerSettings.get().let { compilerSettings ->
+            assertThat(compilerSettings.additionalSourceFiles.get()).containsExactly("source.c")
+            assertThat(compilerSettings.additionalIncludes.get()).containsExactly("include.h")
+            assertThat(compilerSettings.additionalLibs.get()).containsExactly("lib.so")
+            assertThat(compilerSettings.codeGenerationFlags.get()).containsExactly("-pthread")
+            assertThat(compilerSettings.codeOptimizationFlags.get()).containsExactly("-optimFlag")
+            assertThat(compilerSettings.exportedFunctions.get()).containsExactly("exportFunc")
+            assertThat(compilerSettings.sqliteFlags.get()).containsExactly("sqliteFlag")
+        }
     }
 
     @TestFactory

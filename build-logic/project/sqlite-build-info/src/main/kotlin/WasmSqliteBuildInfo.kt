@@ -11,6 +11,7 @@ import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Nested
 import org.gradle.kotlin.dsl.property
 import java.io.Serializable
 import javax.inject.Inject
@@ -43,6 +44,9 @@ public open class WasmSqliteBuildInfo @Inject constructor(
     @get:Input
     val requireThreads: Property<Boolean> = objects.property<Boolean>()
         .convention(false)
+
+    @get:Nested
+    val extendedInfo: Property<WasmSqliteExtendedBuildInfo> = objects.property()
 
     @Input
     override fun getName(): String = name

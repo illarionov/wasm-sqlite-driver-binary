@@ -108,15 +108,24 @@ configurations {
     }
 }
 
-private val sqliteExtension = extensions.create("sqlite3Build", SqliteWasmBuilderExtension::class.java)
+private val sqliteExtension = extensions.create(
+    "sqlite3Build",
+    SqliteWasmBuilderExtension::class.java,
+    provider {
+        versionCatalogs.named("libs").findVersion("emscripten").get().toString()
+    },
+)
 
 afterEvaluate {
     sqliteExtension.builds.configureEach {
-        setupTasksForBuild(this)
+        setupTasksForBuild(this, sqliteExtension.emscriptenVersion)
     }
 }
 
-private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
+private fun setupTasksForBuild(
+    buildSpec: SqliteWasmBuildSpec,
+    emscriptenVersion: Provider<String>,
+) {
     val sqlite3c: FileCollection = if (buildSpec.sqlite3Source.isEmpty) {
         createSqliteSourceConfiguration(buildSpec.sqliteVersion)
     } else {
@@ -136,7 +145,7 @@ private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
         sourceFiles.from(buildSpec.additionalSourceFiles)
         outputFileName = unstrippedJsFileName
         outputDirectory = layout.buildDirectory.dir(compileUnstrippedResultDir(buildName))
-        emscriptenSdk.emccVersion = versionCatalogs.named("libs").findVersion("emscripten").get().toString()
+        emscriptenSdk.emccVersion = emscriptenVersion
         includes.setFrom(
             sqlite3cFile.map { it.parentFile },
             buildSpec.additionalIncludes,
@@ -145,11 +154,11 @@ private fun setupTasksForBuild(buildSpec: SqliteWasmBuildSpec) {
 
         val additionalArgsProvider = SqliteAdditionalArgumentProvider(
             sqlite3cFile,
-            codeGenerationOptions = buildSpec.codeGenerationOptions,
-            codeOptimizationOptions = buildSpec.codeOptimizationOptions,
-            emscriptenConfigurationOptions = buildSpec.emscriptenConfigurationOptions,
+            codeGenerationOptions = buildSpec.codeGenerationFlags,
+            codeOptimizationOptions = buildSpec.codeOptimizationFlags,
+            emscriptenConfigurationOptions = buildSpec.emscriptenFlags,
             exportedFunctions = buildSpec.exportedFunctions,
-            sqliteConfigOptions = buildSpec.sqliteConfigOptions,
+            sqliteConfigOptions = buildSpec.sqliteFlags,
         )
         additionalArgumentProviders.add(additionalArgsProvider)
     }
