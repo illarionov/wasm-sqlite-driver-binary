@@ -74,7 +74,7 @@ jobs:
           ./gradlew
           --no-configuration-cache
           build
-          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'packageMavenDistribution' || '' }}
+          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'foldDistribution' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_s3) && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
           --stacktrace
 
@@ -91,6 +91,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: build/distribution/maven-wasm-sqlite-binary-*.zip
+          files: |
+            build/distribution/maven-wasm-sqlite-binary-*.zip
+            build/distribution/sqlite-*.zip
           draft: true
           prerelease: true

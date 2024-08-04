@@ -19,6 +19,7 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
+import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.register
 import ru.pixnews.wasm.builder.base.WasmBuildDsl
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
@@ -97,6 +98,12 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     }
 
     public val strippedWasmOutput: Provider<RegularFile> = stripTask.flatMap(WasmStripTask::destination)
+
+    public val packEmscriptenOutputTaskName: String = "packEmscriptenOutput${name.capitalizeAscii()}"
+
+    public val packEmscriptenOutputTask: TaskProvider<Zip> = tasks.register<Zip>(packEmscriptenOutputTaskName)
+
+    public val emscriptenPackedOutput: Provider<RegularFile> = packEmscriptenOutputTask.flatMap { it.archiveFile }
 
     override fun getName(): String = name
 

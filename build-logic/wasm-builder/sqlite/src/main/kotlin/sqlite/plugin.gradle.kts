@@ -8,30 +8,11 @@
 
 package ru.pixnews.wasm.builder.sqlite
 
-import org.gradle.api.artifacts.type.ArtifactTypeDefinition.ARTIFACT_TYPE_ATTRIBUTE
-import org.gradle.api.artifacts.type.ArtifactTypeDefinition.DIRECTORY_TYPE
-import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
-import org.gradle.api.attributes.Category.LIBRARY
-import org.gradle.api.attributes.LibraryElements.HEADERS_CPLUSPLUS
-import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
-import org.gradle.api.attributes.LibraryElements.LINK_ARCHIVE
-import org.gradle.api.attributes.Usage.C_PLUS_PLUS_API
-import org.gradle.api.attributes.Usage.NATIVE_LINK
-import org.gradle.api.attributes.Usage.USAGE_ATTRIBUTE
-import org.gradle.language.cpp.CppBinary.DEBUGGABLE_ATTRIBUTE
-import org.gradle.language.cpp.CppBinary.LINKAGE_ATTRIBUTE
-import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
-import org.gradle.nativeplatform.Linkage.STATIC
-import org.gradle.nativeplatform.MachineArchitecture.ARCHITECTURE_ATTRIBUTE
-import org.gradle.nativeplatform.OperatingSystemFamily.OPERATING_SYSTEM_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.emscripten.emscriptenOperatingSystem
-import ru.pixnews.wasm.builder.base.emscripten.wasm32Architecture
-import ru.pixnews.wasm.builder.base.emscripten.wasmBinaryLibraryElements
-import ru.pixnews.wasm.builder.base.emscripten.wasmRuntimeUsage
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
+import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
+import ru.pixnews.wasm.builder.emscripten.WasmStripTask
+import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath.STRIPPED_RESULT_DIR
-import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath.compileUnstrippedResultDir
 import ru.pixnews.wasm.builder.sqlite.internal.SqliteAdditionalArgumentProvider
 import ru.pixnews.wasm.builder.sqlite.internal.createSqliteSourceConfiguration
 import ru.pixnews.wasm.builder.sqlite.internal.setupUnpackingSqliteAttributes
@@ -47,66 +28,7 @@ setupUnpackingSqliteAttributes(
     ),
 )
 
-configurations {
-    dependencyScope("wasmLibraries")
-
-    consumable("wasmSqliteReleaseElements") {
-        attributes {
-            attribute(USAGE_ATTRIBUTE, objects.wasmRuntimeUsage)
-            attribute(CATEGORY_ATTRIBUTE, objects.named(LIBRARY))
-            attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.wasmBinaryLibraryElements)
-
-            attribute(ARCHITECTURE_ATTRIBUTE, objects.wasm32Architecture)
-            attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.emscriptenOperatingSystem)
-
-            attribute(DEBUGGABLE_ATTRIBUTE, false)
-            attribute(OPTIMIZED_ATTRIBUTE, true)
-            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, true)
-        }
-    }
-    consumable("wasmSqliteDebugElements") {
-        attributes {
-            attribute(USAGE_ATTRIBUTE, objects.wasmRuntimeUsage)
-            attribute(CATEGORY_ATTRIBUTE, objects.named(LIBRARY))
-            attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.wasmBinaryLibraryElements)
-
-            attribute(ARCHITECTURE_ATTRIBUTE, objects.wasm32Architecture)
-            attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.emscriptenOperatingSystem)
-
-            attribute(DEBUGGABLE_ATTRIBUTE, true)
-            attribute(OPTIMIZED_ATTRIBUTE, true)
-            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, true)
-        }
-    }
-    resolvable("wasmStaticLibrariesClasspath") {
-        description = "Static libraries from included libraries used to link Sqlite"
-        extendsFrom(configurations["wasmLibraries"])
-        attributes {
-            attribute(USAGE_ATTRIBUTE, objects.named(NATIVE_LINK))
-            attribute(CATEGORY_ATTRIBUTE, objects.named(LIBRARY))
-            attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LINK_ARCHIVE))
-            attribute(ARTIFACT_TYPE_ATTRIBUTE, DIRECTORY_TYPE)
-            attribute(LINKAGE_ATTRIBUTE, STATIC)
-
-            attribute(ARCHITECTURE_ATTRIBUTE, objects.wasm32Architecture)
-            attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.emscriptenOperatingSystem)
-        }
-    }
-    resolvable("wasmHeadersClasspath") {
-        description = "Header files from included WebAssembly libraries used to compile SQLite"
-        extendsFrom(configurations["wasmLibraries"])
-        attributes {
-            attribute(USAGE_ATTRIBUTE, objects.named(C_PLUS_PLUS_API))
-            attribute(CATEGORY_ATTRIBUTE, objects.named(LIBRARY))
-            attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(HEADERS_CPLUSPLUS))
-            attribute(ARTIFACT_TYPE_ATTRIBUTE, DIRECTORY_TYPE)
-            attribute(LINKAGE_ATTRIBUTE, STATIC)
-
-            attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.emscriptenOperatingSystem)
-            attribute(ARCHITECTURE_ATTRIBUTE, objects.wasm32Architecture)
-        }
-    }
-}
+internal val wasmConfigurations = SqliteWasmConfigurations.Factory(objects, configurations).build()
 
 private val sqliteExtension = extensions.create(
     "sqlite3Build",
@@ -119,6 +41,8 @@ private val sqliteExtension = extensions.create(
 afterEvaluate {
     sqliteExtension.builds.configureEach {
         setupTasksForBuild(this, sqliteExtension.emscriptenVersion)
+        setupPackTask(this)
+        setupOutgoingArtifacts(this)
     }
 }
 
@@ -144,7 +68,7 @@ private fun setupTasksForBuild(
         description = "Compiles SQLite `$buildName` for Wasm"
         sourceFiles.from(buildSpec.additionalSourceFiles)
         outputFileName = unstrippedJsFileName
-        outputDirectory = layout.buildDirectory.dir(compileUnstrippedResultDir(buildName))
+        outputDirectory = layout.buildDirectory.dir(BuildDirPath.compileUnstrippedResultDir(buildSpec.name))
         emscriptenSdk.emccVersion = emscriptenVersion
         includes.setFrom(
             sqlite3cFile.map { it.parentFile },
@@ -179,24 +103,40 @@ private fun setupTasksForBuild(
         }
     }
 
-    setupOutgoingArtifacts(
-        buildSpec.strippedWasmOutput,
-        buildSpec.unstrippedWasmOutput,
-    )
-
     tasks.named("assemble").configure {
         dependsOn(stripSqliteTask)
     }
 }
 
-private fun setupOutgoingArtifacts(
-    strippedWasm: Provider<RegularFile>,
-    unstrippedWasm: Provider<RegularFile>,
+private fun setupPackTask(
+    buildSpec: SqliteWasmBuildSpec,
 ) {
-    configurations.named("wasmSqliteDebugElements").get().outgoing {
-        artifact(unstrippedWasm)
+    val buildName = buildSpec.name
+    val dstDirectory = layout.buildDirectory.dir(BuildDirPath.PACKED_OUTPUT_DIR)
+    val archiveFileName = buildSpec.wasmUnstrippedFileName.map { it.substringBefore(".wasm") + ".zip" }
+    buildSpec.packEmscriptenOutputTask.configure {
+        description = "Pack Emscripten output for `$buildName`"
+        destinationDirectory = dstDirectory
+        this.archiveFileName = archiveFileName
+
+        from(buildSpec.buildTask.flatMap(EmscriptenBuildTask::outputDirectory))
+        from(buildSpec.stripTask.flatMap(WasmStripTask::destination))
     }
-    configurations.named("wasmSqliteReleaseElements").get().outgoing {
-        artifact(strippedWasm)
+    tasks.named("assemble").configure {
+        dependsOn(buildSpec.packEmscriptenOutputTask)
+    }
+}
+
+private fun setupOutgoingArtifacts(
+    buildSpec: SqliteWasmBuildSpec,
+) {
+    wasmConfigurations.wasmDebugElements.outgoing {
+        artifact(buildSpec.unstrippedWasmOutput)
+    }
+    wasmConfigurations.wasmReleaseElements.outgoing {
+        artifact(buildSpec.strippedWasmOutput)
+    }
+    wasmConfigurations.wasmSqliteEmscriptenArchiveElements.outgoing {
+        artifact(buildSpec.emscriptenPackedOutput)
     }
 }

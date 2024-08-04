@@ -9,6 +9,7 @@ package ru.pixnews.wasm.builder.sqlite.internal
 internal object BuildDirPath {
     internal const val COMPILE_WORK_DIR = "emscripten/work"
     internal const val STRIPPED_RESULT_DIR = "emscripten/out"
+    internal const val PACKED_OUTPUT_DIR = "emscripten/pack"
 
     internal fun compileUnstrippedResultDir(buildName: String): String = "emscripten/unstripped-$buildName"
 }
