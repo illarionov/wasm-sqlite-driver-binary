@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish
+package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
