@@ -11,6 +11,7 @@ package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.gradle.kotlin.dsl.withType
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.DownloadableDistributionPaths
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.createWasmSqliteVersionsExtension
 
 /*
@@ -22,27 +23,26 @@ plugins {
 }
 
 private val wasmVersions = createWasmSqliteVersionsExtension()
+val localMavenPaths = DownloadableDistributionPaths(
+    rootProject,
+    wasmVersions.rootVersion,
+)
 
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
 
-private val publishedMavenLocalRoot = isolated.rootProject.projectDirectory.dir("build/localMaven")
-private val downloadableReleaseDirName = wasmVersions.rootVersion.map { "maven-wasm-sqlite-binary-$it" }
-private val downloadableReleaseRoot = publishedMavenLocalRoot.dir(downloadableReleaseDirName)
-private val distributionDir = isolated.rootProject.projectDirectory.dir("build/distribution")
-
 mavenPublishing {
     publishing {
         repositories {
             maven {
                 name = "test"
-                setUrl(publishedMavenLocalRoot.dir("test"))
+                setUrl(localMavenPaths.root.dir("test"))
             }
             maven {
                 name = "downloadableRelease"
-                setUrl(downloadableReleaseRoot)
+                setUrl(localMavenPaths.downloadableReleaseRoot)
             }
             maven {
                 name = "PixnewsS3"
@@ -88,15 +88,16 @@ mavenPublishing {
     }
 }
 
-tasks.register<Zip>("packageMavenDistribution") {
-    archiveBaseName = "maven-wasm-sqlite-binary"
-    destinationDirectory = distributionDir
+val rootCleanupDownloadableReleaseRootTask = rootProject.tasks.named("cleanupDownloadableRelease")
+tasks.withType<PublishToMavenRepository>().configureEach {
+    dependsOn(rootCleanupDownloadableReleaseRootTask)
+}
 
-    from(downloadableReleaseRoot)
-    into(downloadableReleaseDirName)
+val publishAllPublicationsTask = tasks.named("publishAllPublicationsToDownloadableReleaseRepository")
+publishAllPublicationsTask.configure {
+    dependsOn(rootCleanupDownloadableReleaseRootTask)
+}
 
-    isReproducibleFileOrder = true
-    isPreserveFileTimestamps = false
-
-    dependsOn(tasks.named("publishAllPublicationsToDownloadableReleaseRepository"))
+rootProject.tasks.named("publishAllPublicationsToDownloadableReleaseRepository").configure {
+    dependsOn(publishAllPublicationsTask)
 }
