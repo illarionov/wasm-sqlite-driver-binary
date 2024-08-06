@@ -1,4 +1,3 @@
-
 plugins {
     id("ru.pixnews.wasm.sqlite.binary.gradle.lint.detekt")
     id("ru.pixnews.wasm.sqlite.binary.gradle.lint.diktat")
@@ -7,10 +6,23 @@ plugins {
 }
 
 dependencies {
-    add("wasmArchiveAggregation", projects.sqliteAndroidWasmEmscriptenIcu346)
-    add("wasmArchiveAggregation", projects.sqliteAndroidWasmEmscriptenIcuMtPthread346)
-    add("wasmArchiveAggregation", projects.sqliteWasmEmscripten346)
-    add("wasmArchiveAggregation", projects.sqliteWasmEmscriptenMtPthread346)
+    listOf(
+        projects.sqliteAndroidWasmEmscriptenIcu346,
+        projects.sqliteAndroidWasmEmscriptenIcuMtPthread346,
+        projects.sqliteWasmEmscripten346,
+        projects.sqliteWasmEmscriptenMtPthread346,
+    ).forEach {
+        add("wasmArchiveAggregation", it)
+        add("mavenSnapshotAggregation", it)
+    }
+    listOf(
+        projects.commonTempfolder,
+        projects.commonXdg,
+        projects.sqliteBinaryApi,
+        projects.wasmBinaryReader,
+    ).forEach {
+        add("mavenSnapshotAggregation", it)
+    }
 }
 
 tasks.register("styleCheck") {

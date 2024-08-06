@@ -8,55 +8,32 @@
 
 package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 
-import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
-import org.gradle.api.attributes.Usage.USAGE_ATTRIBUTE
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.register
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.CleanupDownloadableReleaseDirectoryTask
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.DownloadableDistributionPaths
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.DistributionAggregationConfigurations
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.createWasmSqliteVersionsExtension
 
 private val wasmVersions = createWasmSqliteVersionsExtension()
-
-val wasmArchiveAggregation = configurations.dependencyScope("wasmArchiveAggregation")
-val wasmArchiveFiles = configurations.resolvable("wasmArchiveAggregationFiles") {
-    extendsFrom(wasmArchiveAggregation.get())
-    attributes {
-        attribute(USAGE_ATTRIBUTE, objects.named("wasm-runtime"))
-        attribute(CATEGORY_ATTRIBUTE, objects.named("emscripten-release-archive"))
-    }
+private val downloadableReleaseDirName: Provider<String> = wasmVersions.rootVersion.map {
+    "maven-wasm-sqlite-binary-$it"
 }
-
-val localMavenPaths = DownloadableDistributionPaths(
-    rootProject,
-    provider { wasmVersions.rootVersion.get() }, // cache configuration errors if use rootVersion directly
-)
-val zipTmpDistributionDir = rootProject.layout.buildDirectory.dir("tmp/zip")
-
-@Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
-val cleanupDownloadableReleaseRootTask = tasks.register<CleanupDownloadableReleaseDirectoryTask>(
-    "cleanupDownloadableRelease",
-) {
-    inputDirectory.set(localMavenPaths.downloadableReleaseRoot)
-}
-
-val prepareDownloadableReleaseTask = tasks.register("publishAllPublicationsToDownloadableReleaseRepository")
+private val distributionDir: Provider<Directory> = layout.buildDirectory.dir("distribution")
+private val aggregateConfigurations = DistributionAggregationConfigurations(objects, configurations)
 
 @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
 val packDistributionTask: TaskProvider<Zip> = tasks.register<Zip>("packageMavenDistribution") {
     archiveBaseName = "maven-wasm-sqlite-binary"
-    destinationDirectory = zipTmpDistributionDir
+    destinationDirectory = layout.buildDirectory.dir("tmp/zip")
 
-    from(localMavenPaths.downloadableReleaseRoot)
-    into(localMavenPaths.downloadableReleaseDirName)
+    from(aggregateConfigurations.mavenSnapshotAggregationFiles.get().asFileTree)
+    into(downloadableReleaseDirName)
 
     isReproducibleFileOrder = true
     isPreserveFileTimestamps = false
-    dependsOn(prepareDownloadableReleaseTask)
 }
 
 tasks.register<Copy>("foldDistribution") {
     from(packDistributionTask.flatMap { it.archiveFile })
-    from(wasmArchiveFiles.get().asFileTree)
-    into(localMavenPaths.distributionDir)
+    from(aggregateConfigurations.wasmArchiveFiles.get().asFileTree)
+    into(distributionDir)
 }

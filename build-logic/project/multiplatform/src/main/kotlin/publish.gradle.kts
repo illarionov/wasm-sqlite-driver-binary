@@ -11,7 +11,8 @@ package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.gradle.kotlin.dsl.withType
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.DownloadableDistributionPaths
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.CleanupDownloadableReleaseDirectoryTask
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.DistributionAggregationConfigurations.Companion.createMavenSnapshotReleaseElements
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.createWasmSqliteVersionsExtension
 
 /*
@@ -23,9 +24,9 @@ plugins {
 }
 
 private val wasmVersions = createWasmSqliteVersionsExtension()
-val localMavenPaths = DownloadableDistributionPaths(
-    rootProject,
-    wasmVersions.rootVersion,
+val localMavenSnapshotRoot: Provider<Directory> = layout.buildDirectory.dir("localMaven").zip(
+    wasmVersions.rootVersion.map { "maven-wasm-sqlite-binary-$it" },
+    Directory::dir,
 )
 
 tasks.withType<AbstractArchiveTask>().configureEach {
@@ -37,12 +38,8 @@ mavenPublishing {
     publishing {
         repositories {
             maven {
-                name = "test"
-                setUrl(localMavenPaths.root.dir("test"))
-            }
-            maven {
-                name = "downloadableRelease"
-                setUrl(localMavenPaths.downloadableReleaseRoot)
+                name = "LocalMavenSnapshot"
+                setUrl(localMavenSnapshotRoot)
             }
             maven {
                 name = "PixnewsS3"
@@ -88,16 +85,26 @@ mavenPublishing {
     }
 }
 
-val rootCleanupDownloadableReleaseRootTask = rootProject.tasks.named("cleanupDownloadableRelease")
+val mavenSnapshotReleaseElements = createMavenSnapshotReleaseElements().get()
+
+@Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
+val cleanupDownloadableReleaseRootTask = tasks.register<CleanupDownloadableReleaseDirectoryTask>(
+    "cleanupDownloadableRelease",
+) {
+    inputDirectory.set(localMavenSnapshotRoot)
+}
+
 tasks.withType<PublishToMavenRepository>().configureEach {
-    dependsOn(rootCleanupDownloadableReleaseRootTask)
+    dependsOn(cleanupDownloadableReleaseRootTask)
 }
 
-val publishAllPublicationsTask = tasks.named("publishAllPublicationsToDownloadableReleaseRepository")
+val publishAllPublicationsTask = tasks.named("publishAllPublicationsToLocalMavenSnapshotRepository")
 publishAllPublicationsTask.configure {
-    dependsOn(rootCleanupDownloadableReleaseRootTask)
+    dependsOn(cleanupDownloadableReleaseRootTask)
 }
 
-rootProject.tasks.named("publishAllPublicationsToDownloadableReleaseRepository").configure {
-    dependsOn(publishAllPublicationsTask)
+mavenSnapshotReleaseElements.outgoing {
+    artifact(localMavenSnapshotRoot) {
+        builtBy(publishAllPublicationsTask)
+    }
 }
