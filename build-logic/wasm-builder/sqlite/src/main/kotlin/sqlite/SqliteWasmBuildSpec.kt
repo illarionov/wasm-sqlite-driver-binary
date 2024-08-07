@@ -17,14 +17,18 @@ import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
+import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Zip
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.register
 import ru.pixnews.wasm.builder.base.WasmBuildDsl
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
 import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
 import ru.pixnews.wasm.builder.emscripten.WasmStripTask
+import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry
+import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -85,6 +89,16 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     public val sqliteFlags: ListProperty<String> = objects.listProperty(String::class.java)
         .convention(SqliteCompilerFlags.openHelperConfig())
 
+    @Nested
+    public val filePrefixMap: ListProperty<FilePrefixMapEntry> = objects.listProperty<FilePrefixMapEntry>().apply {
+        add(
+            objects.createFilePrefixMapEntry(
+                newPath = "/sqlite-android-common/sqlite",
+                oldPath = sqliteWasmFilesSrdDir.asFile.canonicalPath,
+            ),
+        )
+    }
+
     public val buildTaskName: String = "compileSqlite${name.capitalizeAscii()}"
 
     public val buildTask: TaskProvider<EmscriptenBuildTask> = tasks.register<EmscriptenBuildTask>(buildTaskName)
@@ -108,6 +122,6 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     override fun getName(): String = name
 
     public companion object {
-        private const val serialVersionUID: Long = -4
+        private const val serialVersionUID: Long = -5
     }
 }

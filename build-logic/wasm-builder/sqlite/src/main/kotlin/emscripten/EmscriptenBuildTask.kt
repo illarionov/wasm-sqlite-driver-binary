@@ -46,7 +46,7 @@ public abstract class EmscriptenBuildTask @Inject constructor(
     @get:InputFiles
     @get:SkipWhenEmpty
     @get:IgnoreEmptyDirectories
-    @get:PathSensitive(PathSensitivity.RELATIVE)
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
     public val sourceFiles: ConfigurableFileCollection = objects.fileCollection()
 
     @get:Nested
@@ -68,12 +68,12 @@ public abstract class EmscriptenBuildTask @Inject constructor(
     )
 
     @get:InputFiles
-    @get:PathSensitive(PathSensitivity.RELATIVE)
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
     @get:Optional
     public val includes: ConfigurableFileCollection = objects.fileCollection()
 
     @get:InputFiles
-    @get:PathSensitive(PathSensitivity.NONE)
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
     @get:Optional
     public val libs: ConfigurableFileCollection = objects.fileCollection()
 
@@ -88,6 +88,7 @@ public abstract class EmscriptenBuildTask @Inject constructor(
     @TaskAction
     public fun build() {
         emscriptenSdk.checkEmsdkVersion()
+        emscriptenSdk.prepareEmscriptenCache()
 
         val workingDir = this@EmscriptenBuildTask.workingDir.get()
         workingDir.mkdirs()
@@ -102,21 +103,19 @@ public abstract class EmscriptenBuildTask @Inject constructor(
             }.rethrowFailure().assertNormalExitValue()
         } catch (execException: ExecException) {
             throw ExecException(
-                "Failed to execute `$cmdLine`. Make sure ICU can be built on this system.",
+                "Failed to execute `$cmdLine`",
                 execException,
             )
         }
     }
 
     private fun buildCommandLine(): List<String> = emscriptenSdk.buildEmccCommandLine {
-        val workDir = this@EmscriptenBuildTask.workingDir.get()
-
         add("-o")
         add(outputFile.get().toString())
 
         includes.forEach { includePath ->
-            val relativePath = includePath.relativeToOrSelf(workDir)
-            add("-I$relativePath")
+            val canonicalPath = includePath.canonicalPath
+            add("-I$canonicalPath")
         }
 
         addAll(getLinkerCommandLineArguments())
@@ -126,8 +125,8 @@ public abstract class EmscriptenBuildTask @Inject constructor(
         }
 
         sourceFiles.forEach { sourcePath ->
-            val relativePath = sourcePath.relativeToOrSelf(workDir)
-            add(relativePath.toString())
+            val canonicalPath = sourcePath.canonicalPath
+            add(canonicalPath.toString())
         }
     }
 
@@ -142,7 +141,7 @@ public abstract class EmscriptenBuildTask @Inject constructor(
         }
 
         val libraryPaths = libs.mapTo(mutableSetOf()) {
-            it.parentFile.absolutePath
+            it.parentFile.canonicalPath
         }
 
         return buildList {
