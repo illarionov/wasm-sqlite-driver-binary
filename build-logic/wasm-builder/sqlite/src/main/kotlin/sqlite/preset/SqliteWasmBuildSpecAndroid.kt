@@ -9,6 +9,7 @@ package ru.pixnews.wasm.builder.sqlite.preset
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
+import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 
 public fun SqliteWasmBuildSpec.setupAndroidExtensions(
     project: Project,
@@ -26,5 +27,11 @@ public fun SqliteWasmBuildSpec.setupAndroidExtensions(
     exportedFunctions.addAll(
         "_register_localized_collators",
         "_register_android_functions",
+    )
+    filePrefixMap.add(
+        project.objects.createFilePrefixMapEntry(
+            newPath = "/sqlite-android-common/android",
+            oldPath = sqlite3AndroidSourcesDir.asFile.canonicalPath,
+        ),
     )
 }

@@ -92,7 +92,7 @@ public object SqliteWasmConfigurations {
         private fun createWasmStaticLibrariesClasspath(
             wasmLibraries: DependencyScopeConfiguration,
         ) = configurations.resolvable(WASM_STATIC_LIBRARIES_CLASSPATH) {
-            description = "Static libraries from included libraries used to link Sqlite"
+            description = "Static libraries used to link SQLite"
             extendsFrom(wasmLibraries)
             attributes {
                 attribute(USAGE_ATTRIBUTE, objects.named(NATIVE_LINK))

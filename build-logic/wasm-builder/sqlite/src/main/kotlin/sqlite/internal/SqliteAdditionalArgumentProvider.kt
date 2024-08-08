@@ -9,11 +9,13 @@ package ru.pixnews.wasm.builder.sqlite.internal
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.process.CommandLineArgumentProvider
 import java.io.File
 
+@Suppress("LongParameterList")
 internal class SqliteAdditionalArgumentProvider(
     @get:InputFile
     @get:PathSensitive(PathSensitivity.NONE)
@@ -28,9 +30,12 @@ internal class SqliteAdditionalArgumentProvider(
     val exportedFunctions: Provider<List<String>>,
     @get:Input
     val sqliteConfigOptions: Provider<List<String>>,
+    @get:Nested
+    val filePrefixMap: Provider<List<FilePrefixMapEntry>>,
     ) : CommandLineArgumentProvider {
     override fun asArguments(): MutableIterable<String> {
         return mutableListOf<String>().apply {
+            addAll(filePrefixMap.get().map { it.toConfigOption() })
             addAll(codeGenerationOptions.get())
             addAll(codeOptimizationOptions.get())
             addAll(emscriptenConfigurationOptions.get())
@@ -39,5 +44,9 @@ internal class SqliteAdditionalArgumentProvider(
             add("""-DSQLITE_WASM_EXPORT=""") // we specify all exported functions in -sEXPORTED_FUNCTIONS
             add("-DSQLITE_C=${sqliteCFile.get()}")
         }
+    }
+
+    private fun FilePrefixMapEntry.toConfigOption(): String {
+        return "-ffile-prefix-map=${oldPath.get()}=$newPath"
     }
 }

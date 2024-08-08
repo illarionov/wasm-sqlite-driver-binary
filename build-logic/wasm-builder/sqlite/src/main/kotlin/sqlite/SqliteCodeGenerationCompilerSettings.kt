@@ -14,6 +14,7 @@ public object SqliteCodeGenerationCompilerSettings {
         "--minify", "0",
         "--no-entry",
         "-Wno-limited-postlink-optimizations",
+        "-fdebug-compilation-dir=/build",
     )
     public val codeGenerationFlagsMultithread: List<String> = codeGenerationFlags + listOf(
         "-pthread",

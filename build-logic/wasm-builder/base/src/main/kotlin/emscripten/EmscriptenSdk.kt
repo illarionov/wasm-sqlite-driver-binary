@@ -13,6 +13,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
@@ -25,6 +26,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 public abstract class EmscriptenSdk @Inject constructor(
     objects: ObjectFactory,
     providers: ProviderFactory,
@@ -47,6 +49,11 @@ public abstract class EmscriptenSdk @Inject constructor(
     @get:Internal
     public val emscriptenCacheDir: DirectoryProperty = objects.directoryProperty()
 
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    @get:Optional
+    public val emscriptenCacheBase: DirectoryProperty = objects.directoryProperty()
+
     @get:InputFiles
     @Optional
     @PathSensitive(PathSensitivity.NONE)
@@ -59,6 +66,10 @@ public abstract class EmscriptenSdk @Inject constructor(
     @get:Internal
     public val emConfigureExecutablePath: Property<String> = objects.property(String::class.java)
         .convention("upstream/emscripten/emconfigure")
+
+    @get:Internal
+    public val embuilderExecutablePath: Property<String> = objects.property(String::class.java)
+        .convention("upstream/emscripten/embuilder")
 
     @get:Internal
     public val emMakeExecutablePath: Property<String> = objects.property(String::class.java)
@@ -75,6 +86,14 @@ public abstract class EmscriptenSdk @Inject constructor(
     public fun buildEmMakeCommandLine(
         builderAction: MutableList<String>.() -> Unit,
     ): List<String> = buildCommandLine(emMakeExecutablePath, builderAction)
+
+    public fun buildEmBuilderCommandLine(
+        builderAction: MutableList<String>.() -> Unit,
+    ): List<String> = buildList {
+        val command = getEmscriptenExecutableOrThrow(embuilderExecutablePath)
+        add(command.toString())
+        builderAction()
+    }
 
     private fun buildCommandLine(
         commandExecutablePath: Property<String>,
@@ -113,6 +132,24 @@ public abstract class EmscriptenSdk @Inject constructor(
     @Internal
     public fun getEmsdkEnvironment(): Map<String, String> = buildMap {
         put("EMSDK", emscriptenRoot.get().toString())
+    }
+
+    public fun prepareEmscriptenCache() {
+        if (!emscriptenCacheBase.isPresent) {
+            return
+        }
+        val cacheBase = emscriptenCacheBase.get().asFile
+        val cacheDir = emscriptenCacheDir.orNull?.asFile ?: error(
+            "emscriptenCacheBase requires emscriptenCacheDir to be set",
+        )
+        cacheDir.deleteRecursively()
+        if (!cacheDir.mkdirs()) {
+            error("Can not create $cacheDir")
+        }
+        cacheBase.copyRecursively(
+            target = cacheDir,
+            overwrite = false,
+        )
     }
 
     private fun readEmsdkVersion(): String {
