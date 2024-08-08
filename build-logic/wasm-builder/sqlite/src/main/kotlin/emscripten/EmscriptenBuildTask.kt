@@ -58,7 +58,7 @@ public abstract class EmscriptenBuildTask @Inject constructor(
     @get:OutputDirectory
     @Optional
     public val outputDirectory: DirectoryProperty = objects.directoryProperty().convention(
-        layout.buildDirectory.dir(BuildDirPath.compileUnstrippedResultDir("Main")),
+        layout.buildDirectory.dir(BuildDirPath.compileDebugResultDir("Main")),
     )
 
     @get:Input

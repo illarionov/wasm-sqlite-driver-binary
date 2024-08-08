@@ -4,13 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("UnstableApiUsage")
+
 package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish
 
 import com.android.build.api.variant.Variant
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
+import org.gradle.api.artifacts.ConsumableConfiguration
 import org.gradle.api.component.AdhocComponentWithVariants
+import org.gradle.api.component.SoftwareComponentFactory
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
@@ -30,6 +33,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.register
+import org.gradle.language.cpp.CppBinary
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import javax.inject.Inject
@@ -40,6 +44,7 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
     private val objects: ObjectFactory,
     private val providers: ProviderFactory,
     private val configurations: ConfigurationContainer,
+    private val softwareComponentFactory: SoftwareComponentFactory,
 ) {
     private val wasmPaths = WasmLibraryResourcesPaths(layout)
 
@@ -133,6 +138,34 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         }
     }
 
+    fun setupDebugSymbolsPublishedComponent(
+        debugWasmFiles: FileCollection,
+        projectName: String,
+        projectVersion: Provider<String>,
+        archiveBaseName: Provider<String> = providers.provider { projectName },
+        componentName: String = "debugsymbols",
+    ): AdhocComponentWithVariants {
+        val packZipForPublicationTask = setupPackageResourcesTask(
+            targetName = "commonDebug",
+            wasmFiles = debugWasmFiles,
+            projectName = projectName,
+            projectVersion = projectVersion,
+            archiveBaseName = archiveBaseName,
+        )
+
+        val debugSymbolsComponent: AdhocComponentWithVariants = softwareComponentFactory.adhoc(componentName)
+        val releaseWasmFilesConfiguration = createConfigurationWithArchiveArtifact(
+            configurationName = "wasmSqliteCommonDebugElements",
+            description = "Wasm binaries with debug symbols",
+            archiveForPublication = packZipForPublicationTask.flatMap { it.archiveFile },
+            isDebuggable = true,
+        ).get()
+        debugSymbolsComponent.addVariantsFromConfiguration(releaseWasmFilesConfiguration) {
+            mapToMavenScope("runtime")
+        }
+        return debugSymbolsComponent
+    }
+
     @Suppress("LongParameterList")
     private fun setupPackageResourcesTask(
         targetName: String,
@@ -169,27 +202,37 @@ internal open class WasmPublishedResourcesConfigurator @Inject constructor(
         return projectName.lowercase().replace("-", "_")
     }
 
-    @Suppress("UnstableApiUsage")
     private fun createConfigurationWithArchiveArtifact(
         target: KotlinTarget?,
         archiveForPublication: Provider<RegularFile>,
-    ): Configuration {
+        isDebuggable: Boolean = false,
+    ): ConsumableConfiguration {
         val targetName = target?.targetName?.capitalizeAscii() ?: "Common"
+        return createConfigurationWithArchiveArtifact(
+            configurationName = "wasmSqliteReleasePacked${targetName}Elements",
+            description = "Wasm binaries published as Kotlin Multiplatform Resources for $targetName",
+            archiveForPublication = archiveForPublication,
+            isDebuggable = isDebuggable,
+        ).get()
+    }
 
-        return configurations.consumable(
-            "wasmSqliteReleasePacked${targetName}Elements",
-        ) {
-            description = "Wasm binaries published as Kotlin Multiplatform Resources for $targetName"
-            attributes {
-                addMultiplatformNativeResourcesAttributes(objects, target)
+    private fun createConfigurationWithArchiveArtifact(
+        configurationName: String,
+        description: String,
+        archiveForPublication: Provider<RegularFile>,
+        isDebuggable: Boolean = false,
+    ): Provider<ConsumableConfiguration> = configurations.consumable(configurationName) {
+        this.description = description
+        attributes {
+            addMultiplatformNativeResourcesAttributes(objects, null)
+            attribute(CppBinary.DEBUGGABLE_ATTRIBUTE, isDebuggable)
+        }
+        outgoing {
+            artifact(archiveForPublication) {
+                extension = "zip"
+                classifier = "kotlin_resources"
             }
-            outgoing {
-                artifact(archiveForPublication) {
-                    extension = "zip"
-                    classifier = "kotlin_resources"
-                }
-            }
-        }.get()
+        }
     }
 
     class WasmLibraryResourcesPaths(
