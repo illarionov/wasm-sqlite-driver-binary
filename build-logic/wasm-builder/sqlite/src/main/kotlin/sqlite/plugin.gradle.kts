@@ -67,8 +67,8 @@ private fun setupTasksForBuild(
     } else {
         buildSpec.sqlite3Source
     }
-    val unstrippedWasmFileName = buildSpec.wasmUnstrippedFileName
-    val unstrippedJsFileName = unstrippedWasmFileName.map { it.substringBeforeLast(".wasm") + ".mjs" }
+    val debugWasmFileName = buildSpec.wasmDebugFileName
+    val debugJsFileName = debugWasmFileName.map { it.substringBeforeLast(".wasm") + ".mjs" }
     val strippedWasmFileName = buildSpec.wasmFileName
     val buildName = buildSpec.name.capitalizeAscii()
 
@@ -79,8 +79,8 @@ private fun setupTasksForBuild(
         group = "Build"
         description = "Compiles SQLite `$buildName` for Wasm"
         sourceFiles.from(buildSpec.additionalSourceFiles)
-        outputFileName = unstrippedJsFileName
-        outputDirectory = layout.buildDirectory.dir(BuildDirPath.compileUnstrippedResultDir(buildSpec.name))
+        outputFileName = debugJsFileName
+        outputDirectory = layout.buildDirectory.dir(BuildDirPath.compileDebugResultDir(buildSpec.name))
         emscriptenSdk.emccVersion = emscriptenVersion
         emscriptenSdk.emscriptenCacheBase.set(
             prepareEmscriptenCacheTask.flatMap(EmscriptenPrepareCacheTask::cacheDirectory),
@@ -115,7 +115,7 @@ private fun setupTasksForBuild(
     stripSqliteTask.configure {
         group = "Build"
         description = "Strip compiled SQLite `$buildName` Wasm binary"
-        source = buildSqliteTask.flatMap { it.outputDirectory.file(unstrippedWasmFileName.get()) }
+        source = buildSqliteTask.flatMap { it.outputDirectory.file(debugWasmFileName.get()) }
         val dstDir = layout.buildDirectory.dir(STRIPPED_RESULT_DIR)
         destination = dstDir.zip(strippedWasmFileName) { dir, name -> dir.file(name) }
         doFirst {
@@ -166,7 +166,7 @@ private fun setupPackTask(
 ) {
     val buildName = buildSpec.name
     val dstDirectory = layout.buildDirectory.dir(BuildDirPath.PACKED_OUTPUT_DIR)
-    val archiveFileName = buildSpec.wasmUnstrippedFileName.map { it.substringBefore(".wasm") + ".zip" }
+    val archiveFileName = buildSpec.wasmDebugFileName.map { it.substringBefore(".wasm") + ".zip" }
     buildSpec.packEmscriptenOutputTask.configure {
         description = "Pack Emscripten output for `$buildName`"
         destinationDirectory = dstDirectory
@@ -184,7 +184,7 @@ private fun setupOutgoingArtifacts(
     buildSpec: SqliteWasmBuildSpec,
 ) {
     wasmConfigurations.wasmDebugElements.outgoing {
-        artifact(buildSpec.unstrippedWasmOutput)
+        artifact(buildSpec.debugWasmOutput)
     }
     wasmConfigurations.wasmReleaseElements.outgoing {
         artifact(buildSpec.strippedWasmOutput)

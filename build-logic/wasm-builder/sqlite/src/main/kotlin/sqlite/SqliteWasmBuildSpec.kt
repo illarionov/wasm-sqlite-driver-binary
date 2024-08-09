@@ -60,10 +60,10 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
     public val wasmBaseFileName: Property<String> = objects.property(String::class.java)
         .convention("sqlite")
 
-    public val wasmUnstrippedFileName: Property<String> = objects.property(String::class.java)
+    public val wasmDebugFileName: Property<String> = objects.property(String::class.java)
         .convention(
             providers.provider {
-                "${wasmBaseFileName.get()}-$name-${sqliteVersion.get()}-unstripped.wasm"
+                "${wasmBaseFileName.get()}-$name-${sqliteVersion.get()}-debug.wasm"
             },
         )
 
@@ -107,8 +107,8 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
 
     public val stripTask: TaskProvider<WasmStripTask> = tasks.register<WasmStripTask>(stripTaskName)
 
-    public val unstrippedWasmOutput: Provider<RegularFile> = buildTask.flatMap {
-        it.outputDirectory.file(wasmUnstrippedFileName.get())
+    public val debugWasmOutput: Provider<RegularFile> = buildTask.flatMap {
+        it.outputDirectory.file(wasmDebugFileName.get())
     }
 
     public val strippedWasmOutput: Provider<RegularFile> = stripTask.flatMap(WasmStripTask::destination)

@@ -21,9 +21,15 @@ public abstract class PublishResourcesExtension @Inject internal constructor(
     providers: ProviderFactory,
     configurations: ConfigurationContainer,
 ) : Serializable {
-    public val files: ConfigurableFileCollection = objects.fileCollection().apply {
+    public val releaseFiles: ConfigurableFileCollection = objects.fileCollection().apply {
         val wasmReleaseElements = providers.provider {
             configurations.findByName("wasmSqliteReleaseElements")?.artifacts?.files
+        }
+        from(wasmReleaseElements)
+    }
+    public val debugFiles: ConfigurableFileCollection = objects.fileCollection().apply {
+        val wasmReleaseElements = providers.provider {
+            configurations.findByName("wasmSqliteDebugElements")?.artifacts?.files
         }
         from(wasmReleaseElements)
     }

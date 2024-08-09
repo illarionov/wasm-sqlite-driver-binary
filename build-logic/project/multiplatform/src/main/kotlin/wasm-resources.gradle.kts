@@ -30,11 +30,19 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
     extensions.configure<KotlinMultiplatformExtension> {
         @Suppress("SENSELESS_NULL_IN_WHEN")
         when (publishResourcesExtension.publishMethod.get()) {
-            COMMON_MODULE, null -> setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.files)
-            TARGETS -> setupNativeOrJsTargetsResources(this, resourcesConfigurator, publishResourcesExtension.files)
+            COMMON_MODULE, null -> {
+                setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.releaseFiles)
+                setupDebugPublication(resourcesConfigurator, publishResourcesExtension.debugFiles)
+            }
+
+            TARGETS -> setupNativeOrJsTargetsResources(
+                this,
+                resourcesConfigurator,
+                publishResourcesExtension.releaseFiles,
+            )
         }
-        setupAndroidAssets(resourcesConfigurator, publishResourcesExtension.files)
-        setupJvmResources(this, resourcesConfigurator, publishResourcesExtension.files)
+        setupAndroidAssets(resourcesConfigurator, publishResourcesExtension.releaseFiles)
+        setupJvmResources(this, resourcesConfigurator, publishResourcesExtension.releaseFiles)
     }
 }
 
@@ -70,11 +78,32 @@ private fun setupCommonResources(
     }
 }
 
+private fun setupDebugPublication(
+    resourcesConfigurator: WasmPublishedResourcesConfigurator,
+    debugWasmFiles: FileCollection,
+) {
+    val debugProjectName = """${project.name}-debug"""
+    val debugBuildComponent = resourcesConfigurator.setupDebugSymbolsPublishedComponent(
+        debugWasmFiles = debugWasmFiles,
+        projectName = debugProjectName,
+        projectVersion = provider { project.version.toString() },
+        archiveBaseName = project.extensions.getByType<BasePluginExtension>().archivesName,
+    )
+
+    plugins.withType<PublishingPlugin> {
+        extensions.getByType<PublishingExtension>().publications.create<MavenPublication>("debugResources") {
+            artifactId = debugProjectName
+            from(debugBuildComponent)
+            (this as MavenPublicationInternal).publishWithOriginalFileName()
+        }
+    }
+}
+
 // Old version with publishing resources in target publications.
 private fun setupNativeOrJsTargetsResources(
     multiplatformExtension: KotlinMultiplatformExtension,
     resourcesConfigurator: WasmPublishedResourcesConfigurator,
-    wasmFiles: FileCollection = publishResourcesExtension.files,
+    wasmFiles: FileCollection = publishResourcesExtension.releaseFiles,
 ) {
     val targetsWithResources = setOf(
         "iosArm64",
@@ -99,7 +128,7 @@ private fun setupNativeOrJsTargetsResources(
 
 private fun setupAndroidAssets(
     resourcesConfigurator: WasmPublishedResourcesConfigurator,
-    wasmFiles: FileCollection = publishResourcesExtension.files,
+    wasmFiles: FileCollection = publishResourcesExtension.releaseFiles,
 ) {
     plugins.withId("com.android.library") {
         val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
@@ -116,7 +145,7 @@ private fun setupAndroidAssets(
 private fun setupJvmResources(
     multiplatformExtension: KotlinMultiplatformExtension,
     resourcesConfigurator: WasmPublishedResourcesConfigurator,
-    wasmFiles: FileCollection = publishResourcesExtension.files,
+    wasmFiles: FileCollection = publishResourcesExtension.releaseFiles,
 ) {
     multiplatformExtension.sourceSets
         .matching { it.name == "jvmMain" }

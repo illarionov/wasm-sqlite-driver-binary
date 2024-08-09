@@ -12,5 +12,5 @@ internal object BuildDirPath {
     internal const val PACKED_OUTPUT_DIR = "emscripten/pack"
     internal const val EMSCRIPTEN_WORK_CACHE = "emscripten/cache"
 
-    internal fun compileUnstrippedResultDir(buildName: String): String = "emscripten/unstripped-$buildName"
+    internal fun compileDebugResultDir(buildName: String): String = "emscripten/debug-$buildName"
 }
