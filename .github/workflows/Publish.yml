@@ -36,7 +36,8 @@ jobs:
       - name: Install required software
         run: |
           brew update
-          brew install make wabt
+          brew install make wabt llvm
+          echo "/usr/local/opt/llvm/bin/" >> $GITHUB_PATH
 
       - name: Install EMSDK
         uses: mymindstorm/setup-emsdk@v14

@@ -159,15 +159,20 @@ public abstract class IcuBuildWasmLibraryTask @Inject constructor(
         val cflags = icuAdditionalCflags.getWithPthreadDefaults(ICU_PTHREADS_CFLAGS) + getCflagsDataDirDefaults()
         val cxxflags = icuAdditionalCxxflags.getWithPthreadDefaults(ICU_PTHREADS_CXXFLAGS) + getCflagsDataDirDefaults()
 
-        return System.getenv().filterKeys {
-            it == "PATH"
-        } + emscriptenSdk.getEmsdkEnvironment() + mapOf(
-            "CFLAGS" to cflags.joinToString(" "),
-            "CXXFLAGS" to cxxflags.joinToString(" "),
-            "FORCE_LIBS" to icuForceLibs.getWithPthreadDefaults(ICU_PTHREAD_FORCE_LIBS).joinToString(" "),
-            "PKGDATA_OPTS" to IcuBuildDefaults.ICU_PKGDATA_OPTS.joinToString(" "),
-            "PATH" to (System.getenv()["PATH"] ?: ""),
-        )
+        val env: Map<String, String> = buildMap {
+            putAll(System.getenv().filterKeys { it == "PATH" })
+            put("CFLAGS", cflags.joinToString(" "))
+            put("CXXFLAGS", cxxflags.joinToString(" "))
+            put("FORCE_LIBS", icuForceLibs.getWithPthreadDefaults(ICU_PTHREAD_FORCE_LIBS).joinToString(" "))
+            put("PKGDATA_OPTS", IcuBuildDefaults.ICU_PKGDATA_OPTS.joinToString(" "))
+            put("PATH", System.getenv()["PATH"] ?: "")
+            emscriptenSdk.emscriptenCacheDir.let {
+                if (it.isPresent) {
+                    put("EM_CACHE", it.get().asFile.canonicalPath)
+                }
+            }
+        }
+        return env
     }
 
     private fun Provider<List<String>>.getWithPthreadDefaults(
