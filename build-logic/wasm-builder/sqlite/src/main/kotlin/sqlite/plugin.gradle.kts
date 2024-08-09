@@ -10,7 +10,9 @@ package ru.pixnews.wasm.builder.sqlite
 
 import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask
 import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask.LinkTimeOptimizer
+import ru.pixnews.wasm.builder.base.emscripten.ValidateDwarfTask
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
+import ru.pixnews.wasm.builder.base.ext.toUpperCamelCase
 import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
 import ru.pixnews.wasm.builder.emscripten.WasmStripTask
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath
@@ -38,9 +40,7 @@ internal val wasmConfigurations = SqliteWasmConfigurations.Factory(objects, conf
 private val sqliteExtension = extensions.create(
     "sqlite3Build",
     SqliteWasmBuilderExtension::class.java,
-    provider {
-        versionCatalogs.named("libs").findVersion("emscripten").get().toString()
-    },
+    provider { versionCatalogs.named("libs").findVersion("emscripten").get().toString() },
 )
 
 private val emscriptenCacheDir = layout.buildDirectory.dir(EMSCRIPTEN_WORK_CACHE)
@@ -51,56 +51,66 @@ private val prepareEmscriptenCacheTask = tasks.register<EmscriptenPrepareCacheTa
 
 afterEvaluate {
     sqliteExtension.builds.configureEach {
-        setupTasksForBuild(this, sqliteExtension.emscriptenVersion)
+        val sqlite3Source = if (sqlite3Source.isEmpty) {
+            createSqliteSourceConfiguration(sqliteVersion)
+        } else {
+            sqlite3Source
+        }.elements.map { it.first().asFile }
+
+        val filePrefixMap: Provider<List<FilePrefixMapEntry>> = foldPrefixMap(
+            sqlite3c = sqlite3Source,
+            emscriptenRoot = sqliteExtension.emscriptenRoot,
+            emscriptenCacheDir = emscriptenCacheDir,
+            additionalEntries = filePrefixMap,
+        )
+
+        setupTasksForBuild(
+            buildSpec = this,
+            sqlite3c = sqlite3Source,
+            emscriptenRoot = sqliteExtension.emscriptenRoot,
+            emscriptenVersion = sqliteExtension.emscriptenVersion,
+            filePrefixMap = filePrefixMap,
+        )
+
         setupPackTask(this)
         setupOutgoingArtifacts(this)
+        setupValidateTask(this, filePrefixMap)
     }
 }
 
-@Suppress("LongMethod")
 private fun setupTasksForBuild(
     buildSpec: SqliteWasmBuildSpec,
+    sqlite3c: Provider<File>,
+    emscriptenRoot: Provider<File>,
     emscriptenVersion: Provider<String>,
+    filePrefixMap: Provider<List<FilePrefixMapEntry>>,
 ) {
-    val sqlite3c: FileCollection = if (buildSpec.sqlite3Source.isEmpty) {
-        createSqliteSourceConfiguration(buildSpec.sqliteVersion)
-    } else {
-        buildSpec.sqlite3Source
-    }
     val debugWasmFileName = buildSpec.wasmDebugFileName
     val debugJsFileName = debugWasmFileName.map { it.substringBeforeLast(".wasm") + ".mjs" }
-    val strippedWasmFileName = buildSpec.wasmFileName
+    val releaseWasmFileName = buildSpec.wasmFileName
     val buildName = buildSpec.name.capitalizeAscii()
 
     val buildSqliteTask = buildSpec.buildTask
     buildSqliteTask.configure {
-        val sqlite3cFile: Provider<File> = sqlite3c.elements.map { it.first().asFile }
-
         group = "Build"
         description = "Compiles SQLite `$buildName` for Wasm"
         sourceFiles.from(buildSpec.additionalSourceFiles)
         outputFileName = debugJsFileName
         outputDirectory = layout.buildDirectory.dir(BuildDirPath.compileDebugResultDir(buildSpec.name))
+        emscriptenSdk.emscriptenRoot = emscriptenRoot
         emscriptenSdk.emccVersion = emscriptenVersion
         emscriptenSdk.emscriptenCacheBase.set(
             prepareEmscriptenCacheTask.flatMap(EmscriptenPrepareCacheTask::cacheDirectory),
         )
         emscriptenSdk.emscriptenCacheDir.set(emscriptenCacheDir)
         includes.setFrom(
-            sqlite3cFile.map { it.parentFile },
+            sqlite3c.map { it.parentFile },
             buildSpec.additionalIncludes,
         )
         libs.setFrom(buildSpec.additionalLibs)
 
-        val filePrefixMap = foldPrefixMap(
-            sqlite3cFile,
-            emscriptenSdk.emscriptenRoot,
-            emscriptenCacheDir,
-            buildSpec.filePrefixMap,
-        )
-
         val additionalArgsProvider = SqliteAdditionalArgumentProvider(
-            sqlite3cFile,
+            sqlite3c,
             codeGenerationOptions = buildSpec.codeGenerationFlags,
             codeOptimizationOptions = buildSpec.codeOptimizationFlags,
             emscriptenConfigurationOptions = buildSpec.emscriptenFlags,
@@ -117,7 +127,7 @@ private fun setupTasksForBuild(
         description = "Strip compiled SQLite `$buildName` Wasm binary"
         source = buildSqliteTask.flatMap { it.outputDirectory.file(debugWasmFileName.get()) }
         val dstDir = layout.buildDirectory.dir(STRIPPED_RESULT_DIR)
-        destination = dstDir.zip(strippedWasmFileName) { dir, name -> dir.file(name) }
+        destination = dstDir.zip(releaseWasmFileName) { dir, name -> dir.file(name) }
         doFirst {
             dstDir.get().asFile.let { dir ->
                 dir.walkBottomUp()
@@ -177,6 +187,25 @@ private fun setupPackTask(
     }
     tasks.named("assemble").configure {
         dependsOn(buildSpec.packEmscriptenOutputTask)
+    }
+}
+
+private fun setupValidateTask(
+    buildSpec: SqliteWasmBuildSpec,
+    filePrefixMap: Provider<List<FilePrefixMapEntry>>,
+) {
+    val filePrefixOldPaths: Provider<List<String>> = filePrefixMap.flatMap { prefixList: List<FilePrefixMapEntry> ->
+        val list = objects.listProperty<String>()
+        prefixList.forEach { list.add(it.oldPath) }
+        list
+    }
+    val validateWasmTask = tasks.register<ValidateDwarfTask>("validate${buildSpec.name.toUpperCamelCase()}") {
+        wasmBinary.set(buildSpec.debugWasmOutput)
+        paths.add("/home")
+        paths.addAll(filePrefixOldPaths)
+    }
+    tasks.named("check").configure {
+        dependsOn(validateWasmTask)
     }
 }
 

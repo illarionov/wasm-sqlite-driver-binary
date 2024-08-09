@@ -35,10 +35,7 @@ public abstract class EmscriptenSdk @Inject constructor(
     @get:Input
     @Optional
     public val emscriptenRoot: Property<File> = objects.property(File::class.java).convention(
-        providers
-            .environmentVariable("EMSDK")
-            .orElse(providers.gradleProperty("emsdkRoot"))
-            .map(::File),
+        providers.defaultEmscriptenRoot(),
     )
 
     @get:Input

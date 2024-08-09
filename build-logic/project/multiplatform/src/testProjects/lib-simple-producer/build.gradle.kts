@@ -26,7 +26,8 @@ val conf = configurations.consumable("wasmSqliteReleaseElements") {
 val testingRepository = project.layout.buildDirectory.dir("repo")
 
 publishedResources {
-    files.setFrom(layout.projectDirectory.file("resource.txt.wasm"))
+    releaseFiles.setFrom(layout.projectDirectory.file("resource.txt.wasm"))
+    debugFiles.setFrom(layout.projectDirectory.file("resource-debug.txt.wasm"))
 }
 
 publishing {

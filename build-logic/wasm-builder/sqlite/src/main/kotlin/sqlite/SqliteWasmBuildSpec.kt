@@ -24,7 +24,7 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.register
 import ru.pixnews.wasm.builder.base.WasmBuildDsl
-import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
+import ru.pixnews.wasm.builder.base.ext.toUpperCamelCase
 import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
 import ru.pixnews.wasm.builder.emscripten.WasmStripTask
 import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry
@@ -99,11 +99,11 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
         )
     }
 
-    public val buildTaskName: String = "compileSqlite${name.capitalizeAscii()}"
+    public val buildTaskName: String = "compileSqlite${name.toUpperCamelCase()}"
 
     public val buildTask: TaskProvider<EmscriptenBuildTask> = tasks.register<EmscriptenBuildTask>(buildTaskName)
 
-    public val stripTaskName: String = "stripSqlite${name.capitalizeAscii()}"
+    public val stripTaskName: String = "stripSqlite${name.toUpperCamelCase()}"
 
     public val stripTask: TaskProvider<WasmStripTask> = tasks.register<WasmStripTask>(stripTaskName)
 
@@ -113,7 +113,7 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
 
     public val strippedWasmOutput: Provider<RegularFile> = stripTask.flatMap(WasmStripTask::destination)
 
-    public val packEmscriptenOutputTaskName: String = "packEmscriptenOutput${name.capitalizeAscii()}"
+    public val packEmscriptenOutputTaskName: String = "packEmscriptenOutput${name.toUpperCamelCase()}"
 
     public val packEmscriptenOutputTask: TaskProvider<Zip> = tasks.register<Zip>(packEmscriptenOutputTaskName)
 
