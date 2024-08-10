@@ -24,6 +24,9 @@ plugins {
 
 private val publishResourcesExtension = extensions.create("publishedResources", PublishResourcesExtension::class.java)
 
+// XXX: We need to figure out a way to publish debug symbols. This one doesn't work.
+private val PUBLISH_DEBUG_SYMBOLS = false
+
 pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
     val resourcesConfigurator: WasmPublishedResourcesConfigurator = objects.newInstance()
 
@@ -32,7 +35,9 @@ pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
         when (publishResourcesExtension.publishMethod.get()) {
             COMMON_MODULE, null -> {
                 setupCommonResources(this, resourcesConfigurator, publishResourcesExtension.releaseFiles)
-                setupDebugPublication(resourcesConfigurator, publishResourcesExtension.debugFiles)
+                if (PUBLISH_DEBUG_SYMBOLS) {
+                    setupDebugPublication(resourcesConfigurator, publishResourcesExtension.debugFiles)
+                }
             }
 
             TARGETS -> setupNativeOrJsTargetsResources(
