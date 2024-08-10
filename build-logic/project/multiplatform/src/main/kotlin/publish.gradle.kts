@@ -13,7 +13,6 @@ import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.gradle.kotlin.dsl.withType
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.CleanupDownloadableReleaseDirectoryTask
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.DistributionAggregationConfigurations.Companion.createMavenSnapshotReleaseElements
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.createWasmSqliteVersionsExtension
 
 /*
  * Convention plugin with publishing defaults

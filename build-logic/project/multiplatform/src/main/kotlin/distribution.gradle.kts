@@ -11,7 +11,6 @@ package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.register
 import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.DistributionAggregationConfigurations
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.createWasmSqliteVersionsExtension
 
 private val wasmVersions = createWasmSqliteVersionsExtension()
 private val downloadableReleaseDirName: Provider<String> = wasmVersions.rootVersion.map {
