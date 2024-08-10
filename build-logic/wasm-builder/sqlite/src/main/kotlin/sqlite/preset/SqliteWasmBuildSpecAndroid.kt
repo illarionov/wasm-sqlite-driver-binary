@@ -8,8 +8,8 @@ package ru.pixnews.wasm.builder.sqlite.preset
 
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
+import ru.pixnews.wasm.builder.sqlite.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
-import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 
 public fun SqliteWasmBuildSpec.setupAndroidExtensions(
     project: Project,

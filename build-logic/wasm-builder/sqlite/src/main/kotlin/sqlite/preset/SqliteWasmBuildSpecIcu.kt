@@ -9,10 +9,10 @@ package ru.pixnews.wasm.builder.sqlite.preset
 import org.gradle.api.Project
 import org.gradle.api.file.FileSystemLocation
 import org.gradle.kotlin.dsl.get
+import ru.pixnews.wasm.builder.sqlite.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmConfigurations.WASM_HEADERS_CLASSPATH
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmConfigurations.WASM_STATIC_LIBRARIES_CLASSPATH
-import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 import java.io.File
 
 public fun SqliteWasmBuildSpec.setupIcu(

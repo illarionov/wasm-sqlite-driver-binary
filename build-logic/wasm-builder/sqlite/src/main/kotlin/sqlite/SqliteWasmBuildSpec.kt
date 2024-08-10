@@ -27,8 +27,9 @@ import ru.pixnews.wasm.builder.base.WasmBuildDsl
 import ru.pixnews.wasm.builder.base.ext.toUpperCamelCase
 import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
 import ru.pixnews.wasm.builder.emscripten.WasmStripTask
-import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry
-import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
+import ru.pixnews.wasm.builder.sqlite.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
+import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
+import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -75,19 +76,19 @@ public open class SqliteWasmBuildSpec @Inject internal constructor(
         )
 
     public val codeGenerationFlags: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCodeGenerationCompilerSettings.codeGenerationFlagsMultithread)
+        .convention(SqliteCodeGenerationFlags.codeGenerationFlagsMultithread)
 
     public val codeOptimizationFlags: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCodeGenerationCompilerSettings.codeOptimizationFlagsO2)
+        .convention(SqliteCodeGenerationFlags.codeOptimizationFlagsO2)
 
     public val emscriptenFlags: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCodeGenerationCompilerSettings.emscriptenFlagsMultithread)
+        .convention(SqliteCodeGenerationFlags.emscriptenFlagsMultithread)
 
     public val exportedFunctions: ListProperty<String> = objects.listProperty(String::class.java)
         .convention(SqliteExportedFunctions.openHelperExportedFunctions)
 
     public val sqliteFlags: ListProperty<String> = objects.listProperty(String::class.java)
-        .convention(SqliteCompilerFlags.openHelperConfig())
+        .convention(OpenHelperConfig.getBuildFlags())
 
     @Nested
     public val filePrefixMap: ListProperty<FilePrefixMapEntry> = objects.listProperty<FilePrefixMapEntry>().apply {

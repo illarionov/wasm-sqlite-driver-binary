@@ -13,6 +13,7 @@ import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.process.CommandLineArgumentProvider
+import ru.pixnews.wasm.builder.sqlite.FilePrefixMapEntry
 import java.io.File
 
 @Suppress("LongParameterList")
