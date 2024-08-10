@@ -25,6 +25,7 @@ plugins {
 private val publishResourcesExtension = extensions.create("publishedResources", PublishResourcesExtension::class.java)
 
 // XXX: We need to figure out a way to publish debug symbols. This one doesn't work.
+@Suppress("VariableNaming")
 private val PUBLISH_DEBUG_SYMBOLS = false
 
 pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {

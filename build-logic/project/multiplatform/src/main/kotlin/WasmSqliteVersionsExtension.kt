@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish
+package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
 
 import org.gradle.api.Project
 import org.gradle.api.file.RegularFile
@@ -14,7 +14,7 @@ import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.provider.ValueSource
 import org.gradle.api.provider.ValueSourceParameters
 import org.gradle.kotlin.dsl.create
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish.PropertiesValueSource.Parameters
+import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.PropertiesValueSource.Parameters
 import java.util.Properties
 import javax.inject.Inject
 
