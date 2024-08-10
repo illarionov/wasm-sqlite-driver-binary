@@ -6,9 +6,9 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
-import ru.pixnews.wasm.builder.sqlite.SqliteCodeGenerationCompilerSettings
-import ru.pixnews.wasm.builder.sqlite.SqliteCompilerFlags
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
+import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
+import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
@@ -37,8 +37,8 @@ sqlite3Build {
     builds {
         create("wasm-emscripten-346") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationCompilerSettings.codeGenerationFlags
-            emscriptenFlags = SqliteCodeGenerationCompilerSettings.emscriptenFlags
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags
                 .filter { !it.startsWith("-sINITIAL_MEMORY=") }
                 .filter { it != "-sERROR_ON_UNDEFINED_SYMBOLS" }
                 .toList() + listOf(
@@ -47,7 +47,7 @@ sqlite3Build {
             )
 
             additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
-            sqliteFlags = SqliteCompilerFlags.openHelperConfig(
+            sqliteFlags = OpenHelperConfig.getBuildFlags(
                 enableIcu = false,
                 enableMultithreading = false,
             )

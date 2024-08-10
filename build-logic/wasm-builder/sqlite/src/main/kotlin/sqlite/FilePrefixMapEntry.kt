@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.builder.sqlite.internal
+package ru.pixnews.wasm.builder.sqlite
 
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property

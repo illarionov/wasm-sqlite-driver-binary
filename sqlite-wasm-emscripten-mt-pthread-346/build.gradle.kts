@@ -6,9 +6,9 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
-import ru.pixnews.wasm.builder.sqlite.SqliteCodeGenerationCompilerSettings
-import ru.pixnews.wasm.builder.sqlite.SqliteCompilerFlags
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
+import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
+import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
@@ -37,11 +37,11 @@ sqlite3Build {
     builds {
         create("wasm-emscripten-mt-pthread-346") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationCompilerSettings.codeGenerationFlagsMultithread
-            emscriptenFlags = SqliteCodeGenerationCompilerSettings.emscriptenFlagsMultithread
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
                 .filter { !it.startsWith("-sINITIAL_MEMORY=") }
                 .toList() + "-sINITIAL_MEMORY=4194304"
-            sqliteFlags = SqliteCompilerFlags.openHelperConfig(
+            sqliteFlags = OpenHelperConfig.getBuildFlags(
                 enableIcu = false,
                 enableMultithreading = true,
             )

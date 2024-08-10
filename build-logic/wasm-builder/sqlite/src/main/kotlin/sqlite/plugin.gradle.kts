@@ -15,11 +15,10 @@ import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
 import ru.pixnews.wasm.builder.base.ext.toUpperCamelCase
 import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
 import ru.pixnews.wasm.builder.emscripten.WasmStripTask
+import ru.pixnews.wasm.builder.sqlite.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath.EMSCRIPTEN_WORK_CACHE
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath.STRIPPED_RESULT_DIR
-import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry
-import ru.pixnews.wasm.builder.sqlite.internal.FilePrefixMapEntry.Companion.createFilePrefixMapEntry
 import ru.pixnews.wasm.builder.sqlite.internal.SqliteAdditionalArgumentProvider
 import ru.pixnews.wasm.builder.sqlite.internal.createSqliteSourceConfiguration
 import ru.pixnews.wasm.builder.sqlite.internal.setupUnpackingSqliteAttributes

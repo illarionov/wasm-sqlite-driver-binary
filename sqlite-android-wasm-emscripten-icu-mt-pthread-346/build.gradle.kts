@@ -9,9 +9,9 @@
 import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
-import ru.pixnews.wasm.builder.sqlite.SqliteCodeGenerationCompilerSettings
-import ru.pixnews.wasm.builder.sqlite.SqliteCompilerFlags
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
+import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
+import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
 import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
 import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
@@ -55,9 +55,9 @@ sqlite3Build {
     builds {
         create("android-wasm-emscripten-icu-mt-pthread-346") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationCompilerSettings.codeGenerationFlagsMultithread
-            emscriptenFlags = SqliteCodeGenerationCompilerSettings.emscriptenFlagsMultithread
-            sqliteFlags = SqliteCompilerFlags.openHelperConfig(
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
+            sqliteFlags = OpenHelperConfig.getBuildFlags(
                 enableIcu = true,
                 enableMultithreading = true,
             )

@@ -10,6 +10,9 @@ package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
 
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
+/*
+ * A plugin that creates Kotlin classes containing Wasm SQLite build details and the compiler settings used.
+ */
 private val sqliteConfigurationExtension = extensions.create(
     "sqliteConfigGenerator",
     SqliteConfigGeneratorExtension::class.java,

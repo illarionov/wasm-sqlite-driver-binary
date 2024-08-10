@@ -315,8 +315,8 @@
             <pgp value="19BEAB2D799C020F17C69126B16698A4ADF4D638"/>
          </artifact>
       </component>
-      <component group="org.codehaus.groovy" name="groovy" version="3.0.10">
-         <artifact name="groovy-3.0.10.jar">
+      <component group="org.codehaus.groovy" name="groovy" version="3.0.17">
+         <artifact name="groovy-3.0.17.jar">
             <pgp value="34441E504A937F43EB0DAEF96A65176A0FB1CD0B"/>
          </artifact>
       </component>

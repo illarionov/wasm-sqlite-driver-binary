@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.builder.sqlite
+package ru.pixnews.wasm.builder.sqlite.preset
 
-public object SqliteCodeGenerationCompilerSettings {
+public object SqliteCodeGenerationFlags {
     @Suppress("ArgumentListWrapping")
     public val codeGenerationFlags: List<String> = listOf(
         "-g3",
