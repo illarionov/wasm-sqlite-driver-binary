@@ -70,6 +70,8 @@ To build the project, you will need to install the following software in additio
  - [WABT](https://github.com/WebAssembly/wabt) (The WebAssembly Binary Toolkit)
    - on macOS: `brew install wabt`
    - on Ubuntu Linux: `apt install wabt`
+ - llvm-dwarfdump
+   - on macOS: `brew install llvm`
  - [Emscripten SDK](https://emscripten.org/)
    - Check [this link](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended)
    for instructions on installing the Emscripten SDK.

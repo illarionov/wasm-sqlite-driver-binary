@@ -23,3 +23,15 @@ kotlin {
 java {
     targetCompatibility = JavaVersion.VERSION_21
 }
+
+dependencies {
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.assertk)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}

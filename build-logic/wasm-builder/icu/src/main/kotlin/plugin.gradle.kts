@@ -22,6 +22,8 @@ import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 import org.gradle.nativeplatform.MachineArchitecture.ARCHITECTURE_ATTRIBUTE
 import org.gradle.nativeplatform.OperatingSystemFamily.OPERATING_SYSTEM_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask
+import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask.LinkTimeOptimizer
 import ru.pixnews.wasm.builder.base.emscripten.emscriptenOperatingSystem
 import ru.pixnews.wasm.builder.base.emscripten.wasm32Architecture
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
@@ -50,11 +52,18 @@ configurations.consumable("wasmIcuElements") {
 
 setupUnpackingIcuAttributes()
 
+private val emccVersion = versionCatalogs.named("libs").findVersion("emscripten").get().toString()
+
 internal val icuSources = createIcuSourceConfiguration(
     icuVersion = versionCatalogs.named("libs").findVersion("icu").get().toString(),
 ).asFileTree
 
 private val icuSourceDir: Provider<File> = icuSources.firstDirectory(providers)
+
+private val prepareEmscriptenCacheTask = tasks.register<EmscriptenPrepareCacheTask>("prepareEmscriptenCache") {
+    emscriptenSdk.emccVersion = emccVersion
+    lto = LinkTimeOptimizer.NONE
+}
 
 private val icuBuildExtension = extensions.create("icuBuild", IcuWasmBuilderExtension::class.java)
 
@@ -81,7 +90,9 @@ private fun setupTasksForBuild(buildSpec: IcuWasmBuildSpec) {
         description = "Compiles ICU `$buildName` for WebAssembly"
 
         icuSource.fileProvider(icuSourceDir)
-        emscriptenSdk.emccVersion = versionCatalogs.named("libs").findVersion("emscripten").get().toString()
+        emscriptenSdk.emccVersion = emccVersion
+        emscriptenSdk.emscriptenCacheBase = prepareEmscriptenCacheTask.flatMap { it.cacheDirectory }
+        emscriptenSdk.emscriptenCacheDir = layout.buildDirectory.dir("emscripten/cache")
         icuBuildToolchainDirectory = buildToolchainTask.flatMap(IcuBuildHostToolchainTask::outputDirectory)
 
         this.outputDirectory = outputDirectory

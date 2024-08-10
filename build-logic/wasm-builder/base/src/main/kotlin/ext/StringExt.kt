@@ -15,3 +15,8 @@ public fun String.capitalizeAscii(): String = replaceFirstChar {
         it.toString()
     }
 }
+
+public fun String.toUpperCamelCase(): String = this
+    .split("-", "_")
+    .filter(String::isNotEmpty)
+    .joinToString("", transform = String::capitalizeAscii)
