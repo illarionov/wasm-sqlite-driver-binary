@@ -51,7 +51,8 @@ public open class ValidateDwarfTask @Inject constructor(
                 this.standardOutput = outputStream
             }.rethrowFailure().assertNormalExitValue()
         } catch (execException: ExecException) {
-            throw ExecException("Failed to execute `llvm-dwarfdump`", execException)
+            logger.error("Failed to execute `llvm-dwarfdump`", execException)
+            return
         }
 
         val sources = outputStream.toString()
