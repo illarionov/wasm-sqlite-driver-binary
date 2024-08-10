@@ -7,7 +7,7 @@ androidCompileSdk = "31"
 androidMinSdk = "14"
 
 # keep in sync with root settings.gradle
-agp = "8.2.2"
+agp = "8.5.2"
 assertk = "0.28.1"
 detekt = "1.23.6"
 diktat = "2.0.0"
