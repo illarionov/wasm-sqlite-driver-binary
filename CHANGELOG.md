@@ -1,5 +1,20 @@
 # Change Log
 
+## [0.1] — 2024-08-10
+
+Initial version
+
+### Added
+
+- sqlite-wasm-emscripten-346 and sqlite-wasm-emscripten-mt-pthread-346 builds
+- binary archives with assemblies in releases
+
+### Changed
+
+- Binaries are now published in Android Assets for the Android target 
+- For native platforms, binaries are now published in a common module
+- Various fixes and Version updates
+
 ## [0.1-alpha10] — 2024-07-20
 
 ### Changed
