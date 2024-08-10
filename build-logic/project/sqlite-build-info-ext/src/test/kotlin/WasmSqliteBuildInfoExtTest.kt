@@ -60,8 +60,9 @@ class WasmSqliteBuildInfoExtTest {
 
         buildInfo.extendedInfo.get().compilerSettings.get().let { compilerSettings ->
             assertThat(compilerSettings.additionalSourceFiles.get()).containsExactly("source.c")
-            assertThat(compilerSettings.additionalIncludes.get()).containsExactly("include.h")
-            assertThat(compilerSettings.additionalLibs.get()).containsExactly("lib.so")
+            // Disabled until https://github.com/gradle/gradle/issues/27443 is fixed
+            // assertThat(compilerSettings.additionalIncludes.get()).containsExactly("include.h")
+            // assertThat(compilerSettings.additionalLibs.get()).containsExactly("lib.so")
             assertThat(compilerSettings.codeGenerationFlags.get()).containsExactly("-pthread")
             assertThat(compilerSettings.codeOptimizationFlags.get()).containsExactly("-optimFlag")
             assertThat(compilerSettings.exportedFunctions.get()).containsExactly("exportFunc")

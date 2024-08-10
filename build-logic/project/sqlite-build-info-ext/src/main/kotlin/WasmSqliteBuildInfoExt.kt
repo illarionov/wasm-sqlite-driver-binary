@@ -9,6 +9,7 @@ package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
 import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Provider
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.newInstance
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuilderExtension
@@ -60,14 +61,23 @@ private fun WasmSqliteExtendedBuildInfo.fromBuildSpec(
         spec.additionalSourceFiles.elements.map { files: Set<FileSystemLocation> ->
             files.map { it.asFile.name }
         }
-    val additionalIncludeNames: Provider<List<String>> =
-        spec.additionalIncludes.elements.map { files: Set<FileSystemLocation> ->
-            files.map { it.asFile.name }
-        }
-    val additionalLibNames: Provider<List<String>> =
-        spec.additionalLibs.elements.map { files: Set<FileSystemLocation> ->
-            files.map { it.asFile.name }
-        }
+
+    val additionalIncludeNames: Provider<List<String>>
+    val additionalLibNames: Provider<List<String>>
+
+    // Disabled until https://github.com/gradle/gradle/issues/27443 is fixed
+    val issue27443Fixed = false
+    if (issue27443Fixed) {
+        additionalIncludeNames = spec.additionalIncludes.elements.map { files: Set<FileSystemLocation> ->
+                files.map { it.asFile.name }
+            }
+        additionalLibNames = spec.additionalLibs.elements.map { files: Set<FileSystemLocation> ->
+                files.map { it.asFile.name }
+            }
+    } else {
+        additionalIncludeNames = objects.listProperty()
+        additionalLibNames = objects.listProperty()
+    }
 
     val compilerSettings = objects.newInstance<WasmSqliteCompilerSettings>().apply {
         additionalSourceFiles.set(additionalSourceFileNames)
