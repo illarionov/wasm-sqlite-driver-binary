@@ -13,6 +13,7 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputDirectory
@@ -30,6 +31,7 @@ import javax.inject.Inject
  * It helps achieve more reproducible builds, as this compilation uses the debug-prefix-map parameter to get
  * deterministic paths in the DWARF debug info.
  */
+@CacheableTask
 public open class EmscriptenPrepareCacheTask @Inject constructor(
     private val execOperations: ExecOperations,
     projectLayout: ProjectLayout,

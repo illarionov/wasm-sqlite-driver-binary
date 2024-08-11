@@ -13,6 +13,7 @@ import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.SetProperty
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.Internal
@@ -37,6 +38,7 @@ import javax.inject.Inject
 /**
  * Builds the ICU for WebAssembly using Emscripten
  */
+@CacheableTask
 public abstract class IcuBuildWasmLibraryTask @Inject constructor(
     private val execOperations: ExecOperations,
     objects: ObjectFactory,
