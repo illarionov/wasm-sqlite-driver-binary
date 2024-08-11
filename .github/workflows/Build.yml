@@ -18,6 +18,11 @@ concurrency:
 env:
   CI: true
   TERM: dumb
+  GRADLE_OPTS: >-
+    -Dorg.gradle.jvmargs="-Xmx1G -XX:MaxMetaspaceSize=1G -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC"
+  KOTLIN_DAEMON_JVMARGS: >-
+    -Xmx1G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
+  ORG_GRADLE_PROJECT_verboseTest: true
 
 permissions:
   checks: write
@@ -71,7 +76,7 @@ jobs:
 
       - name: Assemble debug build, run tests
         run: >
-          ./gradlew
+          ./gradlew -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
           build --stacktrace --scan
 
       - name: Publish test results
@@ -134,7 +139,7 @@ jobs:
 
       - name: Run static code analyzers
         run: >
-          ./gradlew
+          ./gradlew -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
           styleCheck --continue
 
       - name: Uploads Detekt .sarif files to GitHub

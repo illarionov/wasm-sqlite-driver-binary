@@ -18,6 +18,11 @@ on:
 env:
   CI: true
   TERM: dumb
+  GRADLE_OPTS: >-
+    -Dorg.gradle.jvmargs="-Xmx1G -XX:MaxMetaspaceSize=1G -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC"
+  KOTLIN_DAEMON_JVMARGS: >-
+    -Xmx1G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
+  ORG_GRADLE_PROJECT_verboseTest: true
 
 jobs:
   publish:
@@ -71,7 +76,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: FCF62075
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
         run: >
-          ./gradlew
+          ./gradlew -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
           --no-configuration-cache
           build
           ${{ (github.event_name == 'push' || inputs.create_github_release) && 'foldDistribution' || '' }}
