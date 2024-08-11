@@ -92,7 +92,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            build/distribution/maven-wasm-sqlite-binary.zip
+            build/distribution/maven-wasm-sqlite-binary-*.zip
             build/distribution/sqlite-*.zip
           draft: true
           prerelease: true

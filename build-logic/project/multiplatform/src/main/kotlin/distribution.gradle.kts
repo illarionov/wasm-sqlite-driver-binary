@@ -22,6 +22,7 @@ private val aggregateConfigurations = DistributionAggregationConfigurations(obje
 @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
 val packDistributionTask: TaskProvider<Zip> = tasks.register<Zip>("packageMavenDistribution") {
     archiveBaseName = "maven-wasm-sqlite-binary"
+    archiveVersion = wasmVersions.rootVersion
     destinationDirectory = layout.buildDirectory.dir("tmp/zip")
 
     from(aggregateConfigurations.mavenSnapshotAggregationFiles.get().asFileTree)
