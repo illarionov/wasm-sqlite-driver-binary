@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.2] — 2024-08-11
+
+### Added
+
+- Linux Arm64 target
+- JS, iOS, macOS targets to multithreaded builds
+
 ## [0.1] — 2024-08-10
 
 Initial version
