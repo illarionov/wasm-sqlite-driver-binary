@@ -61,6 +61,7 @@ sqliteConfigGenerator {
 kotlin {
     androidTarget()
     jvm()
+    linuxArm64()
     linuxX64()
 
     sourceSets {
