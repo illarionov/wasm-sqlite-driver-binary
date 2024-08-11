@@ -175,7 +175,15 @@ private fun setupPackTask(
 ) {
     val buildName = buildSpec.name
     val dstDirectory = layout.buildDirectory.dir(BuildDirPath.PACKED_OUTPUT_DIR)
-    val archiveFileName = buildSpec.wasmDebugFileName.map { it.substringBefore(".wasm") + ".zip" }
+    val archiveVersion: String = project.version.toString()
+    val archiveFileName = buildSpec.wasmDebugFileName.map { wasmDebugFileName ->
+        val nameNoExtension = wasmDebugFileName.substringBefore(".wasm")
+        if (archiveVersion.isEmpty()) {
+            "$nameNoExtension.zip"
+        } else {
+            "$nameNoExtension-$archiveVersion.zip"
+        }
+    }
     buildSpec.packEmscriptenOutputTask.configure {
         description = "Pack Emscripten output for `$buildName`"
         destinationDirectory = dstDirectory
