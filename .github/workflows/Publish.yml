@@ -19,9 +19,9 @@ env:
   CI: true
   TERM: dumb
   GRADLE_OPTS: >-
-    -Dorg.gradle.jvmargs="-Xmx1G -XX:MaxMetaspaceSize=1G -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC"
+    -Dorg.gradle.jvmargs="-Xmx2G -XX:MaxMetaspaceSize=1G -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC"
   KOTLIN_DAEMON_JVMARGS: >-
-    -Xmx1G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
+    -Xmx2G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
   ORG_GRADLE_PROJECT_verboseTest: true
 
 jobs:
