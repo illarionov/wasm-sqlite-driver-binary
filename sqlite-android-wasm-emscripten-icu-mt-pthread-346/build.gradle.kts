@@ -79,8 +79,18 @@ sqliteConfigGenerator {
 kotlin {
     androidTarget()
     jvm()
+    js {
+        browser()
+        nodejs()
+    }
     linuxArm64()
     linuxX64()
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
+    macosX64()
+    macosArm64()
+    mingwX64()
 
     sourceSets {
         commonMain.dependencies {
