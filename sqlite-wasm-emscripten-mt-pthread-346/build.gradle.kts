@@ -44,7 +44,7 @@ sqlite3Build {
             sqliteFlags = OpenHelperConfig.getBuildFlags(
                 enableIcu = false,
                 enableMultithreading = true,
-            )
+            ) + "-DSQLITE_OMIT_UTF16"
             exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
         }
     }

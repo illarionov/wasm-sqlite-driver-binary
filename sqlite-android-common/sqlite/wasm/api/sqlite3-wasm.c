@@ -1,7 +1,7 @@
 /*
  * Copy of the https://sqlite.org/src/file?name=ext/wasm/api/sqlite3-wasm.c&ci=trunk
- * (d33a16495ca871781e78812d3a18fed78b797468fffee657b8d7199b277ff359)
- * with redefined SQLITE_WASM_EXPORT
+ * (09a938fc570f282e602acd111147c7b74b5332da72540c512a79b916ab57882a)
+ * with redefined SQLITE_WASM_EXPORT and SQLITE_OMIT_UTF16
  */
 
 /*
@@ -110,8 +110,8 @@
 #ifndef SQLITE_ENABLE_EXPLAIN_COMMENTS
 #  define SQLITE_ENABLE_EXPLAIN_COMMENTS 1
 #endif
-#ifndef SQLITE_ENABLE_FTS4
-#  define SQLITE_ENABLE_FTS4 1
+#ifndef SQLITE_ENABLE_FTS5
+#  define SQLITE_ENABLE_FTS5 1
 #endif
 #ifndef SQLITE_ENABLE_MATH_FUNCTIONS
 #  define SQLITE_ENABLE_MATH_FUNCTIONS 1
@@ -146,9 +146,9 @@
 #ifndef SQLITE_OMIT_SHARED_CACHE
 # define SQLITE_OMIT_SHARED_CACHE 1
 #endif
-// #ifndef SQLITE_OMIT_UTF16
-// # define SQLITE_OMIT_UTF16 1
-// #endif
+//#ifndef SQLITE_OMIT_UTF16
+//# define SQLITE_OMIT_UTF16 1
+//#endif
 #ifndef SQLITE_OS_KV_OPTIONAL
 # define SQLITE_OS_KV_OPTIONAL 1
 #endif
@@ -176,6 +176,48 @@
 
 #ifdef SQLITE_WASM_EXTRA_INIT
 #  define SQLITE_EXTRA_INIT sqlite3_wasm_extra_init
+#endif
+
+/*
+** If SQLITE_WASM_MINIMAL is defined, undefine most of the ENABLE
+** macros.
+*/
+#ifdef SQLITE_WASM_MINIMAL
+#  undef SQLITE_ENABLE_DBPAGE_VTAB
+#  undef SQLITE_ENABLE_DBSTAT_VTAB
+#  undef SQLITE_ENABLE_EXPLAIN_COMMENTS
+#  undef SQLITE_ENABLE_FTS5
+#  undef SQLITE_ENABLE_OFFSET_SQL_FUNC
+#  undef SQLITE_ENABLE_PREUPDATE_HOOK
+#  undef SQLITE_ENABLE_RTREE
+#  undef SQLITE_ENABLE_SESSION
+#  undef SQLITE_ENABLE_STMTVTAB
+#  undef SQLITE_OMIT_AUTHORIZATION
+#  define SQLITE_OMIT_AUTHORIZATION
+/*Reminder re. custom sqlite3.c:
+
+  fossil clean -x
+  ./configure
+  OPTS='-DSQLITE_OMIT_VIRTUALTABLE -DSQLITE_OMIT_EXPLAIN -DSQLITE_OMIT_TRIGGER' make -e sqlite3
+*/
+/*Requires a custom sqlite3.c
+#  undef SQLITE_OMIT_TRIGGER
+#  define SQLITE_OMIT_TRIGGER
+*/
+/*TODO (requires build tweaks)
+#  undef SQLITE_OMIT_WINDOWFUNC
+#  define SQLITE_OMIT_WINDOWFUNC
+*/
+/*Requires a custom sqlite3.c
+#  undef SQLITE_OMIT_EXPLAIN
+#  define SQLITE_OMIT_EXPLAIN
+*/
+/*Requires a custom sqlite3.c
+#  undef SQLITE_OMIT_VIRTUALTABLE
+#  define SQLITE_OMIT_VIRTUALTABLE
+*/
+#  undef SQLITE_OMIT_JSON
+#  define SQLITE_OMIT_JSON
 #endif
 
 #include <assert.h>
@@ -507,6 +549,7 @@ const char * sqlite3__wasm_enum_json(void){
   } _DefGroup;
 
   DefGroup(changeset){
+#ifdef SQLITE_CHANGESETSTART_INVERT
     DefInt(SQLITE_CHANGESETSTART_INVERT);
     DefInt(SQLITE_CHANGESETAPPLY_NOSAVEPOINT);
     DefInt(SQLITE_CHANGESETAPPLY_INVERT);
@@ -521,6 +564,7 @@ const char * sqlite3__wasm_enum_json(void){
     DefInt(SQLITE_CHANGESET_OMIT);
     DefInt(SQLITE_CHANGESET_REPLACE);
     DefInt(SQLITE_CHANGESET_ABORT);
+#endif
   } _DefGroup;
 
   DefGroup(config){
@@ -553,6 +597,10 @@ const char * sqlite3__wasm_enum_json(void){
     DefInt(SQLITE_CONFIG_SMALL_MALLOC);
     DefInt(SQLITE_CONFIG_SORTERREF_SIZE);
     DefInt(SQLITE_CONFIG_MEMDB_MAXSIZE);
+    /* maintenance note: we specifically do not include
+       SQLITE_CONFIG_ROWID_IN_VIEW here, on the grounds that
+       it's only for legacy support and no apps written with
+       this API require that. */
   } _DefGroup;
 
   DefGroup(dataTypes) {
@@ -568,7 +616,6 @@ const char * sqlite3__wasm_enum_json(void){
     DefInt(SQLITE_DBCONFIG_LOOKASIDE);
     DefInt(SQLITE_DBCONFIG_ENABLE_FKEY);
     DefInt(SQLITE_DBCONFIG_ENABLE_TRIGGER);
-    DefInt(SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER);
     DefInt(SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION);
     DefInt(SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE);
     DefInt(SQLITE_DBCONFIG_ENABLE_QPSG);
@@ -863,8 +910,10 @@ const char * sqlite3__wasm_enum_json(void){
   } _DefGroup;
 
   DefGroup(session){
+#ifdef SQLITE_SESSION_CONFIG_STRMSIZE
     DefInt(SQLITE_SESSION_CONFIG_STRMSIZE);
     DefInt(SQLITE_SESSION_OBJCONFIG_SIZE);
+#endif
   } _DefGroup;
 
   DefGroup(sqlite3Status){
@@ -926,6 +975,7 @@ const char * sqlite3__wasm_enum_json(void){
   } _DefGroup;
 
   DefGroup(vtab) {
+#if !defined(SQLITE_OMIT_VIRTUALTABLE) && !defined(SQLITE_WASM_MINIMAL)
     DefInt(SQLITE_INDEX_SCAN_UNIQUE);
     DefInt(SQLITE_INDEX_CONSTRAINT_EQ);
     DefInt(SQLITE_INDEX_CONSTRAINT_GT);
@@ -953,6 +1003,7 @@ const char * sqlite3__wasm_enum_json(void){
     DefInt(SQLITE_FAIL);
     //DefInt(SQLITE_ABORT); // Also an error code
     DefInt(SQLITE_REPLACE);
+#endif /*!SQLITE_OMIT_VIRTUALTABLE*/
   } _DefGroup;
 
 #undef DefGroup
@@ -1112,6 +1163,7 @@ const char * sqlite3__wasm_enum_json(void){
     } _StructBinder;
 #undef CurrentStruct
 
+#if !defined(SQLITE_OMIT_VIRTUALTABLE) && !defined(SQLITE_WASM_MINIMAL)
     /**
      ** Workaround: in order to map the various inner structs from
      ** sqlite3_index_info, we have to uplift those into constructs we
@@ -1187,6 +1239,8 @@ const char * sqlite3__wasm_enum_json(void){
       M(colUsed,            "j");
     } _StructBinder;
 #undef CurrentStruct
+
+#endif /*!SQLITE_OMIT_VIRTUALTABLE*/
 
 #if SQLITE_WASM_TESTS
 #define CurrentStruct WasmTestStruct
@@ -1557,6 +1611,7 @@ sqlite3_kvvfs_methods * sqlite3__wasm_kvvfs_methods(void){
   return &sqlite3KvvfsMethods;
 }
 
+#if !defined(SQLITE_OMIT_VIRTUALTABLE) && !defined(SQLITE_WASM_MINIMAL)
 /*
 ** This function is NOT part of the sqlite3 public API. It is strictly
 ** for use by the sqlite project's own JS/WASM bindings.
@@ -1579,6 +1634,7 @@ int sqlite3__wasm_vtab_config(sqlite3 *pDb, int op, int arg){
     return SQLITE_MISUSE;
   }
 }
+#endif /*!SQLITE_OMIT_VIRTUALTABLE*/
 
 /*
 ** This function is NOT part of the sqlite3 public API. It is strictly
@@ -1682,35 +1738,24 @@ int sqlite3__wasm_config_j(int op, sqlite3_int64 arg){
   return sqlite3_config(op, arg);
 }
 
-#if 0
-// Pending removal after verification of a workaround discussed in the
-// forum post linked to below.
 /*
 ** This function is NOT part of the sqlite3 public API. It is strictly
 ** for use by the sqlite project's own JS/WASM bindings.
 **
-** Returns a pointer to sqlite3_free(). In compliant browsers the
-** return value, when passed to sqlite3.wasm.exports.functionEntry(),
-** must resolve to the same function as
-** sqlite3.wasm.exports.sqlite3_free. i.e. from a dev console where
-** sqlite3 is exported globally, the following must be true:
-**
-** ```
-** sqlite3.wasm.functionEntry(
-**   sqlite3.wasm.exports.sqlite3__wasm_ptr_to_sqlite3_free()
-** ) === sqlite3.wasm.exports.sqlite3_free
-** ```
-**
-** Using a function to return this pointer, as opposed to exporting it
-** via sqlite3__wasm_enum_json(), is an attempt to work around a
-** Safari-specific quirk covered at
-** https://sqlite.org/forum/info/e5b20e1feb37a19a.
-**/
+** If z is not NULL, returns the result of passing z to
+** sqlite3_mprintf()'s %Q modifier (if addQuotes is true) or %q (if
+** addQuotes is 0). Returns NULL if z is NULL or on OOM.
+*/
 SQLITE_WASM_EXPORT
-void * sqlite3__wasm_ptr_to_sqlite3_free(void){
-  return (void*)sqlite3_free;
+char * sqlite3__wasm_qfmt_token(char *z, int addQuotes){
+  char * rc = 0;
+  if( z ){
+    rc = addQuotes
+      ? sqlite3_mprintf("%Q", z)
+      : sqlite3_mprintf("%q", z);
+  }
+  return rc;
 }
-#endif
 
 #if defined(__EMSCRIPTEN__) && defined(SQLITE_ENABLE_WASMFS)
 #include <emscripten/wasmfs.h>
