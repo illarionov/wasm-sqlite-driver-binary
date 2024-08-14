@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3] — 2024-08-14
+
+### Changed
+
+- Update SQLite to 3.46.1
+- Add -SQLITE_OMIT_UTF16 to non-Android builds
+
 ## [0.2] — 2024-08-11
 
 ### Added
