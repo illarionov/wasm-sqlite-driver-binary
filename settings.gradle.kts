@@ -23,7 +23,7 @@ buildscript {
             name = "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin",
             version = "0.16.2",
         )
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20-RC")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20")
     }
 }
 
