@@ -18,7 +18,7 @@ kotlinpoet = "1.18.0"
 kotlinx-binary-compatibility-validator = "0.16.3"
 spotless = "6.25.0"
 junit5 = "5.11.0"
-kotlinx-io ="0.5.1"
+kotlinx-io ="0.5.3"
 mockk = "1.13.12"
 
 [libraries]
