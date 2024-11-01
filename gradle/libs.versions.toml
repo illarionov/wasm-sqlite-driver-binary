@@ -19,7 +19,7 @@ kotlinx-binary-compatibility-validator = "0.16.3"
 spotless = "6.25.0"
 junit5 = "5.11.1"
 kotlinx-io ="0.5.4"
-mockk = "1.13.12"
+mockk = "1.13.13"
 
 [libraries]
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
