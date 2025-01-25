@@ -3,23 +3,23 @@ emscripten = "3.1.64"
 sqlite = "3460100"
 icu = "75.1"
 
-androidCompileSdk = "31"
+androidCompileSdk = "35"
 androidMinSdk = "14"
 
 # keep in sync with root settings.gradle
-agp = "8.5.2"
+agp = "8.8.0"
 assertk = "0.28.1"
-detekt = "1.23.6"
+detekt = "1.23.7"
 diktat = "2.0.0"
 gradle-maven-publish-plugin = "0.30.0"
-kotlin = "2.0.20-RC"
+kotlin = "2.1.0"
 kotlin-compile-testing-fork = "0.5.1"
 kotlinpoet = "2.0.0"
-kotlinx-binary-compatibility-validator = "0.16.3"
-spotless = "6.25.0"
+kotlinx-binary-compatibility-validator = "0.17.0"
+spotless = "7.0.0"
 junit5 = "5.11.1"
-kotlinx-io ="0.5.4"
-mockk = "1.13.13"
+kotlinx-io ="0.6.0"
+mockk = "1.13.14"
 
 [libraries]
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }

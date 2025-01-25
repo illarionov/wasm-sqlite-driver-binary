@@ -13,17 +13,17 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.5.2")
-        classpath("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
+        classpath("com.android.tools.build:gradle:8.8.0")
+        classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.0")
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
-        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
-        classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.6")
+        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.0")
+        classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.0")
         classpath(
             group = "org.jetbrains.kotlinx.binary-compatibility-validator",
             name = "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin",
-            version = "0.16.2",
+            version = "0.17.0",
         )
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20-RC")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
     }
 }
 
