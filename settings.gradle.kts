@@ -16,8 +16,8 @@ buildscript {
         classpath("com.android.tools.build:gradle:8.8.0")
         classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.0")
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
-        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.0")
-        classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.0")
+        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
+        classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.7")
         classpath(
             group = "org.jetbrains.kotlinx.binary-compatibility-validator",
             name = "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin",
