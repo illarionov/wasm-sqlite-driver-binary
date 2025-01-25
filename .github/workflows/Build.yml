@@ -49,14 +49,14 @@ jobs:
       - name: Install EMSDK
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: 3.1.64
+          version: 4.0.1
           actions-cache-folder: 'emsdk-cache'
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '22'
+          java-version: '23'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -129,7 +129,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '22'
+          java-version: '23'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4

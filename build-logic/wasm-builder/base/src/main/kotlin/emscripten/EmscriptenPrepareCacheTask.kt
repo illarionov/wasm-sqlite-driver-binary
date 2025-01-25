@@ -57,7 +57,6 @@ public open class EmscriptenPrepareCacheTask @Inject constructor(
                 "libGL-getprocaddr",
                 "libGL-mt-getprocaddr",
                 "libal",
-                "libbulkmemory",
                 "libc",
                 "libc++-mt-noexcept",
                 "libc++-noexcept",
