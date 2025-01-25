@@ -186,6 +186,11 @@
             <pgp value="3DA35301A7C330257B8755754058F67406EAA6AB"/>
          </artifact>
       </component>
+      <component group="icu" name="sources" version="76.1">
+         <artifact name="sources-76.1.tgz">
+            <pgp value="E52F07877A5805F9AF4AB0ACD46C5610D06E7001"/>
+         </artifact>
+      </component>
       <component group="io.github.classgraph" name="classgraph" version="4.8.174">
          <artifact name="classgraph-4.8.174.jar">
             <pgp value="1F47744C9B6E14F2049C2857F1F111AF65925306"/>

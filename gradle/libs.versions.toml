@@ -1,7 +1,7 @@
 [versions]
 emscripten = "4.0.1"
 sqlite = "3460100"
-icu = "75.1"
+icu = "76.1"
 
 androidCompileSdk = "35"
 androidMinSdk = "14"
