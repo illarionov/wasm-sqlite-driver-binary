@@ -1,5 +1,25 @@
 # Change Log
 
+## [0.4] — 2025-01-25
+
+#### 🚀 New Feature
+
+- SQLite 3.48.0 builds with ICU 76.1 and Emscripten 4.0.1
+
+#### 💥 Breaking Change
+
+- SQLite 3.46 build configurations have been discontinued
+
+#### 🤖 Dependencies
+
+- Emscripten 4.0.1
+- SQLite 3.48.0
+- ICU 76.1
+- Android Gradle Plugin 8.3.7
+- Kotlin 2.1.0
+- Kotlinx-io 0.6.0
+- Other dependencies used in the build pipeline have also been updated.
+
 ## [0.3] — 2024-08-14
 
 ### Changed
