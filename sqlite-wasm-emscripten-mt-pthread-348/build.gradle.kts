@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, the wasm-sqlite-open-helper project authors and contributors. Please see the AUTHORS file
+ * Copyright 2024-2025, the wasm-sqlite-open-helper project authors and contributors. Please see the AUTHORS file
  * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -27,15 +27,15 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_mt_pthread_346_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_MT_PTHREAD_346_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_mt_pthread_348_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_MT_PTHREAD_348_VERSION",
 ).get()
 
 sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("wasm-emscripten-mt-pthread-346") {
+        create("wasm-emscripten-mt-pthread-348") {
             sqliteVersion = defaultSqliteVersion
             codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
             emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
@@ -52,7 +52,7 @@ sqlite3Build {
 
 sqliteConfigGenerator {
     configurations {
-        create("wasm-emscripten-mt-pthread-346") {
+        create("wasm-emscripten-mt-pthread-348") {
             fromSqliteBuild(objects, sqlite3Build)
         }
     }
@@ -82,5 +82,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenmtpthread346"
+    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenmtpthread348"
 }

@@ -14,7 +14,7 @@ public fun RepositoryHandler.sqliteRepository(): Unit = exclusiveContent {
         ivy {
             url = URI("https://www.sqlite.org/")
             patternLayout {
-                artifact("2024/sqlite-amalgamation-[revision].[ext]")
+                artifact("2025/sqlite-amalgamation-[revision].[ext]")
             }
             metadataSources {
                 artifact()

@@ -38,6 +38,17 @@ public object OpenHelperConfig {
         // Default file system
         add(defaultUnixVfs.sqliteBuildOption)
 
+        // Additional features from sqlite-webassembly config
+        addAll(
+            listOf(
+                "-DSQLITE_ENABLE_EXPLAIN_COMMENTS",
+                "-DSQLITE_ENABLE_MATH_FUNCTIONS",
+                "-DSQLITE_ENABLE_OFFSET_SQL_FUNC",
+                "-DSQLITE_ENABLE_PREUPDATE_HOOK", // required by session extension
+                "-DSQLITE_ENABLE_SESSION",
+            ),
+        )
+
         // Additional features
         addAll(
             listOf(
