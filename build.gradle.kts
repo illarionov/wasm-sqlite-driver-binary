@@ -7,10 +7,10 @@ plugins {
 
 dependencies {
     listOf(
-        projects.sqliteAndroidWasmEmscriptenIcu346,
-        projects.sqliteAndroidWasmEmscriptenIcuMtPthread346,
-        projects.sqliteWasmEmscripten346,
-        projects.sqliteWasmEmscriptenMtPthread346,
+        projects.sqliteAndroidWasmEmscriptenIcu348,
+        projects.sqliteAndroidWasmEmscriptenIcuMtPthread348,
+        projects.sqliteWasmEmscripten348,
+        projects.sqliteWasmEmscriptenMtPthread348,
     ).forEach {
         add("wasmArchiveAggregation", it)
         add("mavenSnapshotAggregation", it)

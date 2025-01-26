@@ -1,19 +1,28 @@
 /*
- * Copyright 2024, the wasm-sqlite-open-helper project authors and contributors. Please see the AUTHORS file
+ * Copyright 2024-2025, the wasm-sqlite-open-helper project authors and contributors. Please see the AUTHORS file
  * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
+import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
+import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
 import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
+import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
+import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
- *  * No multithreading support
+ *  * Configuration similar to AOSP
+ *  * Android-specific patches applied
+ *  * Android-specific Localized collators
+ *  * Multithreading using pthread
+ *  * ICU statically compiled
  */
 plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
@@ -27,38 +36,41 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_346_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_346_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_mt_pthread_348_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_MT_PTHREAD_348_VERSION",
 ).get()
+
+dependencies {
+    "wasmLibraries"(projects.icuWasm) {
+        attributes {
+            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, true)
+            attribute(ICU_DATA_PACKAGING_ATTRIBUTE, ICU_DATA_PACKAGING_STATIC)
+        }
+    }
+}
 
 sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("wasm-emscripten-346") {
+        create("android-wasm-emscripten-icu-mt-pthread-348") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
-            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags
-                .filter { !it.startsWith("-sINITIAL_MEMORY=") }
-                .filter { it != "-sERROR_ON_UNDEFINED_SYMBOLS" }
-                .toList() + listOf(
-                "-sINITIAL_MEMORY=4194304",
-                "-sERROR_ON_UNDEFINED_SYMBOLS=0",
-            )
-
-            additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
             sqliteFlags = OpenHelperConfig.getBuildFlags(
-                enableIcu = false,
-                enableMultithreading = false,
-            ) + "-DSQLITE_OMIT_UTF16"
-            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctions
+                enableIcu = true,
+                enableMultithreading = true,
+            )
+            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
+            setupIcu(project)
+            setupAndroidExtensions(project)
         }
     }
 }
 
 sqliteConfigGenerator {
     configurations {
-        create("wasm-emscripten-346") {
+        create("android-wasm-emscripten-icu-mt-pthread-348") {
             fromSqliteBuild(objects, sqlite3Build)
         }
     }
@@ -88,5 +100,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.pixnews.wasm.sqlite.binary.emscripten346"
+    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenicumtpthread348"
 }

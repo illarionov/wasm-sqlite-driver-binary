@@ -1,13 +1,13 @@
 [versions]
 emscripten = "4.0.1"
-sqlite = "3460100"
+sqlite = "3480000"
 icu = "76.1"
 
 androidCompileSdk = "35"
 androidMinSdk = "14"
 
 # keep in sync with root settings.gradle
-agp = "8.8.0"
+agp = "8.7.3"
 assertk = "0.28.1"
 detekt = "1.23.7"
 diktat = "2.0.0"
