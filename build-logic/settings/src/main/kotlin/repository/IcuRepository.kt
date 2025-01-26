@@ -14,7 +14,7 @@ public fun RepositoryHandler.icuRepository(): Unit = exclusiveContent {
         ivy {
             url = URI("https://github.com/unicode-org/icu/releases/download")
             patternLayout {
-                artifact("release-75-1/icu4c-75_1-src.[ext]")
+                artifact("release-76-1/icu4c-76_1-src.[ext]")
             }
             metadataSources {
                 artifact()
