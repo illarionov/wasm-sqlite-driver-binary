@@ -44,6 +44,7 @@
          <trusted-key id="7E22D50A7EBD9D2CD269B2D4056ACA74D46000BF" group="io.netty"/>
          <trusted-key id="837B2CBB1D966C80643A2D6527F164F945828C4C" group="^com[.]willowtreeapps($|([.].*))" regex="true"/>
          <trusted-key id="8756C4F765C9AC3CB6B85D62379CE192D401AB61" group="com.diffplug.durian"/>
+         <trusted-key id="8AB4B1AB3F0067ED73E00F0062C98BA8FCF62075" group="at.released.tempfolder"/>
          <trusted-key id="A5BD02B93E7A40482EB1D66A5F69AD087600B22C" group="org.ow2.asm"/>
          <trusted-key id="A5F483CD733A4EBAEA378B2AE88979FB9B30ACF2">
             <trusting group="androidx.databinding"/>
@@ -279,6 +280,11 @@
       <component group="org.checkerframework" name="checker-qual" version="3.33.0">
          <artifact name="checker-qual-3.33.0.jar">
             <pgp value="19BEAB2D799C020F17C69126B16698A4ADF4D638"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.groovy" name="groovy" version="3.0.21">
+         <artifact name="groovy-3.0.21.jar">
+            <pgp value="34441E504A937F43EB0DAEF96A65176A0FB1CD0B"/>
          </artifact>
       </component>
       <component group="org.codehaus.groovy" name="groovy" version="3.0.22">
