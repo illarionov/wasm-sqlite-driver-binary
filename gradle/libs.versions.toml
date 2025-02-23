@@ -20,6 +20,7 @@ spotless = "7.0.0"
 junit5 = "5.11.1"
 kotlinx-io ="0.6.0"
 mockk = "1.13.16"
+tempfolder = "0.1"
 
 [libraries]
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
@@ -32,6 +33,7 @@ kotlin-compile-testing = { group = "dev.zacsweers.kctfork", name = "core", versi
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+tempfolder = { group = "at.released.tempfolder", name = "tempfolder-sync", version.ref = "tempfolder" }
 
 # Dependencies of the included build-logic
 agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

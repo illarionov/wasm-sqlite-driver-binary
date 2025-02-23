@@ -21,11 +21,9 @@ kotlin {
     androidTarget()
     jvm()
     js {
-      browser()
       nodejs()
     }
     wasmJs {
-        browser()
         nodejs()
     }
     iosArm64()
@@ -51,7 +49,7 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.assertk)
-            implementation(projects.commonTempfolder)
+            implementation(libs.tempfolder)
         }
         nativeMain.dependencies {
             implementation(projects.commonXdg)

@@ -16,7 +16,6 @@ dependencies {
         add("mavenSnapshotAggregation", it)
     }
     listOf(
-        projects.commonTempfolder,
         projects.commonXdg,
         projects.sqliteBinaryApi,
         projects.wasmBinaryReader,
