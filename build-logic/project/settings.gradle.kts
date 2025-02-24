@@ -6,6 +6,7 @@
 
 pluginManagement {
     includeBuild("../settings")
+    includeBuild("../wasm-builder") { name = "sohb-gradle-wasm-builder-plugins" }
 }
 
 plugins {

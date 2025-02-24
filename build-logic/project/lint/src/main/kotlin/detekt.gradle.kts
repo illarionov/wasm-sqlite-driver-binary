@@ -17,6 +17,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt")
 }
 
+@Suppress("UnstableApiUsage")
 val detektCheck = tasks.register("detektCheck", Detekt::class) {
     description = "Custom detekt for to check all modules"
 
@@ -30,7 +31,7 @@ val detektCheck = tasks.register("detektCheck", Detekt::class) {
                 it.name.endsWith(".kt") || it.name.endsWith(".kts")
             },
     )
-    basePath = rootProject.projectDir.toString()
+    basePath = layout.settingsDirectory.asFile.toString()
 
     parallel = true
     ignoreFailures = false

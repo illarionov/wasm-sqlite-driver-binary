@@ -19,24 +19,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-
-    // Get our own convention plugins from 'gradle/plugin/project'
-    listOf(
-        "project" to "sohb-gradle-project-plugins",
-        "wasm-builder" to "sohb-gradle-wasm-builder-plugins",
-    ).forEach { (path, gradleProjectsPluginName) ->
-        if (File(rootDir, "build-logic/$path").exists()) {
-            includeBuild("build-logic/$path") {
-                name = gradleProjectsPluginName
-            }
-        }
-        // If not the main build, 'project' is located next to the build
-        if (File(rootDir, "../$path").exists()) {
-            includeBuild("../$path") {
-                name = gradleProjectsPluginName
-            }
-        }
-    }
 }
 
 dependencyResolutionManagement {

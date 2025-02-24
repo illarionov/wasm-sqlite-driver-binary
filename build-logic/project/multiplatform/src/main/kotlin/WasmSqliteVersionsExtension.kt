@@ -20,8 +20,9 @@ import javax.inject.Inject
 
 private const val VERSION_PROPERTIES_PATH = "config/version.properties"
 
+@Suppress("UnstableApiUsage")
 internal fun Project.createWasmSqliteVersionsExtension(): WasmSqliteVersionsExtension {
-    val configFilePath: RegularFile = rootProject.layout.projectDirectory.file(VERSION_PROPERTIES_PATH)
+    val configFilePath: RegularFile = layout.settingsDirectory.file(VERSION_PROPERTIES_PATH)
     return extensions.create<WasmSqliteVersionsExtension>("wasmSqliteVersions", configFilePath)
 }
 
