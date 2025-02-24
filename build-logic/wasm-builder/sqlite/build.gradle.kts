@@ -45,7 +45,6 @@ testing {
             }
         }
         register<JvmTestSuite>("functionalTest") {
-            testType = "functional-test"
             useJUnit()
 
             dependencies {

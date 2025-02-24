@@ -78,9 +78,7 @@ testing {
                 }
             }
         }
-        register<JvmTestSuite>("functionalTest") {
-            testType = "functional-test"
-        }
+        register<JvmTestSuite>("functionalTest")
     }
 }
 
