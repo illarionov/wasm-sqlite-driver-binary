@@ -135,6 +135,9 @@
 - name: PACKAGE_NAME_INCORRECT_PATH
   enabled: false
 
+- name: PACKAGE_NAME_INCORRECT_PREFIX
+  enabled: false
+
 - name: RUN_IN_SCRIPT
   enabled: false
 

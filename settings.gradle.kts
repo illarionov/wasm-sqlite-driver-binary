@@ -2,6 +2,7 @@ pluginManagement {
     includeBuild("build-logic/settings")
     includeBuild("build-logic/project") { name = "sohb-gradle-project-plugins" }
     includeBuild("build-logic/wasm-builder") { name = "sohb-gradle-wasm-builder-plugins" }
+    includeBuild("build-logic/chicory-aot-gradle") { name = "sohb-chicory-aot-plugin" }
 }
 
 plugins {
@@ -39,4 +40,5 @@ include("icu-wasm")
 include("sqlite-android-wasm-emscripten-icu-mt-pthread-348")
 include("sqlite-android-wasm-emscripten-icu-348")
 include("sqlite-wasm-emscripten-348")
+include("sqlite-wasm-emscripten-aot-348")
 include("sqlite-wasm-emscripten-mt-pthread-348")

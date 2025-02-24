@@ -26,12 +26,14 @@
          </trusted-key>
          <trusted-key id="0785B3EFF60B1B1BEA94E0BB7C25280EAE63EBE5" group="org.apache.httpcomponents"/>
          <trusted-key id="0D35D3F60078655126908E8AF3D1600878E85A3D" group="io.netty"/>
+         <trusted-key id="19BEAB2D799C020F17C69126B16698A4ADF4D638" group="org.checkerframework" name="checker-qual"/>
          <trusted-key id="2DB4F1EF0FA761ECC4EA935C86FDC7E2A11262CB" group="commons-codec"/>
          <trusted-key id="4797B4F5DCC46CEA61059071A1AE06236CA2BA62" group="^com[.]diffplug($|([.].*))" regex="true"/>
          <trusted-key id="59B06224FD8912E36603BE79FEFE78456EDDC34A" group="io.mockk"/>
          <trusted-key id="5F6C2148AD4911FE308110E5F0D0AE433308B042" group="io.gitlab.arturbosch.detekt"/>
          <trusted-key id="694621A7227D8D5289699830ABE9F3126BB741C1" group="^com[.]google($|([.].*))" regex="true"/>
          <trusted-key id="696B6199A2A9D8C29CE78CC0D041CAD2E452550F" group="com.google.protobuf"/>
+         <trusted-key id="6DE9B8077FBB2F8A019F4904BD17A565509DEE20" group="com.github.javaparser"/>
          <trusted-key id="6F538074CCEBF35F28AF9B066A0975F8B1127B83" group="org.jetbrains.kotlin"/>
          <trusted-key id="7B121B76A7ED6CE6E60AD51784E913A8E3A748C0" group="org.bouncycastle"/>
          <trusted-key id="7B72C18D9C362314BF8E981B0CAEBC0883C5BB65" group="com.vanniktech"/>
@@ -59,6 +61,7 @@
          <trusted-key id="E7DC75FC24FB3C8DFE8086AD3D5839A2262CBBFB" group="org.jetbrains.kotlinx"/>
          <trusted-key id="EE0CA873074092F806F59B65D364ABAA39A47320" group="com.google.errorprone" name="error_prone_annotations"/>
          <trusted-key id="FA7929F83AD44C4590F6CC6815C71C0A4E0B8EDD" group="net.java.dev.jna"/>
+         <trusted-key id="FC22B1D003762F7336CE946C1C300EDE197A9487" group="com.dylibso.chicory"/>
          <trusted-key id="FF6E2C001948C5F2F38B0CC385911F425EC61B51" group="^org[.]junit($|([.].*))" regex="true"/>
       </trusted-keys>
    </configuration>
@@ -106,6 +109,11 @@
       <component group="com.google.j2objc" name="j2objc-annotations" version="2.8">
          <artifact name="j2objc-annotations-2.8.jar">
             <pgp value="EB1B3DE71713C9EC2E87CC26EE92349AD86DE446"/>
+         </artifact>
+      </component>
+      <component group="com.google.j2objc" name="j2objc-annotations" version="3.0.0">
+         <artifact name="j2objc-annotations-3.0.0.jar">
+            <pgp value="BDB5FA4FE719D787FB3D3197F6D4A1D411E9D1AE"/>
          </artifact>
       </component>
       <component group="com.googlecode.concurrent-trees" name="concurrent-trees" version="2.6.1">
@@ -351,6 +359,11 @@
       <component group="org.hamcrest" name="hamcrest-core" version="1.3">
          <artifact name="hamcrest-core-1.3.jar">
             <pgp value="4DB1A49729B053CAF015CEE9A6ADFC93EF34893E"/>
+         </artifact>
+      </component>
+      <component group="org.javassist" name="javassist" version="3.30.2-GA">
+         <artifact name="javassist-3.30.2-GA.jar">
+            <pgp value="E5C3B1929191DF06136CCB2B164779204E106A76"/>
          </artifact>
       </component>
       <component group="org.jcommander" name="jcommander" version="1.85">
