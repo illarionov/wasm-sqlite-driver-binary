@@ -8,18 +8,19 @@ package ru.pixnews.wasm.sqlite.binary.reader
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import at.released.tempfolder.sync.TempDirectory
+import at.released.tempfolder.sync.createTempDirectory
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.writeString
 import ru.pixnews.wasm.sqlite.binary.base.WasmSourceUrl
-import ru.pixnews.wasm.sqlite.open.helper.common.tempfolder.TempFolder
 import kotlin.test.AfterTest
 import kotlin.test.Test
 
 class AppleFileManagerSourceReaderTest {
-    private val tempFolder: TempFolder = TempFolder.create()
+    private val tempFolder: TempDirectory<*> = createTempDirectory { prefix = "wasm-binary-reader-" }
     private val fileSystem: FileSystem = SystemFileSystem
 
     @AfterTest
@@ -30,7 +31,7 @@ class AppleFileManagerSourceReaderTest {
     @Test
     fun appleFileManagerSourceReader_shouldRedPath() {
         val url = WasmSourceUrl("resource.txt")
-        val path = Path(tempFolder.resolve("src/macosMain/${url.url}"))
+        val path = Path(tempFolder.append("src/macosMain/${url.url}").asString())
         SystemFileSystem.run {
             createDirectories(path.parent!!)
             sink(path).buffered().use {
@@ -40,7 +41,7 @@ class AppleFileManagerSourceReaderTest {
 
         val reader = AppleFileManagerSourceReader(
             fileSystem = fileSystem,
-            basePath = tempFolder.path,
+            basePath = tempFolder.absolutePath().asString(),
         )
 
         val resourceContent = reader.readBytesOrThrow(url).decodeToString()
