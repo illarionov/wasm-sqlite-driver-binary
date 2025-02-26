@@ -14,7 +14,7 @@ plugins {
     `maven-publish`
 }
 
-group = "at.released.gradle.chicory.aot"
+group = "at.released.wasm2class"
 
 dependencies {
     implementation(libs.gradle.maven.publish.plugin)
@@ -38,6 +38,8 @@ dependencies {
     compileOnly(libs.chicory.runtime)
     compileOnly(libs.chicory.wasm)
     compileOnly(libs.javaparser)
+    compileOnly(libs.agp.plugin.api)
+    compileOnly(libs.kotlin.gradle.plugin)
 }
 
 testing {

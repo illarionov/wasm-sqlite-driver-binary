@@ -6,8 +6,6 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
-import at.released.gradle.chicory.aot.WasmAotGeneratorTask
-import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
 import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
@@ -22,9 +20,10 @@ import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
  * sqlite-android-wasm-emscripten-icu-348 compiled to .class files
  */
 plugins {
-    id("at.released.gradle.chicory.aot.generator.base")
+    id("at.released.wasm2class.plugin")
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
     id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.generator")
     id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
@@ -44,8 +43,6 @@ dependencies {
         }
     }
 }
-
-val aotRootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
 
 sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
@@ -68,41 +65,39 @@ sqlite3Build {
     }
 }
 
-sqliteConfigGenerator {
-    configurations {
-        create("android-wasm-emscripten-icu-aot-348") {
-            rootPackage = aotRootPackage
-            fromSqliteBuild(objects, sqlite3Build)
+private val aotRootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
+private val sqliteBuild = sqlite3Build.builds["android-wasm-emscripten-icu-aot-348"]
+
+wasm2class {
+    targetPackage = aotRootPackage
+    modules {
+        create("AndroidWasmEmscriptenIcuAot348") {
+            wasm = sqliteBuild.strippedWasmOutput
         }
     }
 }
 
-val aotGeneratorTask = tasks.register<WasmAotGeneratorTask>("generateAndroidWasmEmscriptenIcu348Aot") {
-    wasmBinary = sqlite3Build.builds.named("android-wasm-emscripten-icu-aot-348").flatMap(SqliteWasmBuildSpec::strippedWasmOutput)
-    rootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
-    moduleClassBaseName = "SqliteAndroidEmscriptenIcuAot348"
+sqliteConfigGenerator {
+    configurations {
+        create(sqliteBuild.name) {
+            rootPackage = aotRootPackage
+            fromSqliteBuild(objects, sqlite3Build)
+            wasmFileName = "AndroidWasmEmscriptenIcuAot348.meta"
+        }
+    }
 }
 
-val outputClasses = files(aotGeneratorTask.flatMap(WasmAotGeneratorTask::outputClasses))
-
 kotlin {
+    androidTarget()
     jvm()
 
     sourceSets {
         commonMain.dependencies {
             api(projects.sqliteBinaryApi)
         }
-        jvmMain.dependencies {
-            api(libs.chicory.runtime)
-            compileOnly(outputClasses)
-        }
     }
 }
 
-java {
-    sourceSets.named("jvmMain") {
-        java.srcDir(aotGeneratorTask.flatMap(WasmAotGeneratorTask::outputSources))
-        resources.srcDir(aotGeneratorTask.flatMap(WasmAotGeneratorTask::outputResources))
-        resources.srcDir(outputClasses)
-    }
+android {
+    namespace = aotRootPackage
 }
