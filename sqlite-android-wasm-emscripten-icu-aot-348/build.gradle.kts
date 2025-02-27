@@ -6,14 +6,18 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
+import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
+import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
 import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
+import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
+import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
- * SQLite WebAssembly Build with Emscripten
- *  * No multithreading support
+ * sqlite-android-wasm-emscripten-icu-348 compiled to .class files
  */
 plugins {
     id("at.released.wasm2class.plugin")
@@ -27,42 +31,47 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_aot_348_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_AOT_348_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_aot_348_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_AOT_348_VERSION",
 ).get()
+
+dependencies {
+    "wasmLibraries"(projects.icuWasm) {
+        attributes {
+            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, false)
+            attribute(ICU_DATA_PACKAGING_ATTRIBUTE, ICU_DATA_PACKAGING_STATIC)
+        }
+    }
+}
 
 sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("wasm-emscripten-aot-348") {
+        create("android-wasm-emscripten-icu-aot-348") {
             sqliteVersion = defaultSqliteVersion
             codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
-            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags
-                .filter { !it.startsWith("-sINITIAL_MEMORY=") }
-                .filter { it != "-sERROR_ON_UNDEFINED_SYMBOLS" }
-                .toList() + listOf(
-                "-sINITIAL_MEMORY=4194304",
-                "-sERROR_ON_UNDEFINED_SYMBOLS=0",
-            )
-
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags -
+                    "-sERROR_ON_UNDEFINED_SYMBOLS" + "-sERROR_ON_UNDEFINED_SYMBOLS=0"
             additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
             sqliteFlags = OpenHelperConfig.getBuildFlags(
-                enableIcu = false,
+                enableIcu = true,
                 enableMultithreading = false,
-            ) + "-DSQLITE_OMIT_UTF16"
+            )
             exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctions
+            setupIcu(project)
+            setupAndroidExtensions(project)
         }
     }
 }
 
 private val aotRootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
-private val sqliteBuild = sqlite3Build.builds["wasm-emscripten-aot-348"]
+private val sqliteBuild = sqlite3Build.builds["android-wasm-emscripten-icu-aot-348"]
 
 wasm2class {
     targetPackage = aotRootPackage
     modules {
-        create("AotWasmEmscripten348") {
+        create("AndroidWasmEmscriptenIcuAot348") {
             wasm = sqliteBuild.strippedWasmOutput
         }
     }
@@ -73,7 +82,7 @@ sqliteConfigGenerator {
         create(sqliteBuild.name) {
             rootPackage = aotRootPackage
             fromSqliteBuild(objects, sqlite3Build)
-            wasmFileName = "AotWasmEmscripten348.meta"
+            wasmFileName = "AndroidWasmEmscriptenIcuAot348.meta"
         }
     }
 }

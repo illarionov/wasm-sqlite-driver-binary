@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.gradle.chicory.aot
+package at.released.wasm2class.generator
 
 import com.dylibso.chicory.wasm.Parser
 import com.dylibso.chicory.wasm.WasmModule
@@ -16,6 +16,7 @@ import com.dylibso.chicory.wasm.types.Section
 import com.dylibso.chicory.wasm.types.SectionId
 import java.io.ByteArrayOutputStream
 
+// Based on the https://github.com/dylibso/chicory/tree/main/aot-maven-plugin
 internal fun generateWasmMeta(wasmBytes: ByteArray, module: WasmModule): ByteArray {
     val writer = WasmWriter()
     Parser.parseWithoutDecoding(wasmBytes) { section: Section ->

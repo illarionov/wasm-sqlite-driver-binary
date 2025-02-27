@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.gradle.chicory.aot
+package at.released.wasm2class
 
 import java.util.Locale
 
