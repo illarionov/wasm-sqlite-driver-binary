@@ -7,10 +7,10 @@ plugins {
 
 dependencies {
     listOf(
-        projects.sqliteAndroidWasmEmscriptenIcu348,
-        projects.sqliteAndroidWasmEmscriptenIcuMtPthread348,
-        projects.sqliteWasmEmscripten348,
-        projects.sqliteWasmEmscriptenMtPthread348,
+        projects.sqliteAndroidWasmEmscriptenIcu349,
+        projects.sqliteAndroidWasmEmscriptenIcuMtPthread349,
+        projects.sqliteWasmEmscripten349,
+        projects.sqliteWasmEmscriptenMtPthread349,
     ).forEach {
         add("wasmArchiveAggregation", it)
         add("mavenSnapshotAggregation", it)
@@ -19,8 +19,8 @@ dependencies {
         projects.commonXdg,
         projects.sqliteBinaryApi,
         projects.wasmBinaryReader,
-        projects.sqliteWasmEmscriptenAot348,
-        projects.sqliteAndroidWasmEmscriptenIcuAot348,
+        projects.sqliteWasmEmscriptenAot349,
+        projects.sqliteAndroidWasmEmscriptenIcuAot349,
     ).forEach {
         add("mavenSnapshotAggregation", it)
     }

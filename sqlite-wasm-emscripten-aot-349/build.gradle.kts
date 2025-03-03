@@ -13,47 +13,67 @@ import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
- *  * Multithreading using pthread
+ *  * No multithreading support
  */
 plugins {
+    id("at.released.wasm2class.plugin")
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
+    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
     id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.generator")
     id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
 }
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_mt_pthread_348_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_MT_PTHREAD_348_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_aot_349_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_AOT_349_VERSION",
 ).get()
 
 sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("wasm-emscripten-mt-pthread-348") {
+        create("wasm-emscripten-aot-349") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
-            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags
                 .filter { !it.startsWith("-sINITIAL_MEMORY=") }
-                .toList() + "-sINITIAL_MEMORY=4194304"
+                .filter { it != "-sERROR_ON_UNDEFINED_SYMBOLS" }
+                .toList() + listOf(
+                "-sINITIAL_MEMORY=4194304",
+                "-sERROR_ON_UNDEFINED_SYMBOLS=0",
+            )
+
+            additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
             sqliteFlags = OpenHelperConfig.getBuildFlags(
                 enableIcu = false,
-                enableMultithreading = true,
+                enableMultithreading = false,
             ) + "-DSQLITE_OMIT_UTF16"
-            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
+            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctions
+        }
+    }
+}
+
+private val aotRootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
+private val sqliteBuild = sqlite3Build.builds["wasm-emscripten-aot-349"]
+
+wasm2class {
+    targetPackage = aotRootPackage
+    modules {
+        create("AotWasmEmscripten349") {
+            wasm = sqliteBuild.strippedWasmOutput
         }
     }
 }
 
 sqliteConfigGenerator {
     configurations {
-        create("wasm-emscripten-mt-pthread-348") {
+        create(sqliteBuild.name) {
+            rootPackage = aotRootPackage
             fromSqliteBuild(objects, sqlite3Build)
+            wasmFileName = "AotWasmEmscripten349.meta"
         }
     }
 }
@@ -61,18 +81,6 @@ sqliteConfigGenerator {
 kotlin {
     androidTarget()
     jvm()
-    js {
-        browser()
-        nodejs()
-    }
-    linuxArm64()
-    linuxX64()
-    iosArm64()
-    iosSimulatorArm64()
-    iosX64()
-    macosX64()
-    macosArm64()
-    mingwX64()
 
     sourceSets {
         commonMain.dependencies {
@@ -82,5 +90,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenmtpthread348"
+    namespace = aotRootPackage
 }
