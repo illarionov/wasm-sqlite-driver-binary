@@ -49,7 +49,7 @@ jobs:
       - name: Install EMSDK
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: 4.0.1
+          version: 4.0.4
           actions-cache-folder: 'emsdk-cache'
 
       - name: Setup Java
