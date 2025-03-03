@@ -6,23 +6,14 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
-import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
 import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
-import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
-import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
- *  * Configuration similar to AOSP
- *  * Android-specific patches applied
- *  * Android-specific Localized collators
- *  * Multithreading using pthread
- *  * ICU statically compiled
+ *  * No multithreading support
  */
 plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
@@ -36,41 +27,38 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_mt_pthread_348_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_MT_PTHREAD_348_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_349_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_349_VERSION",
 ).get()
-
-dependencies {
-    "wasmLibraries"(projects.icuWasm) {
-        attributes {
-            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, true)
-            attribute(ICU_DATA_PACKAGING_ATTRIBUTE, ICU_DATA_PACKAGING_STATIC)
-        }
-    }
-}
 
 sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("android-wasm-emscripten-icu-mt-pthread-348") {
+        create("wasm-emscripten-349") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
-            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
-            sqliteFlags = OpenHelperConfig.getBuildFlags(
-                enableIcu = true,
-                enableMultithreading = true,
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags
+                .filter { !it.startsWith("-sINITIAL_MEMORY=") }
+                .filter { it != "-sERROR_ON_UNDEFINED_SYMBOLS" }
+                .toList() + listOf(
+                "-sINITIAL_MEMORY=4194304",
+                "-sERROR_ON_UNDEFINED_SYMBOLS=0",
             )
-            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
-            setupIcu(project)
-            setupAndroidExtensions(project)
+
+            additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
+            sqliteFlags = OpenHelperConfig.getBuildFlags(
+                enableIcu = false,
+                enableMultithreading = false,
+            ) + "-DSQLITE_OMIT_UTF16"
+            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctions
         }
     }
 }
 
 sqliteConfigGenerator {
     configurations {
-        create("android-wasm-emscripten-icu-mt-pthread-348") {
+        create("wasm-emscripten-349") {
             fromSqliteBuild(objects, sqlite3Build)
         }
     }
@@ -100,5 +88,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenicumtpthread348"
+    namespace = "ru.pixnews.wasm.sqlite.binary.emscripten349"
 }

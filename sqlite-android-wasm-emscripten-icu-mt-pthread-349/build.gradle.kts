@@ -18,11 +18,11 @@ import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
- *  * Based on the AOSP SQLite configuration
+ *  * Configuration similar to AOSP
  *  * Android-specific patches applied
  *  * Android-specific Localized collators
+ *  * Multithreading using pthread
  *  * ICU statically compiled
- *  * No multithreading support
  */
 plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
@@ -36,14 +36,14 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_348_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_348_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_mt_pthread_349_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_MT_PTHREAD_349_VERSION",
 ).get()
 
 dependencies {
     "wasmLibraries"(projects.icuWasm) {
         attributes {
-            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, false)
+            attribute(EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE, true)
             attribute(ICU_DATA_PACKAGING_ATTRIBUTE, ICU_DATA_PACKAGING_STATIC)
         }
     }
@@ -53,17 +53,15 @@ sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("android-wasm-emscripten-icu-348") {
+        create("android-wasm-emscripten-icu-mt-pthread-349") {
             sqliteVersion = defaultSqliteVersion
-            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
-            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags -
-                    "-sERROR_ON_UNDEFINED_SYMBOLS" + "-sERROR_ON_UNDEFINED_SYMBOLS=0"
-            additionalSourceFiles.from("../sqlite-android-common/sqlite/wasm/api/callbacks-wasm.c")
+            codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlagsMultithread
+            emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlagsMultithread
             sqliteFlags = OpenHelperConfig.getBuildFlags(
                 enableIcu = true,
-                enableMultithreading = false,
+                enableMultithreading = true,
             )
-            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctions
+            exportedFunctions = SqliteExportedFunctions.openHelperExportedFunctionsMultithread
             setupIcu(project)
             setupAndroidExtensions(project)
         }
@@ -72,7 +70,7 @@ sqlite3Build {
 
 sqliteConfigGenerator {
     configurations {
-        create("android-wasm-emscripten-icu-348") {
+        create("android-wasm-emscripten-icu-mt-pthread-349") {
             fromSqliteBuild(objects, sqlite3Build)
         }
     }
@@ -102,5 +100,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenicu348"
+    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenicumtpthread349"
 }

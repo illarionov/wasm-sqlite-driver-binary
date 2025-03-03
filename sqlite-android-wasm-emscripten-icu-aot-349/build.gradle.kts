@@ -17,7 +17,7 @@ import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
 import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
- * sqlite-android-wasm-emscripten-icu-348 compiled to .class files
+ * sqlite-android-wasm-emscripten-icu-349 compiled to .class files
  */
 plugins {
     id("at.released.wasm2class.plugin")
@@ -31,8 +31,8 @@ plugins {
 
 group = "ru.pixnews.wasm-sqlite-open-helper"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_aot_348_version",
-    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_AOT_348_VERSION",
+    propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_aot_349_version",
+    envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_AOT_349_VERSION",
 ).get()
 
 dependencies {
@@ -48,7 +48,7 @@ sqlite3Build {
     val defaultSqliteVersion = versionCatalogs.named("libs").findVersion("sqlite").get().toString()
 
     builds {
-        create("android-wasm-emscripten-icu-aot-348") {
+        create("android-wasm-emscripten-icu-aot-349") {
             sqliteVersion = defaultSqliteVersion
             codeGenerationFlags = SqliteCodeGenerationFlags.codeGenerationFlags
             emscriptenFlags = SqliteCodeGenerationFlags.emscriptenFlags -
@@ -66,12 +66,12 @@ sqlite3Build {
 }
 
 private val aotRootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
-private val sqliteBuild = sqlite3Build.builds["android-wasm-emscripten-icu-aot-348"]
+private val sqliteBuild = sqlite3Build.builds["android-wasm-emscripten-icu-aot-349"]
 
 wasm2class {
     targetPackage = aotRootPackage
     modules {
-        create("AndroidWasmEmscriptenIcuAot348") {
+        create("AndroidWasmEmscriptenIcuAot349") {
             wasm = sqliteBuild.strippedWasmOutput
         }
     }
@@ -82,7 +82,7 @@ sqliteConfigGenerator {
         create(sqliteBuild.name) {
             rootPackage = aotRootPackage
             fromSqliteBuild(objects, sqlite3Build)
-            wasmFileName = "AndroidWasmEmscriptenIcuAot348.meta"
+            wasmFileName = "AndroidWasmEmscriptenIcuAot349.meta"
         }
     }
 }
