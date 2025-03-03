@@ -19,6 +19,8 @@ dependencies {
         projects.commonXdg,
         projects.sqliteBinaryApi,
         projects.wasmBinaryReader,
+        projects.sqliteWasmEmscriptenAot348,
+        projects.sqliteAndroidWasmEmscriptenIcuAot348,
     ).forEach {
         add("mavenSnapshotAggregation", it)
     }
