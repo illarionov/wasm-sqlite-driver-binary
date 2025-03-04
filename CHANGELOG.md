@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.5.1] — 2025-03-04
+
+#### 🐛 Bug Fix
+
+- Rollback Kotlin to 2.1.10 due to  KT-75393
+
 ## [0.5] — 2025-03-04
 
 #### 🚀 New Feature
