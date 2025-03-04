@@ -1,5 +1,16 @@
 # Change Log
 
+## [0.5] — 2025-03-04
+
+#### 🚀 New Feature
+
+- SQLite 3.49.1 builds with ICU 76.1 and Emscripten 4.0.4
+- New modules sqlite-wasm-emscripten-aot-349 and sqlite-android-wasm-emscripten-icu-aot-349 with SQLite precompiled to .class using [wasm2class-gradle-plugin](https://github.com/illarionov/wasm2class-gradle-plugin) to use in Android and Kotlin/Java JVM projects
+
+#### 💥 Breaking Change
+
+- SQLite 3.48 build configurations have been discontinued
+
 ## [0.4] — 2025-01-25
 
 #### 🚀 New Feature

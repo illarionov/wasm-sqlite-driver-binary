@@ -16,15 +16,21 @@ This project provides four different SQLite builds, differing in compilation set
 
 | Name | SQLite | Multithreading | ICU | Android Extensions | Runtime | Binaries |
 | :- | :- | :-: | :- | :-: | :- | :-: |
-| [sqlite-android-wasm-emscripten-icu-348](#Sqlite-android-wasm-emscripten-icu-348) | 3.48.0 |  | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-android-wasm-emscripten-icu-348-3480000-debug-0.4.zip) |
-| [sqlite-android-wasm-emscripten-icu-mt-pthread-348](#Sqlite-android-wasm-emscripten-icu-mt-pthread-348) | 3.48.0 | ✔ | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-android-wasm-emscripten-icu-mt-pthread-348-3480000-debug-0.4.zip) |
-| [sqlite-wasm-emscripten-348](#Sqlite-wasm-emscripten-348) | 3.48.0 |  |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-wasm-emscripten-348-3480000-debug-0.4.zip) |
-| [sqlite-wasm-emscripten-mt-pthread-348](#Sqlite-wasm-emscripten-mt-pthread-348) | 3.48.0 | ✔ |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-wasm-emscripten-mt-pthread-348-3480000-debug-0.4.zip) |
+| [sqlite-android-wasm-emscripten-icu-349](#Sqlite-android-wasm-emscripten-icu-349) | 3.49.1 |  | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.5.zip) |
+| [sqlite-android-wasm-emscripten-icu-mt-pthread-349](#Sqlite-android-wasm-emscripten-icu-mt-pthread-349) | 3.49.1 | ✔ | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.5.zip) |
+| [sqlite-wasm-emscripten-349](#Sqlite-wasm-emscripten-349) | 3.49.1 |  |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-wasm-emscripten-349-3490100-debug-0.5.zip) |
+| [sqlite-wasm-emscripten-mt-pthread-349](#Sqlite-wasm-emscripten-mt-pthread-349) | 3.49.1 | ✔ |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.5.zip) |
 
-### Sqlite-android-wasm-emscripten-icu-348
+Also there are 2 variants of AOT-precompiled modules to .class using [wasm2class-gradle-plugin](https://github.com/illarionov/wasm2class-gradle-plugin)
+for JVM projects with Chicory:
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-348:0.4")`
-* Debug binaries: [sqlite-android-wasm-emscripten-icu-348-3480000-debug-0.4.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-android-wasm-emscripten-icu-348-3480000-debug-0.4.zip)
+* sqlite-wasm-emscripten-aot-349
+* sqlite-android-wasm-emscripten-icu-aot-349
+
+### Sqlite-android-wasm-emscripten-icu-349
+
+* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-349:0.5")`
+* Debug binaries: [sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.5.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.5.zip)
 
 Single-threaded SQLite build with a configuration similar to that used in the Android system.
 
@@ -120,12 +126,12 @@ ICU build flags:
 --with-data-packaging=static -lm -O3 DU_HAVE_MMAP=0 -DUCONFIG_NO_FILE_IO -DUCONFIG_NO_FORMATTING -DUCONFIG_NO_LEGACY_CONVERSION -DUCONFIG_NO_TRANSLITERATION
 ```
 
-### Sqlite-android-wasm-emscripten-icu-mt-pthread-348
+### Sqlite-android-wasm-emscripten-icu-mt-pthread-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-348:0.4")`
-* Binaries with debug symbols: [sqlite-android-wasm-emscripten-icu-mt-pthread-348-3480000-debug-0.4.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-android-wasm-emscripten-icu-mt-pthread-348-3480000-debug-0.4.zip)
+* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.5")`
+* Binaries with debug symbols: [sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.5.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.5.zip)
 
-The same configuration as [sqlite-android-wasm-emscripten-icu-348](#sqlite-android-wasm-emscripten-icu-348), but with multithreading enabled.
+The same configuration as [sqlite-android-wasm-emscripten-icu-349](#sqlite-android-wasm-emscripten-icu-349), but with multithreading enabled.
 
 Build flag differences:
 ```
@@ -136,10 +142,10 @@ Additional Emscripten flags: -sSHARED_MEMORY
 Additional SQLite flags: -DSQLITE_THREADSAFE=2
 ```
 
-### Sqlite-wasm-emscripten-348
+### Sqlite-wasm-emscripten-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-wasm-emscripten-348:0.4")`
-* Binaries with debug symbols: [sqlite-wasm-emscripten-348-3480000-debug-0.4.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-wasm-emscripten-348-3480000-debug-0.4.zip)
+* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-wasm-emscripten-349:0.5")`
+* Binaries with debug symbols: [sqlite-wasm-emscripten-349-3490100-debug-0.5.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.5/sqlite-wasm-emscripten-349-3490100-debug-0.5.zip)
 
 Single-threaded SQLite configuration without ICU and Android extensions.
 
@@ -221,12 +227,12 @@ Additional source files:
 sqlite3-wasm.c callbacks-wasm.c
 ```
 
-### Sqlite-wasm-emscripten-mt-pthread-348
+### Sqlite-wasm-emscripten-mt-pthread-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-wasm-emscripten-mt-pthread-348:0.4")`
-* Binaries with debug symbols: [sqlite-wasm-emscripten-mt-pthread-348-3480000-debug-0.4.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.4/sqlite-wasm-emscripten-mt-pthread-348-3480000-debug-0.4.zip)
+* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-wasm-emscripten-mt-pthread-349:0.5")`
+* Binaries with debug symbols: [sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.9.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.9/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.5.zip)
 
-The same configuration as [sqlite-wasm-emscripten-348](#sqlite-wasm-emscripten-348), but with multithreading enabled.
+The same configuration as [sqlite-wasm-emscripten-349](#sqlite-wasm-emscripten-349), but with multithreading enabled.
 
 Build flag differences:
 ```
@@ -256,7 +262,7 @@ To simplify loading binaries across different platforms, a helper library "wasm-
 
 Gradle dependency:
 ```
-implementation("ru.pixnews.wasm-sqlite-open-helper:wasm-binary-reader:0.4")
+implementation("ru.pixnews.wasm-sqlite-open-helper:wasm-binary-reader:0.5")
 ```
 
 Sample usage:
@@ -268,8 +274,8 @@ import ru.pixnews.wasm.sqlite.binary.reader.readOrThrow
 // Implementation of thre Reader. Use AndroidAssetsWasmSourceReader(appContext.assets) on Android
 val reader = WasmSourceReader 
 
-// Build configuration from `sqlite-wasm-emscripten-348` module
-val sqlite = SqliteWasmEmscripten348
+// Build configuration from `sqlite-wasm-emscripten-349` module
+val sqlite = SqliteWasmEmscripten349
 
 val wasmBinary: ByteArray = reader.readBytesOrThrow(sqlite.sqliteUrl)
 ```
@@ -303,8 +309,8 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("ru.pixnews.wasm-sqlite-open-helper:wasm-binary-reader:0.4")
-    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-348:0.4")
+    implementation("ru.pixnews.wasm-sqlite-open-helper:wasm-binary-reader:0.5")
+    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.5")
 }
 ```
 
@@ -337,8 +343,8 @@ emsdkRoot=/opt/emsdk
 Install and activate the SDK version used in the project (not the latest one):
 
 ```shell
-./emsdk install 4.0.1
-./emsdk activate 4.0.1
+./emsdk install 4.0.4
+./emsdk activate 4.0.4
 source ./emsdk_env.sh
 ```
 
