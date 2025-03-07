@@ -21,7 +21,7 @@ buildscript {
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
         classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
-        classpath("at.released.wasm2class:plugin:0.1")
+        classpath("at.released.wasm2class:plugin:0.2")
         classpath(
             group = "org.jetbrains.kotlinx.binary-compatibility-validator",
             name = "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin",
