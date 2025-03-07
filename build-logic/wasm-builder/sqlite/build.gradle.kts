@@ -20,6 +20,7 @@ kotlin {
     explicitApi = ExplicitApiMode.Warning
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
+        optIn = listOf("at.released.builder.emscripten.InternalEmscriptenApi")
     }
 }
 
@@ -29,6 +30,7 @@ java {
 
 dependencies {
     api(projects.base)
+    api(libs.emscripten.gradle.plugin)
 }
 
 testing {

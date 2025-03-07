@@ -6,6 +6,11 @@
 
 package ru.pixnews.wasm.builder.sqlite
 
+import at.released.builder.emscripten.EmscriptenAttribute.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import at.released.builder.emscripten.EmscriptenAttribute.emscriptenOperatingSystem
+import at.released.builder.emscripten.EmscriptenAttribute.wasm32Architecture
+import at.released.builder.emscripten.EmscriptenAttribute.wasmBinaryLibraryElements
+import at.released.builder.emscripten.EmscriptenAttribute.wasmRuntimeUsage
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.ConsumableConfiguration
 import org.gradle.api.artifacts.DependencyScopeConfiguration
@@ -29,11 +34,6 @@ import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 import org.gradle.nativeplatform.Linkage.STATIC
 import org.gradle.nativeplatform.MachineArchitecture.ARCHITECTURE_ATTRIBUTE
 import org.gradle.nativeplatform.OperatingSystemFamily.OPERATING_SYSTEM_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.emscripten.emscriptenOperatingSystem
-import ru.pixnews.wasm.builder.base.emscripten.wasm32Architecture
-import ru.pixnews.wasm.builder.base.emscripten.wasmBinaryLibraryElements
-import ru.pixnews.wasm.builder.base.emscripten.wasmRuntimeUsage
 
 public object SqliteWasmConfigurations {
     public const val WASM_LIBRARIES: String = "wasmLibraries"

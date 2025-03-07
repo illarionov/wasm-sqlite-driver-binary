@@ -6,7 +6,7 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
-import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import at.released.builder.emscripten.EmscriptenAttribute.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions

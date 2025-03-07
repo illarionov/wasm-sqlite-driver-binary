@@ -11,6 +11,7 @@ agp = "8.7.3"
 assertk = "0.28.1"
 detekt = "1.23.8"
 diktat = "2.0.0"
+emscripten-gradle-plugin = "0.1-alpha01"
 gradle-maven-publish-plugin = "0.30.0"
 kotlin = "2.1.10"
 kotlin-compile-testing-fork = "0.7.0"
@@ -40,6 +41,7 @@ agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 agp-plugin-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+emscripten-gradle-plugin = { group = "at.released.builder.emscripten", name ="emscripten-plugin", version.ref = "emscripten-gradle-plugin" }
 diktat-plugin = { group = "com.saveourtool.diktat", name = "diktat-gradle-plugin", version.ref = "diktat" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradle-maven-publish-plugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

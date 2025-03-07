@@ -8,9 +8,9 @@
 
 package ru.pixnews.wasm.builder.sqlite
 
-import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask
-import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask.LinkTimeOptimizer
-import ru.pixnews.wasm.builder.base.emscripten.ValidateDwarfTask
+import at.released.builder.emscripten.EmscriptenPrepareCacheTask
+import at.released.builder.emscripten.EmscriptenPrepareCacheTask.LinkTimeOptimizer
+import at.released.builder.emscripten.dwarf.ValidateDwarfTask
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
 import ru.pixnews.wasm.builder.base.ext.toUpperCamelCase
 import ru.pixnews.wasm.builder.emscripten.EmscriptenBuildTask
