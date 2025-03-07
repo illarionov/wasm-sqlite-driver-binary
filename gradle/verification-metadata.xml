@@ -66,8 +66,8 @@
       </trusted-keys>
    </configuration>
    <components>
-      <component group="at.released.wasm2class" name="plugin" version="0.1">
-         <artifact name="plugin-0.1.jar">
+      <component group="at.released.wasm2class" name="plugin" version="0.2">
+         <artifact name="plugin-0.2.jar">
             <pgp value="8AB4B1AB3F0067ED73E00F0062C98BA8FCF62075"/>
          </artifact>
       </component>
