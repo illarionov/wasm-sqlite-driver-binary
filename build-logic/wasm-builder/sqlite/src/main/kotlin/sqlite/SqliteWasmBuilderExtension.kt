@@ -6,6 +6,7 @@
 
 package ru.pixnews.wasm.builder.sqlite
 
+import at.released.builder.emscripten.EmscriptenSdk.Companion.defaultEmscriptenRoot
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
@@ -13,7 +14,6 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
 import org.gradle.kotlin.dsl.property
 import ru.pixnews.wasm.builder.base.WasmBuildDsl
-import ru.pixnews.wasm.builder.base.emscripten.defaultEmscriptenRoot
 import java.io.File
 import javax.inject.Inject
 

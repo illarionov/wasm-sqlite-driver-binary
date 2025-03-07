@@ -91,4 +91,7 @@ kotlin {
 
 android {
     namespace = aotRootPackage
+    defaultConfig {
+        minSdk = 28
+    }
 }

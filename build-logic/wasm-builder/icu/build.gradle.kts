@@ -18,4 +18,5 @@ kotlin {
 
 dependencies {
     api(projects.base)
+    api(libs.emscripten.gradle.plugin)
 }

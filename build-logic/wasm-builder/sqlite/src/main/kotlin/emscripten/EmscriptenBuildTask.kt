@@ -6,6 +6,7 @@
 
 package ru.pixnews.wasm.builder.emscripten
 
+import at.released.builder.emscripten.EmscriptenSdk
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
@@ -32,7 +33,6 @@ import org.gradle.kotlin.dsl.newInstance
 import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.ExecOperations
 import org.gradle.process.internal.ExecException
-import ru.pixnews.wasm.builder.base.emscripten.EmscriptenSdk
 import ru.pixnews.wasm.builder.sqlite.internal.BuildDirPath
 import java.io.File
 import javax.inject.Inject

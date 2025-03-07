@@ -8,6 +8,11 @@
 
 package ru.pixnews.wasm.builder.icu
 
+import at.released.builder.emscripten.EmscriptenAttribute.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import at.released.builder.emscripten.EmscriptenAttribute.emscriptenOperatingSystem
+import at.released.builder.emscripten.EmscriptenAttribute.wasm32Architecture
+import at.released.builder.emscripten.EmscriptenPrepareCacheTask
+import at.released.builder.emscripten.EmscriptenPrepareCacheTask.LinkTimeOptimizer
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition.ARTIFACT_TYPE_ATTRIBUTE
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition.DIRECTORY_TYPE
 import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
@@ -15,17 +20,10 @@ import org.gradle.api.attributes.LibraryElements.HEADERS_CPLUSPLUS
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.LINK_ARCHIVE
 import org.gradle.api.attributes.Usage.USAGE_ATTRIBUTE
-import org.gradle.kotlin.dsl.base
-import org.gradle.kotlin.dsl.named
 import org.gradle.language.cpp.CppBinary.LINKAGE_ATTRIBUTE
 import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 import org.gradle.nativeplatform.MachineArchitecture.ARCHITECTURE_ATTRIBUTE
 import org.gradle.nativeplatform.OperatingSystemFamily.OPERATING_SYSTEM_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.emscripten.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
-import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask
-import ru.pixnews.wasm.builder.base.emscripten.EmscriptenPrepareCacheTask.LinkTimeOptimizer
-import ru.pixnews.wasm.builder.base.emscripten.emscriptenOperatingSystem
-import ru.pixnews.wasm.builder.base.emscripten.wasm32Architecture
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
 import ru.pixnews.wasm.builder.base.ext.firstDirectory
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE

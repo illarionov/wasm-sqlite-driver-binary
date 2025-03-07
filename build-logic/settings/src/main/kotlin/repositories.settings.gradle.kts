@@ -8,6 +8,7 @@ package ru.pixnews.wasm.sqlite.binary.gradle.settings
 
 import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.googleFiltered
 import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.icuRepository
+import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.pixnewsRepository
 import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.sqliteRepository
 
 /*
@@ -18,6 +19,7 @@ pluginManagement {
         googleFiltered()
         mavenCentral()
         gradlePluginPortal()
+        pixnewsRepository()
     }
 }
 
@@ -27,5 +29,6 @@ dependencyResolutionManagement {
         mavenCentral()
         sqliteRepository()
         icuRepository()
+        pixnewsRepository()
     }
 }
