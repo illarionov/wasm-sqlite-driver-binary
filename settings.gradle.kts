@@ -1,3 +1,9 @@
+/*
+ * Copyright 2025, the wasm-sqlite-open-helper project authors and contributors. Please see the AUTHORS file
+ * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 pluginManagement {
     includeBuild("build-logic/settings")
     includeBuild("build-logic/project") { name = "sohb-gradle-project-plugins" }
@@ -21,6 +27,7 @@ buildscript {
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
         classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
+        classpath("at.released.cassettes:cassettes-plugin:0.1-alpha01")
         classpath("at.released.wasm2class:plugin:0.2")
         classpath(
             group = "org.jetbrains.kotlinx.binary-compatibility-validator",
@@ -33,9 +40,7 @@ buildscript {
 
 rootProject.name = "wasm-sqlite-open-helper-binary"
 
-include("common-xdg")
 include("sqlite-binary-api")
-include("wasm-binary-reader")
 include("icu-wasm")
 include("sqlite-android-wasm-emscripten-icu-mt-pthread-349")
 include("sqlite-android-wasm-emscripten-icu-349")
