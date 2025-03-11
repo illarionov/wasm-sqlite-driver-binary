@@ -36,6 +36,7 @@ kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotli
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 tempfolder = { group = "at.released.tempfolder", name = "tempfolder-sync", version.ref = "tempfolder" }
+cassettes-base = { module = "at.released.cassettes:cassettes-base", version.ref = "cassettes" }
 
 # Dependencies of the included build-logic
 agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
