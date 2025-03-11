@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.6] — 2025-03-11
+
+#### 💥 Breaking Change
+
+- Library for publishing binaries as resources moved to https://github.com/illarionov/cassettes-kmp
+
+#### 💅 Polish
+
+- Emscripten build plugin moved to https://github.com/illarionov/emscripten-gradle-plugin
+
 ## [0.5.1] — 2025-03-04
 
 #### 🐛 Bug Fix
