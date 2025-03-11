@@ -154,7 +154,7 @@ class WasmSqliteBuildInfoGenerator(
                 FunSpec.getterBuilder()
                     .addStatement(
                         "return %L(requireNotNull(%T::class.java.getResource(%S)).toString())",
-                        WASM_SOURCE_URL_CLASS_NAME,
+                        SOURCE_URL_CLASS_NAME,
                         outputObjectClassName,
                         configuration.wasmFileName.get(),
                     )
@@ -194,7 +194,7 @@ class WasmSqliteBuildInfoGenerator(
         wasmUrlStaticPath: String,
     ) {
         val sqliteUrlPropertyBuilder: PropertySpec.Builder.() -> Unit = {
-            this.initializer("%L(%S)", WASM_SOURCE_URL_CLASS_NAME.simpleName, wasmUrlStaticPath)
+            this.initializer("%L(%S)", SOURCE_URL_CLASS_NAME.simpleName, wasmUrlStaticPath)
         }
         val fileContent = generateActualObject(sqliteUrlPropertyBuilder)
         fileContent.writeTo(outputDirectory)
@@ -207,7 +207,7 @@ class WasmSqliteBuildInfoGenerator(
             .addModifiers(PUBLIC, ACTUAL)
             .addSuperinterface(WASM_SQLITE_CONFIGURATION_CLASS_NAME)
             .addProperty(
-                PropertySpec.builder("sqliteUrl", WASM_SOURCE_URL_CLASS_NAME, OVERRIDE)
+                PropertySpec.builder("sqliteUrl", SOURCE_URL_CLASS_NAME, OVERRIDE)
                     .apply(sqliteUrlPropertyBuilder)
                     .build(),
             )
@@ -241,7 +241,7 @@ class WasmSqliteBuildInfoGenerator(
             ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteExtendedBuildInfo")
         val WASM_SQLITE_COMPILER_SETTINGS_CLASS_NAME =
             ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteCompilerSettings")
-        val WASM_SOURCE_URL_CLASS_NAME = ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSourceUrl")
+        val SOURCE_URL_CLASS_NAME = ClassName("at.released.cassettes.base", "AssetUrl")
 
         private fun String.dropTrailingSlash() = if (this.endsWith("/")) {
             this.dropLast(1)
