@@ -9,10 +9,11 @@ androidMinSdk = "14"
 # keep in sync with root settings.gradle
 agp = "8.7.3"
 assertk = "0.28.1"
+cassettes = "0.1-alpha01"
 detekt = "1.23.8"
 diktat = "2.0.0"
 emscripten-gradle-plugin = "0.1-alpha01"
-gradle-maven-publish-plugin = "0.30.0"
+gradle-maven-publish-plugin = "0.31.0"
 kotlin = "2.1.10"
 kotlin-compile-testing-fork = "0.7.0"
 kotlinpoet = "2.1.0"
@@ -39,6 +40,7 @@ tempfolder = { group = "at.released.tempfolder", name = "tempfolder-sync", versi
 # Dependencies of the included build-logic
 agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 agp-plugin-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
+cassettes-plugin = { module = "at.released.cassettes:cassettes-plugin", version.ref = "cassettes" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 emscripten-gradle-plugin = { group = "at.released.builder.emscripten", name ="emscripten-plugin", version.ref = "emscripten-gradle-plugin" }

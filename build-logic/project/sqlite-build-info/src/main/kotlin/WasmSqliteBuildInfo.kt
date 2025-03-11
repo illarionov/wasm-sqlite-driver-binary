@@ -53,7 +53,7 @@ public open class WasmSqliteBuildInfo @Inject constructor(
 
     companion object {
         private const val serialVersionUID: Long = -1
-        const val WSOH_RESOURCES_SUBDIR = "wsohResources"
+        const val WSOH_RESOURCES_SUBDIR = "cassettes"
 
         fun getDefaultWasmFileSubdir(
             projectName: String,

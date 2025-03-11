@@ -14,6 +14,7 @@ fun RepositoryHandler.pixnewsRepository() {
         url = URI("https://maven.pixnews.ru")
         mavenContent {
             includeGroupAndSubgroups("at.released.builder.emscripten")
+            includeGroupAndSubgroups("at.released.cassettes")
         }
     }
 }

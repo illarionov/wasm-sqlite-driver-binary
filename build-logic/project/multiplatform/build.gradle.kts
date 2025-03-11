@@ -17,10 +17,11 @@ plugins {
 group = "ru.pixnews.wasm.sqlite.binary.gradle.multiplatform"
 
 dependencies {
+    implementation(libs.agp.plugin.api)
+    implementation(libs.cassettes.plugin)
     implementation(libs.gradle.maven.publish.plugin)
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.kotlinx.binary.compatibility.validator.plugin)
-    implementation(libs.agp.plugin.api)
     runtimeOnly(libs.agp.plugin)
 }
 

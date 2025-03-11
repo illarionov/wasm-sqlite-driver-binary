@@ -52,14 +52,14 @@ class WasmSqliteBuildInfoGeneratorTest {
             name = "Android",
             textFactory = WasmSqliteBuildInfoGenerator::generateAndroidActualCode,
             expectContainsText = arrayOf(
-                "wsohResources/test/sqlite3-android-icu-3460000.wasm",
+                "cassettes/test/sqlite3-android-icu-3460000.wasm",
             ),
         ),
         ShouldContainTextTestCase(
             name = "Native or JS",
             textFactory = WasmSqliteBuildInfoGenerator::generateNativeOrJsActualCode,
             expectContainsText = arrayOf(
-                "wsohResources/test/sqlite3-android-icu-3460000.wasm",
+                "cassettes/test/sqlite3-android-icu-3460000.wasm",
             ),
         ),
     ).map { testParams ->

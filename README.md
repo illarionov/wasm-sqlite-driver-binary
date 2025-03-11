@@ -258,11 +258,11 @@ binaries are packaged and published in a format compatible with Kotlin Multiplat
 is not yet publicly announced).
 To use it in your project, you can try the [Compose Multiplatform Resources] plugin, or check the [resources.gradle.kts] of the main project.
 
-To simplify loading binaries across different platforms, a helper library "wasm-binary-reader" is available.
+To simplify loading binaries across different platforms, a helper library "cassettes-playhead" is available.
 
 Gradle dependency:
 ```
-implementation("ru.pixnews.wasm-sqlite-open-helper:wasm-binary-reader:0.5.1")
+implementation("at.released.cassettes:cassettes-playhead:0.1-alpha01")
 ```
 
 Sample usage:
@@ -271,7 +271,7 @@ import ru.pixnews.wasm.sqlite.binary.base.WasmSqliteConfiguration
 import ru.pixnews.wasm.sqlite.binary.reader.WasmSourceReader
 import ru.pixnews.wasm.sqlite.binary.reader.readOrThrow
 
-// Implementation of thre Reader. Use AndroidAssetsWasmSourceReader(appContext.assets) on Android
+// Implementation of the Reader. Use AndroidAssetsWasmSourceReader(appContext.assets) on Android
 val reader = WasmSourceReader 
 
 // Build configuration from `sqlite-wasm-emscripten-349` module
@@ -309,7 +309,7 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("ru.pixnews.wasm-sqlite-open-helper:wasm-binary-reader:0.5.1")
+    implementation("at.released.cassettes:cassettes-playhead:0.1-alpha01")
     implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.5.1")
 }
 ```
