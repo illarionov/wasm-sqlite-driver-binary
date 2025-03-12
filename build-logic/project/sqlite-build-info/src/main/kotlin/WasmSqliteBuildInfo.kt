@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
+package at.released.wasm.sqlite.binary.gradle.buildinfo
 
 import org.gradle.api.Named
 import org.gradle.api.Project
@@ -23,7 +23,7 @@ public open class WasmSqliteBuildInfo @Inject constructor(
 ) : Serializable, Named {
     @get:Input
     val rootPackage: Property<String> = objects.property<String>()
-        .convention("ru.pixnews.wasm.sqlite.binary")
+        .convention("at.released.wasm.sqlite.binary")
 
     @get:Input
     val wasmSqliteBuildClassName: Property<String> = objects.property<String>()

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.settings.repository
+package at.released.wasm.sqlite.binary.gradle.settings.repository
 
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 

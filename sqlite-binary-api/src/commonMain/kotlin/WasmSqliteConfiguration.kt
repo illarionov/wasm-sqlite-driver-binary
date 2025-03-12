@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.base
+package at.released.wasm.sqlite.binary.base
 
 import at.released.cassettes.base.AssetUrl
 import kotlin.jvm.JvmField

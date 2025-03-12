@@ -6,13 +6,14 @@
 
 @file:OptIn(ExperimentalCompilerApi::class)
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
+package at.released.wasm.sqlite.binary.gradle.buildinfo
 
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import at.released.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.OK
@@ -27,7 +28,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS
 import org.junit.jupiter.api.io.TempDir
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 import java.io.File
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
@@ -70,7 +70,7 @@ class WasmSqliteBuildInfoGeneratorTest {
             testParams.textFactory(generator, codeGenDir!!)
 
             val generatedFileContent = codeGenDir!!.resolve(
-                "ru/pixnews/wasm/sqlite/binary/SqliteAndroidWasmEmscriptenIcu346.kt",
+                "at/released/wasm/sqlite/binary/SqliteAndroidWasmEmscriptenIcu346.kt",
             ).readText()
 
             assertThat(generatedFileContent).contains(expected = testParams.expectContainsText)
@@ -113,7 +113,7 @@ class WasmSqliteBuildInfoGeneratorTest {
         generator.generateCommonCode(codeGenDir!!)
         val generatedExtendedInfo = SourceFile.fromPath(
             codeGenDir!!.resolve(
-                "ru/pixnews/wasm/sqlite/binary/SqliteAndroidWasmEmscriptenIcu346ExtendedBuildInfo.kt",
+                "at/released/wasm/sqlite/binary/SqliteAndroidWasmEmscriptenIcu346ExtendedBuildInfo.kt",
             ),
         )
 
@@ -126,7 +126,7 @@ class WasmSqliteBuildInfoGeneratorTest {
         assertThat(compilation.exitCode).isEqualTo(OK)
 
         val resultBuildInfo = compilation.classLoader.loadClass(
-            "ru.pixnews.wasm.sqlite.binary.SqliteAndroidWasmEmscriptenIcu346ExtendedBuildInfo",
+            "at.released.wasm.sqlite.binary.SqliteAndroidWasmEmscriptenIcu346ExtendedBuildInfo",
         ).kotlin.objectInstance!!
         assertThat(resultBuildInfo.readProp<String>("sqliteVersion"))
             .isEqualTo("testSqliteVersion")
@@ -159,7 +159,7 @@ class WasmSqliteBuildInfoGeneratorTest {
         val wasmSqliteCompilerSettingsStub = SourceFile.kotlin(
             "WasmSqliteCompilerSettings.kt",
             """
-                |package ru.pixnews.wasm.sqlite.binary.base
+                |package at.released.wasm.sqlite.binary.base
                 |interface WasmSqliteCompilerSettings {
                 |    val additionalSourceFiles: List<String>?
                 |    val additionalIncludes: List<String>?
@@ -175,7 +175,7 @@ class WasmSqliteBuildInfoGeneratorTest {
         val wasmSqliteExtendedBuildInfoStub = SourceFile.kotlin(
             "WasmSqliteExtendedBuildInfo.kt",
             """
-                |package ru.pixnews.wasm.sqlite.binary.base
+                |package at.released.wasm.sqlite.binary.base
                 |
                 |interface WasmSqliteExtendedBuildInfo {
                 |    val sqliteVersion: String

@@ -14,7 +14,7 @@ plugins {
     `maven-publish`
 }
 
-group = "ru.pixnews.wasm.sqlite.binary.gradle.multiplatform"
+group = "at.released.wasm.sqlite.binary.gradle.multiplatform"
 
 dependencies {
     implementation(libs.agp.plugin.api)

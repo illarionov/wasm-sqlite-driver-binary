@@ -6,7 +6,7 @@
 
 @file:Suppress("SpacingBetweenPackageAndImports")
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
+package at.released.wasm.sqlite.binary.gradle.buildinfo
 
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 

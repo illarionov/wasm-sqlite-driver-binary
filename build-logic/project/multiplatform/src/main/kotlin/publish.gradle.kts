@@ -6,13 +6,12 @@
 
 @file:Suppress("UnstableApiUsage")
 
-package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
+package at.released.wasm.sqlite.binary.gradle.multiplatform
 
+import at.released.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.CleanupDownloadableReleaseDirectoryTask
+import at.released.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.DistributionAggregationConfigurations.Companion.createMavenSnapshotReleaseElements
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
-import org.gradle.kotlin.dsl.withType
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.CleanupDownloadableReleaseDirectoryTask
-import ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.localsnapshot.DistributionAggregationConfigurations.Companion.createMavenSnapshotReleaseElements
 
 /*
  * Convention plugin with publishing defaults

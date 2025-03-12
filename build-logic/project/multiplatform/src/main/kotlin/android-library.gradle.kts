@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
+package at.released.wasm.sqlite.binary.gradle.multiplatform
 
 import com.android.build.api.dsl.LibraryExtension
 
@@ -13,7 +13,7 @@ import com.android.build.api.dsl.LibraryExtension
  */
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("com.android.library")
 }
 

@@ -10,7 +10,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "ru.pixnews.wasm.sqlite.binary.gradle.lint"
+group = "at.released.wasm.sqlite.binary.gradle.lint"
 
 dependencies {
     implementation(libs.detekt.plugin)

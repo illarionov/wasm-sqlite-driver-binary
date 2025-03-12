@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.base
+package at.released.wasm.sqlite.binary.base
 
 public interface WasmSqliteCompilerSettings {
     public val additionalSourceFiles: List<String>?

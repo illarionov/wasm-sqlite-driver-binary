@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.multiplatform
+package at.released.wasm.sqlite.binary.gradle.multiplatform
 
 /*
  * Convention plugin that configures the creation and publication of wasm binaries as resources
@@ -17,5 +17,5 @@ plugins {
 cassettes {
     files.from(configurations.findByName("wasmSqliteReleaseElements")!!.artifacts.files)
 
-    targetPackage = "ru.pixnews.wasm.sqlite.binary"
+    targetPackage = "at.released.wasm.sqlite.binary"
 }
