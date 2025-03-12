@@ -4,8 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
+package at.released.wasm.sqlite.binary.gradle.buildinfo.ext
 
+import at.released.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteBuildInfo
+import at.released.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo
+import at.released.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Provider
@@ -13,9 +16,6 @@ import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.newInstance
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuilderExtension
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteBuildInfo
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 
 internal const val DEFAULT_EMSCRIPTEN_MEMORY_SIZE: Long = 16_777_216L
 internal const val GENERATE_EXTENDED_INFO: Boolean = true

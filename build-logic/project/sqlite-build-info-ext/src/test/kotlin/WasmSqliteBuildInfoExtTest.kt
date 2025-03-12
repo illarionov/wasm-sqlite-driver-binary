@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
+package at.released.wasm.sqlite.binary.gradle.buildinfo.ext
 
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
+import at.released.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteBuildInfo
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.testfixtures.ProjectBuilder
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import ru.pixnews.wasm.builder.sqlite.SqliteWasmBuildSpec
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteBuildInfo
 import java.io.File
 
 class WasmSqliteBuildInfoExtTest {

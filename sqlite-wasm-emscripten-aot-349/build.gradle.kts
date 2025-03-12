@@ -6,10 +6,10 @@
 
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
+import at.released.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
 import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
 import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
@@ -18,13 +18,13 @@ import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 plugins {
     id("at.released.wasm2class.plugin")
     id("ru.pixnews.wasm.builder.sqlite.plugin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.generator")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.kotlin")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("at.released.wasm.sqlite.binary.gradle.buildinfo.generator")
+    id("at.released.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
 }
 
-group = "ru.pixnews.wasm-sqlite-open-helper"
+group = "at.released.wasm-sqlite-driver"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
     propertiesFileKey = "wsoh_sqlite_wasm_sqlite_wasm_emscripten_aot_349_version",
     envVariableName = "WSOH_SQLITE_WASM_SQLITE_WASM_EMSCRIPTEN_AOT_349_VERSION",
@@ -55,7 +55,7 @@ sqlite3Build {
     }
 }
 
-private val aotRootPackage = "ru.pixnews.wasm.sqlite.binary.aot"
+private val aotRootPackage = "at.released.wasm.sqlite.binary.aot"
 private val sqliteBuild = sqlite3Build.builds["wasm-emscripten-aot-349"]
 
 wasm2class {

@@ -7,6 +7,7 @@
 @file:Suppress("GENERIC_VARIABLE_WRONG_DECLARATION", "UnstableApiUsage")
 
 import at.released.builder.emscripten.EmscriptenAttribute.EMSCRIPTEN_USE_PTHREADS_ATTRIBUTE
+import at.released.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_ATTRIBUTE
 import ru.pixnews.wasm.builder.base.icu.ICU_DATA_PACKAGING_STATIC
 import ru.pixnews.wasm.builder.sqlite.SqliteExportedFunctions
@@ -14,7 +15,6 @@ import ru.pixnews.wasm.builder.sqlite.preset.SqliteCodeGenerationFlags
 import ru.pixnews.wasm.builder.sqlite.preset.config.OpenHelperConfig
 import ru.pixnews.wasm.builder.sqlite.preset.setupAndroidExtensions
 import ru.pixnews.wasm.builder.sqlite.preset.setupIcu
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
 
 /*
  * SQLite WebAssembly Build with Emscripten
@@ -26,15 +26,15 @@ import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.fromSqliteBuild
  */
 plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.generator")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.kotlin")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.android-library")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.wasm-resources")
+    id("at.released.wasm.sqlite.binary.gradle.buildinfo.generator")
+    id("at.released.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
 }
 
-group = "ru.pixnews.wasm-sqlite-open-helper"
+group = "at.released.wasm-sqlite-driver"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
     propertiesFileKey = "wsoh_sqlite_wasm_sqlite_android_wasm_emscripten_icu_mt_pthread_349_version",
     envVariableName = "WSOH_SQLITE_WASM_SQLITE_ANDROID_WASM_EMSCRIPTEN_ICU_MT_PTHREAD_349_VERSION",
@@ -100,5 +100,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.pixnews.wasm.sqlite.binary.emscriptenicumtpthread349"
+    namespace = "at.released.wasm.sqlite.binary.emscriptenicumtpthread349"
 }

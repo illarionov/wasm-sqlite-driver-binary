@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.settings
+package at.released.wasm.sqlite.binary.gradle.settings
 
-import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.googleFiltered
-import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.icuRepository
-import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.pixnewsRepository
-import ru.pixnews.wasm.sqlite.binary.gradle.settings.repository.sqliteRepository
+import at.released.wasm.sqlite.binary.gradle.settings.repository.googleFiltered
+import at.released.wasm.sqlite.binary.gradle.settings.repository.icuRepository
+import at.released.wasm.sqlite.binary.gradle.settings.repository.pixnewsRepository
+import at.released.wasm.sqlite.binary.gradle.settings.repository.sqliteRepository
 
 /*
  * Settings convention plugin that configures repositories used in the application

@@ -6,5 +6,5 @@
 
 @file:Suppress("SpacingBetweenPackageAndImports")
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
+package at.released.wasm.sqlite.binary.gradle.buildinfo.ext
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.settings
+package at.released.wasm.sqlite.binary.gradle.settings
 
 /*
  * Settings convention plugin with common gradle settings

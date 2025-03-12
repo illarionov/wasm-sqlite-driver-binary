@@ -8,4 +8,4 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "ru.pixnews.wasm.sqlite.binary.gradle.settings"
+group = "at.released.wasm.sqlite.binary.gradle.settings"

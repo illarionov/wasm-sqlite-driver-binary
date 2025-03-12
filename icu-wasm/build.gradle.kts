@@ -12,7 +12,7 @@ plugins {
     id("ru.pixnews.wasm.builder.icu.plugin")
 }
 
-group = "ru.pixnews.wasm-sqlite-open-helper"
+group = "at.released.wasm-sqlite-driver"
 
 /*
  * ICU builds in different configurations

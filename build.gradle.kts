@@ -1,8 +1,8 @@
 plugins {
-    id("ru.pixnews.wasm.sqlite.binary.gradle.lint.detekt")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.lint.diktat")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.lint.spotless")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.distribution")
+    id("at.released.wasm.sqlite.binary.gradle.lint.detekt")
+    id("at.released.wasm.sqlite.binary.gradle.lint.diktat")
+    id("at.released.wasm.sqlite.binary.gradle.lint.spotless")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.distribution")
 }
 
 dependencies {

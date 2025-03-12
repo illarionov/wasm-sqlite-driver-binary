@@ -7,12 +7,12 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.kotlin")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
 
-group = "ru.pixnews.wasm-sqlite-open-helper"
+group = "at.released.wasm-sqlite-driver"
 version = wasmSqliteVersions.getSubmoduleVersionProvider(
     propertiesFileKey = "wsoh_sqlite_driver_binary_api_version",
     envVariableName = "WSOH_SQLITE_DRIVER_BINARY_API_VERSION",

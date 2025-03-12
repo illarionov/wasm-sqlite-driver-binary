@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo
+package at.released.wasm.sqlite.binary.gradle.buildinfo
 
+import at.released.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -24,7 +25,6 @@ import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import org.gradle.api.provider.Provider
-import ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.WasmSqliteExtendedBuildInfo.WasmSqliteCompilerSettings
 import java.io.File
 
 @Suppress("TooManyFunctions")
@@ -235,7 +235,7 @@ class WasmSqliteBuildInfoGenerator(
     }
 
     private companion object {
-        const val SQLITE_BINARY_API_ROOT_PACKAGE = "ru.pixnews.wasm.sqlite.binary.base"
+        const val SQLITE_BINARY_API_ROOT_PACKAGE = "at.released.wasm.sqlite.binary.base"
         val WASM_SQLITE_CONFIGURATION_CLASS_NAME = ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteConfiguration")
         val WASM_SQLITE_EXTENDED_BUILD_INFO_CLASS_NAME =
             ClassName(SQLITE_BINARY_API_ROOT_PACKAGE, "WasmSqliteExtendedBuildInfo")

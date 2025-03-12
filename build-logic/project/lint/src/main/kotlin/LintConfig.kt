@@ -6,7 +6,7 @@
 
 @file:Suppress("UnstableApiUsage")
 
-package ru.pixnews.wasm.sqlite.binary.gradle.lint
+package at.released.wasm.sqlite.binary.gradle.lint
 
 import org.gradle.api.Project
 import org.gradle.api.file.Directory

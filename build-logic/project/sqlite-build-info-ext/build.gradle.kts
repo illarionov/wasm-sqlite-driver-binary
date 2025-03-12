@@ -13,7 +13,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "ru.pixnews.wasm.sqlite.binary.gradle"
+group = "at.released.wasm.sqlite.binary.gradle"
 
 dependencies {
     implementation("ru.pixnews.wasm.builder.sqlite:sqlite")

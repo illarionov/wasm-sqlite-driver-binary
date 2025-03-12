@@ -9,7 +9,7 @@ pluginManagement {
 }
 
 plugins {
-    id("ru.pixnews.wasm.sqlite.binary.gradle.settings.root")
+    id("at.released.wasm.sqlite.binary.gradle.settings.root")
 }
 
 dependencyResolutionManagement {

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext
+package at.released.wasm.sqlite.binary.gradle.buildinfo.ext
 
 import ru.pixnews.wasm.builder.base.ext.capitalizeAscii
 

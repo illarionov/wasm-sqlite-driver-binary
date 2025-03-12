@@ -11,7 +11,7 @@ pluginManagement {
 }
 
 plugins {
-    id("ru.pixnews.wasm.sqlite.binary.gradle.settings.root")
+    id("at.released.wasm.sqlite.binary.gradle.settings.root")
 }
 
 // Workaround for https://github.com/gradle/gradle/issues/26020

@@ -29,7 +29,7 @@ for JVM projects with Chicory:
 
 ### Sqlite-android-wasm-emscripten-icu-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-349:0.6")`
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-349:0.6")`
 * Debug binaries: [sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.6.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.6.zip)
 
 Single-threaded SQLite build with a configuration similar to that used in the Android system.
@@ -128,7 +128,7 @@ ICU build flags:
 
 ### Sqlite-android-wasm-emscripten-icu-mt-pthread-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.6")`
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.6")`
 * Binaries with debug symbols: [sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.6.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.6.zip)
 
 The same configuration as [sqlite-android-wasm-emscripten-icu-349](#sqlite-android-wasm-emscripten-icu-349), but with multithreading enabled.
@@ -144,7 +144,7 @@ Additional SQLite flags: -DSQLITE_THREADSAFE=2
 
 ### Sqlite-wasm-emscripten-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-wasm-emscripten-349:0.6")`
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-wasm-emscripten-349:0.6")`
 * Binaries with debug symbols: [sqlite-wasm-emscripten-349-3490100-debug-0.6.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-wasm-emscripten-349-3490100-debug-0.6.zip)
 
 Single-threaded SQLite configuration without ICU and Android extensions.
@@ -229,7 +229,7 @@ sqlite3-wasm.c callbacks-wasm.c
 
 ### Sqlite-wasm-emscripten-mt-pthread-349
 
-* Gradle dependency: `implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-wasm-emscripten-mt-pthread-349:0.6")`
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-wasm-emscripten-mt-pthread-349:0.6")`
 * Binaries with debug symbols: [sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.9.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.9/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.6.zip)
 
 The same configuration as [sqlite-wasm-emscripten-349](#sqlite-wasm-emscripten-349), but with multithreading enabled.
@@ -267,9 +267,9 @@ implementation("at.released.cassettes:cassettes-playhead:0.1-alpha01")
 
 Sample usage:
 ```kotlin
-import ru.pixnews.wasm.sqlite.binary.base.WasmSqliteConfiguration
-import ru.pixnews.wasm.sqlite.binary.reader.WasmSourceReader
-import ru.pixnews.wasm.sqlite.binary.reader.readOrThrow
+import at.released.wasm.sqlite.binary.base.WasmSqliteConfiguration
+import at.released.wasm.sqlite.binary.reader.WasmSourceReader
+import at.released.wasm.sqlite.binary.reader.readOrThrow
 
 // Implementation of the Reader. Use AndroidAssetsWasmSourceReader(appContext.assets) on Android
 val reader = WasmSourceReader 
@@ -296,7 +296,7 @@ pluginManagement {
         maven {
             url = uri("https://maven.pixnews.ru")
             mavenContent {
-                includeGroup("ru.pixnews.wasm-sqlite-open-helper")
+                includeGroup("at.released.wasm-sqlite-driver")
             }
         }
     }
@@ -310,7 +310,7 @@ Add the required dependencies:
 ```kotlin
 dependencies {
     implementation("at.released.cassettes:cassettes-playhead:0.1-alpha01")
-    implementation("ru.pixnews.wasm-sqlite-open-helper:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.6")
+    implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.6")
 }
 ```
 
