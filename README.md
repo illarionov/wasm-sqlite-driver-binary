@@ -16,10 +16,10 @@ This project provides four different SQLite builds, differing in compilation set
 
 | Name | SQLite | Multithreading | ICU | Android Extensions | Runtime | Binaries |
 | :- | :- | :-: | :- | :-: | :- | :-: |
-| [sqlite-android-wasm-emscripten-icu-349](#Sqlite-android-wasm-emscripten-icu-349) | 3.49.1 |  | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.6.zip) |
-| [sqlite-android-wasm-emscripten-icu-mt-pthread-349](#Sqlite-android-wasm-emscripten-icu-mt-pthread-349) | 3.49.1 | ✔ | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.6.zip) |
-| [sqlite-wasm-emscripten-349](#Sqlite-wasm-emscripten-349) | 3.49.1 |  |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-wasm-emscripten-349-3490100-debug-0.6.zip) |
-| [sqlite-wasm-emscripten-mt-pthread-349](#Sqlite-wasm-emscripten-mt-pthread-349) | 3.49.1 | ✔ |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.6.zip) |
+| [sqlite-android-wasm-emscripten-icu-349](#Sqlite-android-wasm-emscripten-icu-349) | 3.49.1 |  | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.7.zip) |
+| [sqlite-android-wasm-emscripten-icu-mt-pthread-349](#Sqlite-android-wasm-emscripten-icu-mt-pthread-349) | 3.49.1 | ✔ | 76.1 STATIC | ✔ | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.7.zip) |
+| [sqlite-wasm-emscripten-349](#Sqlite-wasm-emscripten-349) | 3.49.1 |  |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-wasm-emscripten-349-3490100-debug-0.7.zip) |
+| [sqlite-wasm-emscripten-mt-pthread-349](#Sqlite-wasm-emscripten-mt-pthread-349) | 3.49.1 | ✔ |  |  | Emscripten 4.0.1 | [link](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.7.zip) |
 
 Also there are 2 variants of AOT-precompiled modules to .class using [wasm2class-gradle-plugin](https://github.com/illarionov/wasm2class-gradle-plugin)
 for JVM projects with Chicory:
@@ -29,8 +29,8 @@ for JVM projects with Chicory:
 
 ### Sqlite-android-wasm-emscripten-icu-349
 
-* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-349:0.6")`
-* Debug binaries: [sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.6.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.6.zip)
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-349:0.7")`
+* Debug binaries: [sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.7.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-android-wasm-emscripten-icu-349-3490100-debug-0.7.zip)
 
 Single-threaded SQLite build with a configuration similar to that used in the Android system.
 
@@ -128,8 +128,8 @@ ICU build flags:
 
 ### Sqlite-android-wasm-emscripten-icu-mt-pthread-349
 
-* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.6")`
-* Binaries with debug symbols: [sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.6.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.6.zip)
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.7")`
+* Binaries with debug symbols: [sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.7.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-android-wasm-emscripten-icu-mt-pthread-349-3490100-debug-0.7.zip)
 
 The same configuration as [sqlite-android-wasm-emscripten-icu-349](#sqlite-android-wasm-emscripten-icu-349), but with multithreading enabled.
 
@@ -144,8 +144,8 @@ Additional SQLite flags: -DSQLITE_THREADSAFE=2
 
 ### Sqlite-wasm-emscripten-349
 
-* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-wasm-emscripten-349:0.6")`
-* Binaries with debug symbols: [sqlite-wasm-emscripten-349-3490100-debug-0.6.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.6/sqlite-wasm-emscripten-349-3490100-debug-0.6.zip)
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-wasm-emscripten-349:0.7")`
+* Binaries with debug symbols: [sqlite-wasm-emscripten-349-3490100-debug-0.7.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.7/sqlite-wasm-emscripten-349-3490100-debug-0.7.zip)
 
 Single-threaded SQLite configuration without ICU and Android extensions.
 
@@ -229,8 +229,8 @@ sqlite3-wasm.c callbacks-wasm.c
 
 ### Sqlite-wasm-emscripten-mt-pthread-349
 
-* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-wasm-emscripten-mt-pthread-349:0.6")`
-* Binaries with debug symbols: [sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.9.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.9/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.6.zip)
+* Gradle dependency: `implementation("at.released.wasm-sqlite-driver:sqlite-wasm-emscripten-mt-pthread-349:0.7")`
+* Binaries with debug symbols: [sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.9.zip](https://github.com/illarionov/wasm-sqlite-driver-binary/releases/download/0.9/sqlite-wasm-emscripten-mt-pthread-349-3490100-debug-0.7.zip)
 
 The same configuration as [sqlite-wasm-emscripten-349](#sqlite-wasm-emscripten-349), but with multithreading enabled.
 
@@ -310,7 +310,7 @@ Add the required dependencies:
 ```kotlin
 dependencies {
     implementation("at.released.cassettes:cassettes-playhead:0.1-alpha01")
-    implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.6")
+    implementation("at.released.wasm-sqlite-driver:sqlite-android-wasm-emscripten-icu-mt-pthread-349:0.7")
 }
 ```
 

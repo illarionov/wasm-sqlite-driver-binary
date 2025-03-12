@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.7] — 2025-03-12
+
+#### 🚀 New Feature
+
+- sqlite-android-wasm-emscripten-icu-aot-349 and sqlite-wasm-emscripten-aot-349 published to Maven Central
+
+#### 💥 Breaking Change
+
+- Package changed to at.released.wasm-sqlite-driver
+
 ## [0.6] — 2025-03-11
 
 #### 💥 Breaking Change
