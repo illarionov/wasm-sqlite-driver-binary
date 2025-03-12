@@ -24,6 +24,7 @@ plugins {
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("at.released.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish-mavencentral")
     id("at.released.wasm.sqlite.binary.gradle.buildinfo.generator")
     id("at.released.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
 }
