@@ -53,7 +53,7 @@ mavenPublishing {
     signAllPublications()
 
     configure(
-        KotlinMultiplatform(javadocJar = JavadocJar.None()),
+        KotlinMultiplatform(javadocJar = JavadocJar.Empty()),
     )
 
     pom {

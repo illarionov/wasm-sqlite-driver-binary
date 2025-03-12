@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
     id("at.released.wasm.sqlite.binary.gradle.multiplatform.kotlin")
     id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish")
+    id("at.released.wasm.sqlite.binary.gradle.multiplatform.publish-mavencentral")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
 
