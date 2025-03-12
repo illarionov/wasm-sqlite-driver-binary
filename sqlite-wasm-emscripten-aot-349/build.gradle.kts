@@ -19,7 +19,6 @@ plugins {
     id("at.released.wasm2class.plugin")
     id("ru.pixnews.wasm.builder.sqlite.plugin")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.kotlin")
-    id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.android-library")
     id("ru.pixnews.wasm.sqlite.binary.gradle.multiplatform.publish")
     id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.generator")
     id("ru.pixnews.wasm.sqlite.binary.gradle.buildinfo.ext.utils")
@@ -62,7 +61,7 @@ private val sqliteBuild = sqlite3Build.builds["wasm-emscripten-aot-349"]
 wasm2class {
     targetPackage = aotRootPackage
     modules {
-        create("AotWasmEmscripten349") {
+        create("SqliteWasmEmscriptenAot349") {
             wasm = sqliteBuild.strippedWasmOutput
         }
     }
@@ -73,25 +72,17 @@ sqliteConfigGenerator {
         create(sqliteBuild.name) {
             rootPackage = aotRootPackage
             fromSqliteBuild(objects, sqlite3Build)
-            wasmFileName = "AotWasmEmscripten349.meta"
+            wasmFileName = "SqliteWasmEmscriptenAot349.meta"
         }
     }
 }
 
 kotlin {
-    androidTarget()
     jvm()
 
     sourceSets {
         commonMain.dependencies {
             api(projects.sqliteBinaryApi)
         }
-    }
-}
-
-android {
-    namespace = aotRootPackage
-    defaultConfig {
-        minSdk = 28
     }
 }
