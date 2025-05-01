@@ -12,7 +12,7 @@ public object AndroidSqliteDriverBundledConfig {
      *
      * https://github.com/androidx/androidx/blob/07076aa00829f374a559c3cd9dd07e1aeb8cabd0/sqlite/sqlite-bundled/build.gradle
      *
-     * ce79d6f71d1e706f11e34c6ea7ceb424813ada1b (20224-05-15)
+     * ce79d6f71d1e706f11e34c6ea7ceb424813ada1b (2024-05-15)
      */
     public val sqlite: List<String> = listOf(
         "-DHAVE_USLEEP=1",
