@@ -21,7 +21,7 @@ kotlinx-binary-compatibility-validator = "0.17.0"
 spotless = "7.0.2"
 junit5 = "5.12.2"
 kotlinx-io ="0.7.0"
-mockk = "1.13.17"
+mockk = "1.14.2"
 tempfolder = "0.1"
 
 [libraries]
