@@ -47,7 +47,7 @@ jobs:
           brew install make wabt
 
       - name: Install EMSDK
-        uses: mymindstorm/setup-emsdk@v14
+        uses: mymindstorm/setup-emsdk@v16
         with:
           version: 4.0.4
           actions-cache-folder: 'emsdk-cache'
